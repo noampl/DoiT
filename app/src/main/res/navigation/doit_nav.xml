@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doit_nav"
+    app:startDestination="@id/groupsFragment">
+
+    <fragment
+        android:id="@+id/groupsFragment"
+        android:name="com.example.doit.GroupsFragment"
+        android:label="fragment_groups"
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_groupsFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_groupsFragment_to_tasksFragment"
+            app:destination="@id/tasksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.doit.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_groupsFragment"
+            app:destination="@id/groupsFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_tasksFragment"
+            app:destination="@id/tasksFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_taskDetails"
+            app:destination="@id/taskDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/tasksFragment"
+        android:name="com.example.doit.TasksFragment"
+        android:label="fragment_tasks"
+        tools:layout="@layout/fragment_tasks" >
+        <action
+            android:id="@+id/action_tasksFragment_to_groupsFragment"
+            app:destination="@id/groupsFragment" />
+        <action
+            android:id="@+id/action_tasksFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_tasksFragment_to_specificGroupFragment"
+            app:destination="@id/specificGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/specificGroupFragment"
+        android:name="com.example.doit.SpecificGroupFragment"
+        android:label="fragment_specific_group"
+        tools:layout="@layout/fragment_specific_group" >
+        <action
+            android:id="@+id/action_specificGroupFragment_to_taskDetails"
+            app:destination="@id/taskDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskDetails"
+        android:name="com.example.doit.TaskDetails"
+        android:label="fragment_task_details"
+        tools:layout="@layout/fragment_task_details" />
+</navigation>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tasksFragment"
+        android:title="Tasks"
+        android:icon="@drawable/ic_tasks_foreground"/>
+    <item
+        android:id="@+id/groupsFragment"
+        android:title="Groups"
+        android:icon="@drawable/ic_groups_foreground"/>
+    <item
+        android:id="@+id/accountFragment"
+        android:title="Account"
+        android:icon="@drawable/ic_human_foreground"/>
+</menu>
