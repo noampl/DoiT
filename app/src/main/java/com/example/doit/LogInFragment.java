@@ -2,11 +2,18 @@ package com.example.doit;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.doit.databinding.FragmentLogInBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,7 +22,8 @@ import android.view.ViewGroup;
  */
 public class LogInFragment extends Fragment {
 
-    private View _binding;
+    private static final String TAG = "Login Fragment";
+    private FragmentLogInBinding _binding;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -25,27 +33,27 @@ public class LogInFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment LogInFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LogInFragment newInstance(String param1, String param2) {
-        LogInFragment fragment = new LogInFragment();
-        return fragment;
+    public static LogInFragment newInstance() {
+        return new LogInFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_log_in, container, false);
+
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_log_in, container, false);
+        LoginViewModel viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        _binding.setLoginViewModel(viewModel);
+        _binding.setLifecycleOwner(this);
+        
+        return _binding.getRoot();
     }
 }
