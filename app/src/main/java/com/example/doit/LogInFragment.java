@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -31,13 +32,6 @@ public class LogInFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment LogInFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static LogInFragment newInstance() {
         return new LogInFragment();
     }
@@ -54,6 +48,16 @@ public class LogInFragment extends Fragment {
         LoginViewModel viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
+        _binding.registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragment_container_view, RegisterFragment.class, null)
+                        .commit();
+            }
+        });
         return _binding.getRoot();
     }
+
 }
