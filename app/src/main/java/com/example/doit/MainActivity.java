@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.doit.Model.Repository;
+
 public class MainActivity extends AppCompatActivity {
+    private Repository db;
 
     public MainActivity() {
         super(R.layout.activity_main);

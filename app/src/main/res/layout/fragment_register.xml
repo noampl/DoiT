@@ -10,6 +10,9 @@
         <variable
             name="RegisterViewModel"
             type="com.example.doit.RegisterViewModel" />
+<!--        <variable
+            name="indenticalPass"
+            type="androidx.lifecycle.MutableLiveData&lt;Boolean&gt;" />-->
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="@string/register"
             android:textSize="30dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,6 +58,7 @@
             android:inputType="textPersonName"
             android:hint="@string/first_name"
             android:layout_marginTop="20dp"
+            android:onTextChanged="@{RegisterViewModel::onFirstNameChange}"
             app:layout_constraintTop_toBottomOf="@id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,6 +72,7 @@
             android:inputType="textPersonName"
             android:hint="@string/last_name"
             android:layout_marginTop="10dp"
+            android:onTextChanged="@{RegisterViewModel::onLastNameChange}"
             app:layout_constraintTop_toBottomOf="@id/first_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +86,7 @@
             android:inputType="textEmailAddress"
             android:hint="@string/email"
             android:layout_marginTop="10dp"
+            android:onTextChanged="@{RegisterViewModel::onEmailChange}"
             app:layout_constraintTop_toBottomOf="@id/last_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,6 +100,7 @@
             android:inputType="phone"
             android:hint="@string/phone_number"
             android:layout_marginTop="10dp"
+            android:onTextChanged="@{RegisterViewModel::onPhoneChange}"
             app:layout_constraintTop_toBottomOf="@id/email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -107,6 +114,7 @@
             android:inputType="textPassword"
             android:hint="@string/password"
             android:layout_marginTop="10dp"
+            android:onTextChanged="@{RegisterViewModel::onPasswordChange}"
             app:layout_constraintTop_toBottomOf="@id/phone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -116,10 +124,12 @@
             android:id="@+id/validatPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@{ RegisterViewModel.passwordsIdentical ? @android:color/transparent : @color/design_default_color_error}"
             android:ems="10"
             android:inputType="textPassword"
             android:hint="@string/password"
             android:layout_marginTop="10dp"
+            android:onTextChanged="@{RegisterViewModel::onPasswordValidateChange}"
             app:layout_constraintTop_toBottomOf="@id/password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +141,7 @@
             android:layout_height="wrap_content"
             android:background="@color/design_default_color_on_primary"
             android:text="@string/register"
+            android:onClick="@{() -> RegisterViewModel.register()}"
             app:layout_constraintTop_toBottomOf="@id/validatPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
