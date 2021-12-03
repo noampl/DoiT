@@ -26,7 +26,9 @@
         app:layout_constraintEnd_toStartOf="@id/register_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:onClick="@{loginViewModel.Login()}"/>
+        android:onClick="@{() -> loginViewModel.Login()}" />
+
+
 
     <Button
         android:id="@+id/register_button"
@@ -45,7 +47,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/user_name"
+        android:text="@{loginViewModel.userName}"
+        android:onTextChanged="@{loginViewModel::onUserNameChange}"
         android:layout_marginBottom="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,6 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:text="@{loginViewModel.password}"
+        android:onTextChanged="@{loginViewModel::onPasswordChange}"
         android:inputType="textPassword"
         android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
