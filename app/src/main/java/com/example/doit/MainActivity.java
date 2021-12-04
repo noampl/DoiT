@@ -2,12 +2,14 @@ package com.example.doit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
 import com.example.doit.databinding.ActivityMainBinding;
-import com.example.doit.Model.Repository;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,12 +19,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        initNavigation();
+    }
 
-        if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, LogInFragment.class, null)
-                    .commit();
-        }
+    private void initNavigation(){
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+
+        BottomNavigationView bottomNavigationView = _binding.bottomNavBar;
+        NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.getNavController());
     }
 }
