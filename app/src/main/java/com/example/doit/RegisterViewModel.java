@@ -41,6 +41,83 @@ public class RegisterViewModel extends ViewModel {
         passwordsIdentical.setValue(true);
     }
 
+    public String get_firstName() {
+        return _firstName;
+    }
+
+    public String get_lastName() {
+        return _lastName;
+    }
+
+    public String get_password() {
+        return _password;
+    }
+
+    public String get_email() {
+        return _email;
+    }
+
+    public String get_phoneCountryCode() {
+        return _phoneCountryCode;
+    }
+
+    public String get_phone() {
+        return _phone;
+    }
+
+    public String get_passwordValidation() {
+        return _passwordValidation;
+    }
+
+    public Roles.ROLES get_role() {
+        return _role;
+    }
+
+    public String get_image() {
+        return _image;
+    }
+
+
+    public void set_user(User _user) {
+        this._user = _user;
+    }
+
+    public void set_firstName(String _firstName) {
+        this._firstName = _firstName;
+    }
+
+    public void set_lastName(String _lastName) {
+        this._lastName = _lastName;
+    }
+
+    public void set_password(String _password) {
+        this._password = _password;
+    }
+
+    public void set_email(String _email) {
+        this._email = _email;
+    }
+
+    public void set_phoneCountryCode(String _phoneCountryCode) {
+        this._phoneCountryCode = _phoneCountryCode;
+    }
+
+    public void set_phone(String _phone) {
+        this._phone = _phone;
+    }
+
+    public void set_passwordValidation(String _passwordValidation) {
+        this._passwordValidation = _passwordValidation;
+    }
+
+    public void set_role(Roles.ROLES _role) {
+        this._role = _role;
+    }
+
+    public void set_image(String _image) {
+        this._image = _image;
+    }
+
     public MutableLiveData<Boolean> getPasswordsIdentical() {
         return passwordsIdentical;
     }

@@ -15,18 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.doit.databinding.FragmentLogInBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LogInFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LogInFragment extends Fragment {
+import java.util.Objects;
 
+public class LogInFragment extends Fragment implements IResponseHelper {
+    //region members
     private static final String TAG = "Login Fragment";
     private FragmentLogInBinding _binding;
+    //endregion
 
     public LogInFragment() {
         // Required empty public constructor
@@ -48,10 +47,11 @@ public class LogInFragment extends Fragment {
         LoginViewModel viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
+        viewModel.setResponseHelper(this);
         _binding.registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
+                requireActivity().getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.fragment_container_view, RegisterFragment.class, null)
                         .commit();
@@ -60,4 +60,14 @@ public class LogInFragment extends Fragment {
         return _binding.getRoot();
     }
 
+    @Override
+    public void actionFinished(boolean actionResult) {
+        if (actionResult){
+            Log.d(TAG, "User is find");
+            Toast.makeText(getContext(), "User is connected", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d(TAG, "User is not find");
+            Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
