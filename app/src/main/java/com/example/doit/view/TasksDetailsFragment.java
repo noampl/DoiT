@@ -1,4 +1,4 @@
-package com.example.doit;
+package com.example.doit.view;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.doit.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TasksDetails#newInstance} factory method to
+ * Use the {@link TasksDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TasksDetails extends Fragment {
+public class TasksDetailsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class TasksDetails extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public TasksDetails() {
+    public TasksDetailsFragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +39,8 @@ public class TasksDetails extends Fragment {
      * @return A new instance of fragment TasksDetails.
      */
     // TODO: Rename and change types and number of parameters
-    public static TasksDetails newInstance(String param1, String param2) {
-        TasksDetails fragment = new TasksDetails();
+    public static TasksDetailsFragment newInstance(String param1, String param2) {
+        TasksDetailsFragment fragment = new TasksDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

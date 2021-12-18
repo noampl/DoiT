@@ -1,10 +1,11 @@
-package com.example.doit;
+package com.example.doit.viewmodel;
 
 import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.Model.Consts;
+import com.example.doit.IResponseHelper;
+import com.example.doit.common.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.UserFirebaseWorker;
 

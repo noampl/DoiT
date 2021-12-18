@@ -1,26 +1,31 @@
-package com.example.doit;
+package com.example.doit.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.databinding.DataBindingUtil;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 
-import com.example.doit.Model.Repository;
+import com.example.doit.R;
+import com.example.doit.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private Repository db;
 
-    public MainActivity() {
-        super(R.layout.activity_main);
-    }
+    private ActivityMainBinding _binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, LogInFragment.class, null)
-                    .commit();
-        }
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        initNavigation();
+    }
+
+    private void initNavigation(){
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+
+        BottomNavigationView bottomNavigationView = _binding.bottomNavBar;
+        NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.getNavController());
     }
 }

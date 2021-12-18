@@ -1,10 +1,11 @@
-package com.example.doit;
+package com.example.doit.view;
 
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.doit.IResponseHelper;
+import com.example.doit.R;
+import com.example.doit.viewmodel.RegisterViewModel;
 import com.example.doit.databinding.FragmentRegisterBinding;
 
 /**
@@ -54,9 +58,7 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
             return;
         }
         Toast.makeText(getContext(), "User has been created", Toast.LENGTH_SHORT).show();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragment_container_view, LogInFragment.class, null)
-                .commit();
+        Navigation.findNavController(getActivity(), R.id.fragmentContainerView).navigate(
+                R.id.action_registerFragment2_to_groupsFragment2);
     }
 }

@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/doit_graph">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doit_graph"
+    app:startDestination="@id/logInFragment2">
+    <fragment
+        android:id="@+id/logInFragment2"
+        android:name="com.example.doit.view.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment2_to_registerFragment2"
+            app:destination="@id/registerFragment2" />
+        <action
+            android:id="@+id/action_logInFragment2_to_groupsFragment2"
+            app:destination="@id/groupsFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment2"
+        android:name="com.example.doit.view.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment2_to_groupsFragment2"
+            app:destination="@id/groupsFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragment2"
+        android:name="com.example.doit.view.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/groupsFragment2"
+        android:name="com.example.doit.view.GroupsFragment"
+        android:label="fragment_groups"
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_groupsFragment2_to_chosenGroupFragment"
+            app:destination="@id/chosenGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chosenGroupFragment"
+        android:name="com.example.doit.view.ChosenGroupFragment"
+        android:label="fragment_chosen_group"
+        tools:layout="@layout/fragment_chosen_group" >
+        <action
+            android:id="@+id/action_chosenGroupFragment_to_tasksDetails"
+            app:destination="@id/tasksDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/myTasksFragment"
+        android:name="com.example.doit.view.MyTasksFragment"
+        android:label="fragment_my_tasks"
+        tools:layout="@layout/fragment_my_tasks" >
+        <action
+            android:id="@+id/action_myTasksFragment_to_tasksDetails"
+            app:destination="@id/tasksDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/tasksDetails"
+        android:name="com.example.doit.view.TasksDetailsFragment"
+        android:label="fragment_tasks_details"
+        tools:layout="@layout/fragment_tasks_details" />
 </navigation>

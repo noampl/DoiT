@@ -1,7 +1,7 @@
 package com.example.doit.Model;
 
+import com.example.doit.common.Consts;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.example.doit.Model.UserFirebaseWorker;
 
 import java.util.HashMap;
 import java.util.Map;

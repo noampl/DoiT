@@ -4,12 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".LogInFragment">
+    tools:context=".view.LogInFragment">
 
     <data>
         <variable
             name="loginViewModel"
-            type="com.example.doit.LoginViewModel" />
+            type="com.example.doit.viewmodel.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
