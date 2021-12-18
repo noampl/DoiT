@@ -4,12 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".RegisterFragment">
+    tools:context=".view.RegisterFragment">
 
     <data>
         <variable
             name="RegisterViewModel"
-            type="com.example.doit.RegisterViewModel" />
+            type="com.example.doit.viewmodel.RegisterViewModel" />
 <!--        <variable
             name="indenticalPass"
             type="androidx.lifecycle.MutableLiveData&lt;Boolean&gt;" />-->

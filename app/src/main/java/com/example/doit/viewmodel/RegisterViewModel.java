@@ -1,11 +1,12 @@
-package com.example.doit;
+package com.example.doit.viewmodel;
 
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.Model.Consts;
+import com.example.doit.IResponseHelper;
+import com.example.doit.common.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.Roles;
 import com.example.doit.Model.User;
@@ -15,7 +16,7 @@ public class RegisterViewModel extends ViewModel {
 
     // region Members
 
-    private static final String TAG = "RegisterViewModel";
+    private final String TAG = "RegisterViewModel";
     private Repository repo;
     private static final String ISRAEL_COUNTRY_CODE = "+972";
     private User _user;
@@ -32,7 +33,7 @@ public class RegisterViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
 
-// endregion
+    // endregion
 
     public RegisterViewModel() {
         _user = new User();

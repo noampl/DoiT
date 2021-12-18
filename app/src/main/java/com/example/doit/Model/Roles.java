@@ -1,9 +1,8 @@
 package com.example.doit.Model;
 
 public class Roles {
-    public static enum ROLES {
+    public enum ROLES {
         CLIENT,
-        EDIROT,
         ADMIN
     }
 }
