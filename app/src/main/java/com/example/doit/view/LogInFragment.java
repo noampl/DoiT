@@ -66,7 +66,7 @@ public class LogInFragment extends Fragment implements IResponseHelper {
     @Override
     public void actionFinished(boolean actionResult) {
         if (actionResult){
-            Log.d(TAG, "User is find");
+            Log.d(TAG, "User has been found");
             Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                     R.id.action_logInFragment2_to_groupsFragment2);
             String email = user.getEmail();
