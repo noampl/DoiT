@@ -1,7 +1,9 @@
 package com.example.doit.viewmodel;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,11 +13,19 @@ import com.example.doit.Model.Repository;
 import com.example.doit.Model.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
 
 public class RegisterViewModel extends ViewModel {
 
     // region Members
 
+    private FirebaseAuth mAuth;
     private final String TAG = "RegisterViewModel";
     private Repository repo;
     private static final String ISRAEL_COUNTRY_CODE = "+972";
@@ -36,6 +46,7 @@ public class RegisterViewModel extends ViewModel {
     // endregion
 
     public RegisterViewModel() {
+        mAuth = FirebaseAuth.getInstance();
         _user = new User();
         repo = Repository.getInstance();
         passwordsIdentical = new MutableLiveData<>();
@@ -173,8 +184,22 @@ public class RegisterViewModel extends ViewModel {
     public boolean register(){
         Log.d(TAG, "Trying to register");
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            UserFirebaseWorker worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
-            worker.create(_user, responseHelper);
+            mAuth.createUserWithEmailAndPassword(_user.getEmail(), _user.get_password())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                UserFirebaseWorker worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+                                worker.create(_user, responseHelper);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            }
+                        }
+                    });
         }
         return true;
     }

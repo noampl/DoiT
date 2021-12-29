@@ -49,6 +49,7 @@ public class UserFirebaseWorker implements IDataWorker{
     public void create(User user, IResponseHelper responseHelper ) {
         if(!validateCreateValues(user))
             return;
+
         usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
