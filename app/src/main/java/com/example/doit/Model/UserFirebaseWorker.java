@@ -34,6 +34,7 @@ public class UserFirebaseWorker implements IDataWorker{
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
     private User _user;
+    private String _registerErrorReason;
     private FirebaseAuth mAuth;
     private User _authUser;
     // endregion
@@ -104,7 +105,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
 
     public void deleteUser(DocumentReference documentReference){
-        usersRef.document(documentReference.getPath()).delete()
+        usersRef.document(documentReference.getId()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -126,7 +127,7 @@ public class UserFirebaseWorker implements IDataWorker{
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        mAuth.createUserWithEmailAndPassword(_user.getEmail(), _user.get_password())
+                        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.get_password())
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -137,6 +138,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                            _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
                                             responseHelper.actionFinished(false);
                                             deleteUser(documentReference);
                                         }
@@ -193,5 +195,9 @@ public class UserFirebaseWorker implements IDataWorker{
                     }
                 }
         });
+    }
+
+    public String get_registerErrorReason() {
+        return _registerErrorReason;
     }
 }

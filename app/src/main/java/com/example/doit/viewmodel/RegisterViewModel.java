@@ -26,7 +26,7 @@ public class RegisterViewModel extends ViewModel {
     // region Members
 
     private final String TAG = "RegisterViewModel";
-    private Repository repo;
+    private final Repository repo;
     private static final String ISRAEL_COUNTRY_CODE = "+972";
     private User _user;
     public final String title = "Regiter";
@@ -41,12 +41,14 @@ public class RegisterViewModel extends ViewModel {
     private String _image = "";
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
+    private UserFirebaseWorker worker;
 
     // endregion
 
     public RegisterViewModel() {
-        _user = new User();
         repo = Repository.getInstance();
+        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+        _user = new User();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
     }
@@ -182,11 +184,16 @@ public class RegisterViewModel extends ViewModel {
     public boolean register(){
         Log.d(TAG, "Trying to register");
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            UserFirebaseWorker worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
             worker.create(_user, responseHelper);
             return true;
         }
         return false;
+    }
+
+    public String getErrorReason(){
+        String error;
+        if ((error = worker.get_registerErrorReason()) != null) { return error; }
+        return "ERROR: Unrecognized problem with register";
     }
 
 }
