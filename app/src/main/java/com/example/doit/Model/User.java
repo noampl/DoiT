@@ -81,6 +81,8 @@ public class User {
         _user.put("role", _role);
     }
 
+    //todo: add setImage
+
     public Map<String, Object> getUserMap(){
         return _user;
     }
