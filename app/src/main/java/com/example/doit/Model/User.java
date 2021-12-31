@@ -57,7 +57,7 @@ public class User {
         return this._email;
     }
 
-    public String get_password() {
+    public String getPassword() {
         return this._password;
     }
 

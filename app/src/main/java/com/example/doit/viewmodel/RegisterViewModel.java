@@ -41,7 +41,7 @@ public class RegisterViewModel extends ViewModel {
     private String _image = "";
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
-    private UserFirebaseWorker worker;
+    private final UserFirebaseWorker worker;
 
     // endregion
 
