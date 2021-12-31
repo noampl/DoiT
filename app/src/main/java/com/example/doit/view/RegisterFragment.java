@@ -25,6 +25,7 @@ import com.example.doit.databinding.FragmentRegisterBinding;
  */
 public class RegisterFragment extends Fragment implements IResponseHelper {
     private FragmentRegisterBinding _binding;
+    private RegisterViewModel viewModel;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -43,7 +44,7 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
-        RegisterViewModel viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         viewModel.setResponseHelper(this);
         _binding.setRegisterViewModel(viewModel);
         _binding.setLifecycleOwner(this);
@@ -54,7 +55,7 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
     public void actionFinished(boolean actionResult) {
         Log.d("RegisterFragment", "res is " + actionResult);
         if( actionResult == false){
-            Toast.makeText(getContext(), "ERROR: User has not been created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), viewModel.getErrorReason(), Toast.LENGTH_SHORT).show();
             return;
         }
         Toast.makeText(getContext(), "User has been created", Toast.LENGTH_SHORT).show();

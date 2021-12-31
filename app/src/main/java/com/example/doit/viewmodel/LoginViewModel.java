@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
+import com.example.doit.Model.User;
 import com.example.doit.common.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.UserFirebaseWorker;
@@ -19,12 +20,16 @@ public class LoginViewModel extends ViewModel {
     private String _email;
     private String _password;
     private IResponseHelper responseHelper;
+    private UserFirebaseWorker worker;
+    private long mLastClickTime = 0;
     //endregion
 
     public LoginViewModel() {
         repo = Repository.getInstance();
         _email = "Email";
         _password = "";
+        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+
     }
 
     public IResponseHelper getResponseHelper() {
@@ -37,6 +42,13 @@ public class LoginViewModel extends ViewModel {
 
     public String getUserName(){
         return this._email;
+    }
+
+    public User getAuthUser() {
+        if (worker.getAuthenticatedUserDetails() != null){
+            return worker.getAuthenticatedUserDetails();
+        }
+        return null;
     }
 
     public String getPassword() {
@@ -54,12 +66,11 @@ public class LoginViewModel extends ViewModel {
     public boolean Login(){
         Log.d(TAG, "Login: " + this._email);
         Log.d(TAG, "Password: " + this._password);
-        UserFirebaseWorker worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
         Map<String, Object> user = new HashMap<>();
         user.put("email", this._email);
         user.put("password", this._password);
         Log.d(TAG, "Login: " + user.get("email"));
-        worker.find(user, this.responseHelper, 1);
+        worker.login(user, this.responseHelper);
         return true;
     }
 }

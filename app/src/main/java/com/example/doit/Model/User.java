@@ -53,6 +53,14 @@ public class User {
         _user.put("email", _email);
     }
 
+    public String getEmail() {
+        return this._email;
+    }
+
+    public String getPassword() {
+        return this._password;
+    }
+
     public void setPassword(String password) {
         _password = password;
         _user.put("password", _password);
@@ -72,6 +80,8 @@ public class User {
         _role = role;
         _user.put("role", _role);
     }
+
+    //todo: add setImage
 
     public Map<String, Object> getUserMap(){
         return _user;
