@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.example.doit.common.Converters;
+
 import java.util.List;
 
 @Entity
@@ -12,17 +14,14 @@ public class Group {
 
     // region Members
     @PrimaryKey
-    @NonNull
     private String _id; // the id of the firebase
     private String _name;
     private String _description;
     private List<User> _users;
-
-    @TypeConverters(User.class)
+    @TypeConverters(Converters.class)
     private List<User> admins;
     private String _image;
-
-    @TypeConverters(Task.class)
+    @TypeConverters(Converters.class)
     private List<Task> tasks;
 
     // endregion

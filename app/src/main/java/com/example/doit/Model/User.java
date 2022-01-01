@@ -4,8 +4,10 @@ package com.example.doit.Model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 
+import com.example.doit.common.Converters;
 import com.example.doit.common.Roles;
 
 import java.util.HashMap;
@@ -160,4 +162,19 @@ public class User {
         return user;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                ", _id='" + _id + '\'' +
+                ", _email='" + _email + '\'' +
+                ", _lastName='" + _lastName + '\'' +
+                ", _firstName='" + _firstName + '\'' +
+                ", _password='" + _password + '\'' +
+                ", _image='" + _image + '\'' +
+                ", _phone='" + _phone + '\'' +
+                ", _countryPhoneCode='" + _countryPhoneCode + '\'' +
+                ", _role=" + _role +
+                ", _groups=" + _groups +
+                '}';
+    }
 }
