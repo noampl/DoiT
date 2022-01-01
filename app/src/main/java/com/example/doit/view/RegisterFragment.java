@@ -96,7 +96,6 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
 
     @Override
     public void actionFinished(boolean actionResult) {
-        //_binding.progressBar.setVisibility(View.GONE);
         Log.d("RegisterFragment", "res is " + actionResult);
         if(!actionResult){
             Toast.makeText(getContext(), viewModel.getErrorReason(), Toast.LENGTH_SHORT).show();
