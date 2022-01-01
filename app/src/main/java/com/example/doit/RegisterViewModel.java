@@ -1,33 +1,22 @@
-package com.example.doit.viewmodel;
+package com.example.doit;
 
-import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.IResponseHelper;
-import com.example.doit.common.Consts;
+import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.Executor;
 
 public class RegisterViewModel extends ViewModel {
 
     // region Members
 
-    private final String TAG = "RegisterViewModel";
-    private final Repository repo;
+    private static final String TAG = "RegisterViewModel";
+    private Repository repo;
     private static final String ISRAEL_COUNTRY_CODE = "+972";
     private User _user;
     public final String title = "Regiter";
@@ -42,26 +31,14 @@ public class RegisterViewModel extends ViewModel {
     private String _image = "";
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
-    private final UserFirebaseWorker worker;
-    private Uri image_uri;
-    private Boolean _registering_job_run;
 
-    // endregion
+// endregion
 
     public RegisterViewModel() {
-        repo = Repository.getInstance();
-        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
         _user = new User();
+        repo = Repository.getInstance();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
-    }
-
-    public Uri getImage_uri() {
-        return image_uri;
-    }
-
-    public void setImage_uri(Uri image_uri) {
-        this.image_uri = image_uri;
     }
 
     public String get_firstName() {
@@ -98,17 +75,6 @@ public class RegisterViewModel extends ViewModel {
 
     public String get_image() {
         return _image;
-    }
-
-    public Boolean get_registering_job_run() {
-        if(_registering_job_run == null){
-            _registering_job_run = false;
-        }
-        return _registering_job_run;
-    }
-
-    public void set_registering_job_run(Boolean _registering_job_run) {
-        this._registering_job_run = _registering_job_run;
     }
 
 
@@ -205,26 +171,11 @@ public class RegisterViewModel extends ViewModel {
 
     public boolean register(){
         Log.d(TAG, "Trying to register");
-        set_registering_job_run(true);
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            IResponseHelper a = new IResponseHelper() {
-                @Override
-                public void actionFinished(boolean actionResult) {
-                    _user.setImgae(worker.get_image_url());
-                    worker.create(_user, responseHelper);
-                }
-            };
-            worker.upload_image(this.getImage_uri(), a);
-            return true;
+            UserFirebaseWorker worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+            worker.create(_user, responseHelper);
         }
-        set_registering_job_run(false);
-        return false;
-    }
-
-    public String getErrorReason(){
-        String error;
-        if ((error = worker.get_registerErrorReason()) != null) { return error; }
-        return "ERROR: Unrecognized problem with register";
+        return true;
     }
 
 }

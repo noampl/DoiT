@@ -71,6 +71,11 @@ public class User {
         _user.put("phone", _phone);
     }
 
+    public void setImgae(String image_path){
+        _image = image_path;
+        _user.put("image", image_path);
+    }
+
     public void setPhoneCountryCode(String phoneCountryCode) {
         _countryPhoneCode = phoneCountryCode;
         _user.put("phone_country_code", _countryPhoneCode);
