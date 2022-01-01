@@ -2,7 +2,9 @@ package com.example.doit.viewmodel;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,6 +14,13 @@ import com.example.doit.Model.Repository;
 import com.example.doit.Model.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
 
 public class RegisterViewModel extends ViewModel {
 

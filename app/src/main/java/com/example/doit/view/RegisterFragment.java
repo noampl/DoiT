@@ -60,6 +60,7 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
             }
     );
 
+
     public RegisterFragment() {
         // Required empty public constructor
     }
