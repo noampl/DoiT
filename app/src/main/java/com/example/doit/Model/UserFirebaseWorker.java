@@ -1,5 +1,6 @@
 package com.example.doit.Model;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +38,7 @@ public class UserFirebaseWorker implements IDataWorker{
     private String _registerErrorReason;
     private FirebaseAuth mAuth;
     private User _authUser;
+    private String _image_url;
     // endregion
 
     public UserFirebaseWorker() {
@@ -44,10 +50,14 @@ public class UserFirebaseWorker implements IDataWorker{
     private boolean validateCreateValues(User user) {
         Map<String, Object> userMap = user.getUserMap();
         for(Map.Entry<String, Object> entry : userMap.entrySet()){
-            if (entry.getValue() == null)
+            if (entry.getValue() == null || entry.getValue() == "")
                 return false;
         }
         return true;
+    }
+
+    public String get_image_url() {
+        return _image_url;
     }
 
     private User insertDocumentToUser(DocumentSnapshot doc){
@@ -66,6 +76,38 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public User getAuthenticatedUserDetails() {
         return _authUser;
+    }
+
+    public void upload_image(Uri uri, IResponseHelper resHelper){
+        if (uri == null){
+            return;
+        }
+        File file = new File(String.valueOf(uri));
+        String imageName = file.getName();
+        StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("profile_images")
+                .child(System.currentTimeMillis()+imageName);
+        fileRef.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String url = uri.toString();
+                        Log.d(TAG, "url " + url);
+                        _image_url = url;
+                        resHelper.actionFinished(true);
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error on uploading user profile image", e);
+                        resHelper.actionFinished(false);
+                    }
+                });;
+            }
+        });
+
     }
 
     public void getAuthenticatedUser(IResponseHelper responseHelper) {

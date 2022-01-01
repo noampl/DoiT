@@ -1,9 +1,8 @@
 package com.example.doit.viewmodel;
 
+import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -13,13 +12,6 @@ import com.example.doit.Model.Repository;
 import com.example.doit.Model.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.Executor;
 
 public class RegisterViewModel extends ViewModel {
 
@@ -42,6 +34,8 @@ public class RegisterViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
+    private MutableLiveData<Uri> image_uri;
+    private MutableLiveData<Boolean> _registering_job_run;
 
     // endregion
 
@@ -51,6 +45,12 @@ public class RegisterViewModel extends ViewModel {
         _user = new User();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
+        image_uri = new MutableLiveData<>();
+        image_uri.setValue(null);
+    }
+
+    public MutableLiveData<Uri> get_image_uri() {
+        return image_uri;
     }
 
     public String get_firstName() {
@@ -87,6 +87,18 @@ public class RegisterViewModel extends ViewModel {
 
     public String get_image() {
         return _image;
+    }
+
+    public MutableLiveData<Boolean> get_registering_job_run() {
+        if(_registering_job_run == null){
+            _registering_job_run = new MutableLiveData<>();
+            _registering_job_run.setValue(false);
+        }
+        return _registering_job_run;
+    }
+
+    public void set_registering_job_run(MutableLiveData<Boolean> _registering_job_run) {
+        this._registering_job_run = _registering_job_run;
     }
 
 
@@ -183,10 +195,19 @@ public class RegisterViewModel extends ViewModel {
 
     public boolean register(){
         Log.d(TAG, "Trying to register");
+        _registering_job_run.setValue(true);
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            worker.create(_user, responseHelper);
+            IResponseHelper a = new IResponseHelper() {
+                @Override
+                public void actionFinished(boolean actionResult) {
+                    _user.setImgae(worker.get_image_url());
+                    worker.create(_user, responseHelper);
+                }
+            };
+            worker.upload_image(get_image_uri().getValue(), a);
             return true;
         }
+        _registering_job_run.setValue(false);
         return false;
     }
 

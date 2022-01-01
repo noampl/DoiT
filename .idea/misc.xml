@@ -3,9 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/activity_main.xml" value="0.3125" />
+        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/activity_main.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_log_in.xml" value="0.1" />
-        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_register.xml" value="0.1" />
+        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_register.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.36666666666666664" />
@@ -15,7 +15,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
