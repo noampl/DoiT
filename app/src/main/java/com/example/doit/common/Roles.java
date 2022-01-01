@@ -1,8 +1,7 @@
-package com.example.doit.Model;
+package com.example.doit.common;
 
-public class Roles {
-    public enum ROLES {
-        CLIENT,
-        ADMIN
-    }
+
+public enum Roles {
+    CLIENT,
+    ADMIN
 }

@@ -63,7 +63,7 @@ public class LogInFragment extends Fragment implements IResponseHelper {
             Log.d(TAG, "User has been found");
             User authUser = viewModel.getAuthUser();
             if (authUser != null) {
-                Toast.makeText(getContext(), authUser.getEmail() + " is connected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), authUser.get_email() + " is connected", Toast.LENGTH_SHORT).show();
             }
             Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                     R.id.action_logInFragment2_to_groupsFragment2);

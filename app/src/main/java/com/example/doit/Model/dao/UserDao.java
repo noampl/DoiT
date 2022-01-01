@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.Model.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.example.doit.Model.User;
 
 import java.util.List;
 
