@@ -45,22 +45,6 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
     private FragmentRegisterBinding _binding;
     private RegisterViewModel viewModel;
 
-    ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
-                        Intent data = result.getData();
-                        Uri uri = data != null ? data.getData() : null;
-                        _binding.profileImageButton.setImageURI(uri);
-                        viewModel.get_image_uri().setValue(uri);
-                    }
-                }
-            }
-    );
-
-
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -82,8 +66,6 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
         viewModel.setResponseHelper(this);
         _binding.setRegisterViewModel(viewModel);
         _binding.setLifecycleOwner(this);
-        _binding.progressBar.setVisibility(View.GONE);
-        viewModel.get_registering_job_run().observe(getViewLifecycleOwner(), runningJobObserver);
         _binding.profileImageButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("IntentReset")
             @Override
@@ -97,20 +79,24 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
         return _binding.getRoot();
     }
 
-    final Observer<Boolean> runningJobObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean aBoolean) {
-            if (!aBoolean) {
-                _binding.progressBar.setVisibility(View.GONE);
-            } else {
-                _binding.progressBar.setVisibility(View.VISIBLE);
+    ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        Intent data = result.getData();
+                        Uri uri = data != null ? data.getData() : null;
+                        _binding.profileImageButton.setImageURI(uri);
+                        viewModel.setImage_uri(uri);
+                    }
+                }
             }
-        }
-    };
+    );
 
     @Override
     public void actionFinished(boolean actionResult) {
-        _binding.progressBar.setVisibility(View.GONE);
+        //_binding.progressBar.setVisibility(View.GONE);
         Log.d("RegisterFragment", "res is " + actionResult);
         if(!actionResult){
             Toast.makeText(getContext(), viewModel.getErrorReason(), Toast.LENGTH_SHORT).show();

@@ -43,8 +43,8 @@ public class RegisterViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
-    private MutableLiveData<Uri> image_uri;
-    private MutableLiveData<Boolean> _registering_job_run;
+    private Uri image_uri;
+    private Boolean _registering_job_run;
 
     // endregion
 
@@ -54,12 +54,14 @@ public class RegisterViewModel extends ViewModel {
         _user = new User();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
-        image_uri = new MutableLiveData<>();
-        image_uri.setValue(null);
     }
 
-    public MutableLiveData<Uri> get_image_uri() {
+    public Uri getImage_uri() {
         return image_uri;
+    }
+
+    public void setImage_uri(Uri image_uri) {
+        this.image_uri = image_uri;
     }
 
     public String get_firstName() {
@@ -98,15 +100,14 @@ public class RegisterViewModel extends ViewModel {
         return _image;
     }
 
-    public MutableLiveData<Boolean> get_registering_job_run() {
+    public Boolean get_registering_job_run() {
         if(_registering_job_run == null){
-            _registering_job_run = new MutableLiveData<>();
-            _registering_job_run.setValue(false);
+            _registering_job_run = false;
         }
         return _registering_job_run;
     }
 
-    public void set_registering_job_run(MutableLiveData<Boolean> _registering_job_run) {
+    public void set_registering_job_run(Boolean _registering_job_run) {
         this._registering_job_run = _registering_job_run;
     }
 
@@ -204,7 +205,7 @@ public class RegisterViewModel extends ViewModel {
 
     public boolean register(){
         Log.d(TAG, "Trying to register");
-        _registering_job_run.setValue(true);
+        set_registering_job_run(true);
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
             IResponseHelper a = new IResponseHelper() {
                 @Override
@@ -213,10 +214,10 @@ public class RegisterViewModel extends ViewModel {
                     worker.create(_user, responseHelper);
                 }
             };
-            worker.upload_image(get_image_uri().getValue(), a);
+            worker.upload_image(this.getImage_uri(), a);
             return true;
         }
-        _registering_job_run.setValue(false);
+        set_registering_job_run(false);
         return false;
     }
 
