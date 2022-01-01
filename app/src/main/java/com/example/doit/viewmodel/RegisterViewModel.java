@@ -44,7 +44,7 @@ public class RegisterViewModel extends ViewModel {
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
     private Uri image_uri;
-    private Boolean _registering_job_run;
+    private MutableLiveData<Boolean> _registering_job_run;
 
     // endregion
 
@@ -100,15 +100,15 @@ public class RegisterViewModel extends ViewModel {
         return _image;
     }
 
-    public Boolean get_registering_job_run() {
+    public MutableLiveData<Boolean> get_registering_job_run() {
         if(_registering_job_run == null){
-            _registering_job_run = false;
+            _registering_job_run = new MutableLiveData<>(false);
         }
         return _registering_job_run;
     }
 
     public void set_registering_job_run(Boolean _registering_job_run) {
-        this._registering_job_run = _registering_job_run;
+        this._registering_job_run.setValue(_registering_job_run);
     }
 
 
@@ -169,12 +169,12 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void onFirstNameChange(CharSequence s, int start, int before, int count) {
-        _firstName = s.toString();
+        _firstName = s.toString().toLowerCase();
         _user.setFirstName(_firstName);
     }
 
     public void onLastNameChange(CharSequence s, int start, int before, int count) {
-        _lastName = s.toString();
+        _lastName = s.toString().toLowerCase();
         _user.setLastName(_lastName);
     }
 
@@ -184,7 +184,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void onEmailChange(CharSequence s, int start, int before, int count) {
-        _email = s.toString();
+        _email = s.toString().toLowerCase();
         _user.setEmail(_email);
     }
 

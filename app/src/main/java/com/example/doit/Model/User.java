@@ -40,16 +40,16 @@ public class User {
     }
 
     public void setFirstName(String firstName) {
-        _user.put("first_name", firstName);
+        _user.put("first_name", firstName.toLowerCase());
     }
 
     public void setLastName(String lastName) {
-        _lastName = lastName;
+        _lastName = lastName.toLowerCase();
         _user.put("last_name", _lastName);
     }
 
     public void setEmail(String email) {
-        _email = email;
+        _email = email.toLowerCase();
         _user.put("email", _email);
     }
 

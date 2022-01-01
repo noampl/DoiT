@@ -112,9 +112,9 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void getAuthenticatedUser(IResponseHelper responseHelper) {
         if(mAuth.getCurrentUser() != null){
-            Query userQuery = usersRef;
-            userQuery.whereEqualTo(USERS_FIREBASE_MAP+"email", mAuth.getCurrentUser().getEmail());
-            userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            _authUser = new User();
+            usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
+                    .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
@@ -194,6 +194,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void login(Map<String, Object> user, IResponseHelper responseHelper) {
         Log.d(TAG, "looking for user");
+        _authUser = new User();
         Query findUser = usersRef;
         for (Map.Entry<String,Object> entry: user.entrySet()) {
             findUser = findUser.whereEqualTo(USERS_FIREBASE_MAP+entry.getKey(), entry.getValue());
@@ -214,6 +215,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                             if (task.isSuccessful()) {
                                                 // Sign in success, update UI with the signed-in user's information
                                                 Log.d(TAG, "signInWithEmail:success");
+                                                //responseHelper.actionFinished(true);
                                                 getAuthenticatedUser(responseHelper);
                                             } else {
                                                 // If sign in fails, display a message to the user.
