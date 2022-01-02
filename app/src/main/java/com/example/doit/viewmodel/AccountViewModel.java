@@ -11,7 +11,6 @@ import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 import com.example.doit.common.Consts;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class AccountViewModel extends ViewModel {
@@ -24,6 +23,7 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> UserName;
     private MutableLiveData<String> NumberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
+    private MutableLiveData<Boolean> LoggedOut;
     private String ImageUrl;
     //endregion
 
@@ -40,6 +40,11 @@ public class AccountViewModel extends ViewModel {
         setUserEmailAddress(user.getEmail());
         setUserName(userHashMap.get("first_name") + " " + userHashMap.get("last_name"));
         setImageUrl((String) userHashMap.get("image"));
+    }
+
+    public MutableLiveData<Boolean> getLoggedOut() {
+        if (LoggedOut == null) { LoggedOut = new MutableLiveData<Boolean>(false); }
+        return LoggedOut;
     }
 
     public String getImageUrl() {
@@ -86,5 +91,11 @@ public class AccountViewModel extends ViewModel {
     public void setNumberOfTasks(String numberOfTasks) {
         if(NumberOfTasks == null) { NumberOfTasks = new MutableLiveData<>(); }
         NumberOfTasks.setValue(numberOfTasks);
+    }
+
+    public boolean onClickLogoutButton() {
+        worker.logoutAuthUser();
+        LoggedOut.setValue(true);
+        return true;
     }
 }

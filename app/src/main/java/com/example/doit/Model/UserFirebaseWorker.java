@@ -236,6 +236,11 @@ public class UserFirebaseWorker implements IDataWorker{
         });
     }
 
+    public void logoutAuthUser() {
+        _authUser = new User();
+        mAuth.signOut();
+    }
+
     public String get_registerErrorReason() {
         return _registerErrorReason;
     }

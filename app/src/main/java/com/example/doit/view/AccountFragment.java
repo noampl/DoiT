@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class AccountFragment extends Fragment {
     public static AccountFragment newInstance() { return new AccountFragment(); }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); };
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,12 @@ public class AccountFragment extends Fragment {
         _binding.setAccountViewModel(viewModel);
         _binding.setLifecycleOwner(this);
         viewModel.updateUserDetails();
+        viewModel.getLoggedOut().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                        R.id.action_accountFragment2_to_logInFragment2);
+            }
+        });
         return _binding.getRoot();
     }
 
