@@ -1,20 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.AccountFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <data>
+        <variable
+            name="AccountViewModel"
+            type="com.example.doit.viewmodel.AccountViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_image_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/user_profile_image"
+            android:scaleType="centerCrop"
+            app:image="@{AccountViewModel.imageUrl}"
+            tools:src="@tools:sample/avatars" />
+
+    </androidx.cardview.widget.CardView>
+
     <TextView
+        android:id="@+id/UserNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCOUNT"
+        android:text="@{AccountViewModel.userName}"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/numberOfGroupsMember"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/EmailTextView" />
+
+    <TextView
+        android:id="@+id/EmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{AccountViewModel.userEmailAddress}"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_layout"
+        app:layout_constraintBottom_toTopOf="@id/UserNameTextView"/>
+
+    <Button
+        android:id="@+id/userEditButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="User details edit"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="40sp"/>
+        app:layout_constraintTop_toBottomOf="@id/numberOfTasksMade" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="Logout"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userEditButton" />
+
+    <TextView
+        android:id="@+id/numberOfGroupsMember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{AccountViewModel.numberOfGroups}"
+        android:textSize="25sp"
+        app:layout_constraintTop_toBottomOf="@id/UserNameTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/numberOfTasksMade"
+        />
+
+    <TextView
+        android:id="@+id/numberOfTasksMade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{AccountViewModel.numberOfTasks}"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/userEditButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/numberOfGroupsMember" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

@@ -70,7 +70,7 @@ public class UserFirebaseWorker implements IDataWorker{
         newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
         newUser.setPhoneCountryCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
         newUser.setRole(Roles.ROLES.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
-        //todo: add setImage
+        newUser.setImgae((String) doc.get(USERS_FIREBASE_MAP+"image"));
         return newUser;
     }
 
