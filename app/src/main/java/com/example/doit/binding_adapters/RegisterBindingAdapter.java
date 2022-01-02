@@ -1,8 +1,12 @@
 package com.example.doit.binding_adapters;
 
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
+
+import com.squareup.picasso.Picasso;
 
 public class RegisterBindingAdapter {
     @BindingAdapter("visibility")

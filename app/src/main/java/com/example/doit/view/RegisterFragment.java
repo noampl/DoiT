@@ -1,25 +1,18 @@
 package com.example.doit.view;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -33,8 +26,7 @@ import com.example.doit.IResponseHelper;
 import com.example.doit.R;
 import com.example.doit.viewmodel.RegisterViewModel;
 import com.example.doit.databinding.FragmentRegisterBinding;
-
-import java.util.Objects;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,7 +80,8 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
                         Intent data = result.getData();
                         Uri uri = data != null ? data.getData() : null;
                         _binding.profileImageButton.setImageURI(uri);
-                        viewModel.setImage_uri(uri);
+                        Picasso.with(_binding.getRoot().getContext()).load(uri).fit().into(_binding.profileImageButton);
+                        viewModel.setImageUri(uri);
                     }
                 }
             }

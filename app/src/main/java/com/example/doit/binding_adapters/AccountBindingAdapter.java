@@ -13,9 +13,7 @@ public class AccountBindingAdapter {
         @BindingAdapter("image")
         public static void setImage(ImageView v, String image) {
             if (image != null) {
-                Log.d("a", "aaaaaaaaaaaaaaaaaaaa");
-                Picasso.with(v.getContext()).load(image).fit().centerCrop()
-                        .into(v);
+                Picasso.with(v.getContext()).load(image).fit().into(v);
             }
         }
     }
