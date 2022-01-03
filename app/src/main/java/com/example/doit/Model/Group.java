@@ -14,9 +14,11 @@ public class Group {
 
     // region Members
     @PrimaryKey
+    @NonNull
     private String _id; // the id of the firebase
     private String _name;
     private String _description;
+    @TypeConverters(Converters.class)
     private List<User> _users;
     @TypeConverters(Converters.class)
     private List<User> admins;
@@ -28,7 +30,7 @@ public class Group {
 
     // reigon C'tor
 
-    public Group(){};
+    public Group(){}
 
     public Group(String id, String _name, String _description, List<User> _users, List<User> _admins, String _image, List<Task> _tasks) {
         this._id = id;

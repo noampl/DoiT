@@ -3,6 +3,7 @@ package com.example.doit.Model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -18,9 +19,9 @@ public class User {
 
     // region Members
 
-    private final String TAG = "User Model";
-    private final String NO_IMAGE = "no_image";
-    private final String ISRAEL_COUNRTY_CODE = "+972";
+    private static final String TAG = "User Model";
+    private static final String NO_IMAGE = "no_image";
+    private static final String ISRAEL_COUNRTY_CODE = "+972";
     @PrimaryKey
     @NonNull
     private String _id;
@@ -31,7 +32,9 @@ public class User {
     private String _image;
     private String _phone;
     private String _countryPhoneCode;
+    @TypeConverters(Converters.class)
     private Roles _role;
+    @TypeConverters(Converters.class)
     private List<Group> _groups;
 
     // endregion
@@ -41,6 +44,7 @@ public class User {
     public User() {
     }
 
+    @Ignore
     public User(String id,String _email, String firstName, String _lastName, String _password, String _image, String _phone,
                 String _countryPhoneCode, Roles _role, List<Group> groups) {
         this._id = id;
@@ -119,7 +123,7 @@ public class User {
         return _countryPhoneCode;
     }
 
-    public void setPhoneCountryCode(String _countryPhoneCode) {
+    public void setCountryPhoneCode(String _countryPhoneCode) {
         this._countryPhoneCode = _countryPhoneCode;
     }
 

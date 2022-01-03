@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.Model.Group;
 import com.example.doit.Model.Repository;
 
+import java.util.List;
+
 /**
  * THis View Model holds all the logged in user's groups
  */
@@ -13,14 +15,14 @@ public class GroupsViewModel extends ViewModel {
 
     // region Members
 
-    private MutableLiveData<Group> _groups;
+    private MutableLiveData<List<Group>> _groups;
 
     // endregion
 
     // region C'tor
 
     public GroupsViewModel(){
-        _groups = Repository.getInstance();
+        _groups = Repository.getInstance().getGroups();
     }
 
     // endregion

@@ -208,7 +208,7 @@ public class UserFirebaseWorker implements IDataWorker{
         newUser.setFirstName((String) doc.get(USERS_FIREBASE_MAP+"first_name"));
         newUser.setLastName((String) doc.get(USERS_FIREBASE_MAP+"last_name"));
         newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setPhoneCountryCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
+        newUser.setCountryPhoneCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
         newUser.setRole(Roles.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
 
         //todo: add setImage setGroups

@@ -54,9 +54,9 @@ public class Repository {
         return _groups;
     }
 
-    private void fetchData(){
-        _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
-        _executorService.execute(()-> _groups = LocalDB.db.groupDao().getAll(_curUser.getValue()));
-
-    }
+//    private void fetchData(){
+//        _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
+//        _executorService.execute(()-> _groups = LocalDB.db.groupDao().getAll(_curUser.getValue()));
+//
+//    }
 }

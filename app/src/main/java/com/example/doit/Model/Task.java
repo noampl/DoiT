@@ -1,7 +1,12 @@
 package com.example.doit.Model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.doit.common.Converters;
 
 import java.util.Date;
 
@@ -9,15 +14,22 @@ import java.util.Date;
 public class Task {
 
     // region Members
+
     @PrimaryKey
+    @NonNull
     private String _taskId;
     private String _groupID;
     private String _name;
     private String _description;
+    @TypeConverters(Converters.class)
     private Date _createdDate;
+    @TypeConverters(Converters.class)
     private Date _targetDate;
+    @TypeConverters(Converters.class)
     private Date _finishDate;
+    @TypeConverters(Converters.class)
     private User _createdBy;
+    @TypeConverters(Converters.class)
     private User _assignee;
     private int _value;
     private String _image;
@@ -29,6 +41,7 @@ public class Task {
     public Task(){
     }
 
+    @Ignore
     public Task(String taskId, String _groupID, String _name, String _description, Date _createdDate, Date _targetDate, User _createdBy, User _assignee, int _value, String _image) {
         this._taskId = taskId;
         this._groupID = _groupID;

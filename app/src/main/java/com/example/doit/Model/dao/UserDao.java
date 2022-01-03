@@ -2,6 +2,7 @@ package com.example.doit.Model.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -12,10 +13,11 @@ import com.example.doit.Model.User;
 
 import java.util.List;
 
+@Dao
 public interface UserDao {
 
-    @Query("select * from user")
-    MutableLiveData<List<User>> getAll();
+//    @Query("select * from user")
+//    MutableLiveData<List<User>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(User...Users);
@@ -26,6 +28,6 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
-    @Query("select * from user where _id = :id")
-    MutableLiveData<User> loadUserById(String id);
+//    @Query("select * from user where _id = :id")
+//    MutableLiveData<User> loadUserById(String id);
 }
