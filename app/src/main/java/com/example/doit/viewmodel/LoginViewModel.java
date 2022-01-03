@@ -46,10 +46,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public User getAuthUser() {
-        if (worker.getAuthenticatedUserDetails() != null){
-            return worker.getAuthenticatedUserDetails();
-        }
-        return null;
+        return worker.getAuthenticatedUserDetails();
     }
 
     public String getPassword() {
@@ -57,7 +54,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void onUserNameChange(CharSequence s, int start, int before, int count) {
-        this._email = s.toString();
+        this._email = s.toString().toLowerCase();
     }
 
     public void onPasswordChange(CharSequence s, int start, int before, int count) {
@@ -70,7 +67,6 @@ public class LoginViewModel extends ViewModel {
         Map<String, Object> user = new HashMap<>();
         user.put("email", this._email);
         user.put("password", this._password);
-        Log.d(TAG, "Login: " + user.get("email"));
         worker.login(user, this.responseHelper);
         return true;
     }

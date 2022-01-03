@@ -77,6 +77,7 @@ public class User {
 
     public void setEmail(String _email) {
         this._email = _email;
+
     }
 
     public String get_lastName() {
@@ -97,6 +98,14 @@ public class User {
 
     public String get_password() {
         return _password;
+    public void setImgae(String image_path){
+        _image = image_path;
+        _user.put("image", image_path);
+    }
+
+    public void setPhoneCountryCode(String phoneCountryCode) {
+        _countryPhoneCode = phoneCountryCode;
+        _user.put("phone_country_code", _countryPhoneCode);
     }
 
     public void setPassword(String _password) {

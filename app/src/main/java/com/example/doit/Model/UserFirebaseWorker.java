@@ -1,5 +1,6 @@
 package com.example.doit.Model;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +41,8 @@ public class UserFirebaseWorker implements IDataWorker{
     private String _registerErrorReason;
     private FirebaseAuth mAuth;
     private User _authUser;
-
+    private String _image_url;
+  
     // endregion
 
     // region C'tor
@@ -50,6 +56,33 @@ public class UserFirebaseWorker implements IDataWorker{
     // endregion
 
     // region Properties
+  
+    private boolean validateCreateValues(User user) {
+        Map<String, Object> userMap = user.getUserMap();
+        for(Map.Entry<String, Object> entry : userMap.entrySet()){
+            if (entry.getValue() == null || entry.getValue() == "")
+                return false;
+        }
+        return true;
+    }
+
+    public String get_image_url() {
+        return _image_url;
+    }
+
+    private User insertDocumentToUser(DocumentSnapshot doc){
+        User newUser = new User();
+        newUser.setPassword((String) doc.get(USERS_FIREBASE_MAP+"password"));
+        newUser.setEmail((String) doc.get(USERS_FIREBASE_MAP+"email"));
+        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
+        newUser.setFirstName((String) doc.get(USERS_FIREBASE_MAP+"first_name"));
+        newUser.setLastName((String) doc.get(USERS_FIREBASE_MAP+"last_name"));
+        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
+        newUser.setPhoneCountryCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
+        newUser.setRole(Roles.ROLES.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
+        //todo: add setImage
+        return newUser;
+    }
 
     public User getAuthenticatedUserDetails() {
         return _authUser;
@@ -63,11 +96,43 @@ public class UserFirebaseWorker implements IDataWorker{
 
     // region Public Methods
 
+    public void upload_image(Uri uri, IResponseHelper resHelper){
+        if (uri == null){
+            return;
+        }
+        File file = new File(String.valueOf(uri));
+        String imageName = file.getName();
+        StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("profile_images")
+                .child(System.currentTimeMillis()+imageName);
+        fileRef.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String url = uri.toString();
+                        Log.d(TAG, "url " + url);
+                        _image_url = url;
+                        resHelper.actionFinished(true);
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error on uploading user profile image", e);
+                        resHelper.actionFinished(false);
+                    }
+                });;
+            }
+        });
+
+    }
+
     public void getAuthenticatedUser(IResponseHelper responseHelper) {
         if(mAuth.getCurrentUser() != null){
-            Query userQuery = usersRef;
-            userQuery.whereEqualTo(USERS_FIREBASE_MAP+"email", mAuth.getCurrentUser().getEmail());
-            userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            _authUser = new User();
+            usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
+                    .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
@@ -146,6 +211,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void login(Map<String, Object> user, IResponseHelper responseHelper) {
         Log.d(TAG, "looking for user");
+        _authUser = new User();
         Query findUser = usersRef;
         for (Map.Entry<String,Object> entry: user.entrySet()) {
             findUser = findUser.whereEqualTo(USERS_FIREBASE_MAP+entry.getKey(), entry.getValue());
@@ -166,6 +232,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                             if (task.isSuccessful()) {
                                                 // Sign in success, update UI with the signed-in user's information
                                                 Log.d(TAG, "signInWithEmail:success");
+                                                //responseHelper.actionFinished(true);
                                                 getAuthenticatedUser(responseHelper);
                                             } else {
                                                 // If sign in fails, display a message to the user.

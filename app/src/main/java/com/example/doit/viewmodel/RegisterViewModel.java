@@ -1,5 +1,6 @@
 package com.example.doit.viewmodel;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -33,6 +34,8 @@ public class RegisterViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
+    private Uri image_uri;
+    private MutableLiveData<Boolean> _registering_job_run;
 
     // endregion
 
@@ -42,6 +45,14 @@ public class RegisterViewModel extends ViewModel {
         _user = new User();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
+    }
+
+    public Uri getImage_uri() {
+        return image_uri;
+    }
+
+    public void setImage_uri(Uri image_uri) {
+        this.image_uri = image_uri;
     }
 
     public String get_firstName() {
@@ -78,6 +89,17 @@ public class RegisterViewModel extends ViewModel {
 
     public String get_image() {
         return _image;
+    }
+
+    public MutableLiveData<Boolean> get_registering_job_run() {
+        if(_registering_job_run == null){
+            _registering_job_run = new MutableLiveData<>(false);
+        }
+        return _registering_job_run;
+    }
+
+    public void set_registering_job_run(Boolean _registering_job_run) {
+        this._registering_job_run.setValue(_registering_job_run);
     }
 
 
@@ -138,12 +160,12 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void onFirstNameChange(CharSequence s, int start, int before, int count) {
-        _firstName = s.toString();
+        _firstName = s.toString().toLowerCase();
         _user.setFirstName(_firstName);
     }
 
     public void onLastNameChange(CharSequence s, int start, int before, int count) {
-        _lastName = s.toString();
+        _lastName = s.toString().toLowerCase();
         _user.setLastName(_lastName);
     }
 
@@ -153,7 +175,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void onEmailChange(CharSequence s, int start, int before, int count) {
-        _email = s.toString();
+        _email = s.toString().toLowerCase();
         _user.setEmail(_email);
     }
 
@@ -174,10 +196,19 @@ public class RegisterViewModel extends ViewModel {
 
     public boolean register(){
         Log.d(TAG, "Trying to register");
+        set_registering_job_run(true);
         if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            worker.create(_user, responseHelper);
+            IResponseHelper a = new IResponseHelper() {
+                @Override
+                public void actionFinished(boolean actionResult) {
+                    _user.setImgae(worker.get_image_url());
+                    worker.create(_user, responseHelper);
+                }
+            };
+            worker.upload_image(this.getImage_uri(), a);
             return true;
         }
+        set_registering_job_run(false);
         return false;
     }
 
