@@ -240,7 +240,7 @@ public class UserFirebaseWorker implements IDataWorker{
         mAuth.signOut();
     }
 
-    public void updateAuthUserDetails(User user, Uri image_uri, IResponseHelper helper) {
+    public void updateAuthUserDetails(User user, Uri image_uri, IResponseHelper helper, Boolean ImageHasChanged) {
         IResponseHelper help_image = new IResponseHelper() {
             @Override
             public void actionFinished(boolean actionResult) {
@@ -269,8 +269,8 @@ public class UserFirebaseWorker implements IDataWorker{
                         });
             }
         };
-        upload_image(image_uri, help_image);
-
+        if (ImageHasChanged) {upload_image(image_uri, help_image); }
+        else { help_image.actionFinished(true); }
     }
 
     public String get_registerErrorReason() {

@@ -35,6 +35,7 @@ public class AccountFragment extends Fragment {
     private FragmentAccountBinding _binding;
     private AccountViewModel viewModel;
     private boolean editDetails;
+    private boolean image_changed;
     //endregion
 
     public AccountFragment() {
@@ -61,6 +62,7 @@ public class AccountFragment extends Fragment {
         viewModel.updateUserDetails();
         viewModel.getLoggedOut().observe(getViewLifecycleOwner(), loggedOutObserver);
         viewModel.getFirstName().observe(getViewLifecycleOwner(), invalidFirstName);
+        viewModel.getLastName().observe(getViewLifecycleOwner(), invalidLastName);
         viewModel.getUserEmailAddress().observe(getViewLifecycleOwner(), invalidEmail);
         return _binding.getRoot();
     }
@@ -78,7 +80,7 @@ public class AccountFragment extends Fragment {
         @Override
         public void onChanged(String s) {
             if (s.length() == 0) {
-                _binding.LastNameTextView.setText(" ");
+                _binding.EmailTextView.setText(" ");
             }
         }
     };
@@ -87,7 +89,7 @@ public class AccountFragment extends Fragment {
         @Override
         public void onChanged(String s) {
             if (s.length() == 0) {
-                _binding.EmailTextView.setText(" ");
+                _binding.LastNameTextView.setText(" ");
             }
         }
     };
@@ -103,6 +105,7 @@ public class AccountFragment extends Fragment {
                         Picasso.with(_binding.getRoot().getContext()).load(uri).fit().into(_binding.profileImage);
                         assert uri != null;
                         viewModel.setImageUrl(uri.toString());
+                        viewModel.setImageChanged(true);
                     }
                 }
             }

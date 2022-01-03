@@ -27,6 +27,7 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> NumberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
     private MutableLiveData<Boolean> LoggedOut;
+    private boolean ImageChanged = false;
     private String ImageUrl;
     //endregion
 
@@ -98,6 +99,10 @@ public class AccountViewModel extends ViewModel {
         return NumberOfGroups;
     }
 
+    public void setImageChanged(Boolean aBoolean) {
+        ImageChanged = aBoolean;
+    }
+
     public void setNumberOfGroups(String numberOfGroups) {
         if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(""); }
         NumberOfGroups.setValue(numberOfGroups);
@@ -139,6 +144,6 @@ public class AccountViewModel extends ViewModel {
         user.setFirstName(this.getFirstName().getValue());
         user.setLastName(this.getLastName().getValue());
         user.setImgae(this.getImageUrl());
-        worker.updateAuthUserDetails(user,Uri.parse(this.ImageUrl),helper);
+        worker.updateAuthUserDetails(user,Uri.parse(this.ImageUrl),helper, ImageChanged);
     }
 }
