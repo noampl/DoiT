@@ -29,27 +29,22 @@ public class User {
 
     public User() {
         _user = new HashMap<>();
-        _user.put("email", null);
-        _user.put("first_name", null);
-        _user.put("last_name", null);
-        _user.put("password", null);
-        _user.put("phone", null);
         _user.put("phone_country_code", ISRAEL_COUNRTY_CODE);
         _user.put("role", Roles.ROLES.CLIENT);
         _user.put("image", NO_IMAGE);
     }
 
     public void setFirstName(String firstName) {
-        _user.put("first_name", firstName.toLowerCase());
+        _user.put("first_name", firstName);
     }
 
     public void setLastName(String lastName) {
-        _lastName = lastName.toLowerCase();
+        _lastName = lastName;
         _user.put("last_name", _lastName);
     }
 
     public void setEmail(String email) {
-        _email = email.toLowerCase();
+        if (email != null) {_email = email.toLowerCase(); }
         _user.put("email", _email);
     }
 

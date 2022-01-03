@@ -1,6 +1,7 @@
 package com.example.doit.viewmodel;
 
-import android.util.Log;
+import android.net.Uri;
+import android.widget.ImageButton;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,6 +12,7 @@ import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 import com.example.doit.common.Consts;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class AccountViewModel extends ViewModel {
@@ -20,7 +22,8 @@ public class AccountViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private MutableLiveData<String> UserEmailAddress;
-    private MutableLiveData<String> UserName;
+    private MutableLiveData<String> FirstName;
+    private MutableLiveData<String> LastName;
     private MutableLiveData<String> NumberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
     private MutableLiveData<Boolean> LoggedOut;
@@ -38,7 +41,8 @@ public class AccountViewModel extends ViewModel {
         User user = worker.getAuthenticatedUserDetails();
         Map<String, Object> userHashMap = user.getUserMap();
         setUserEmailAddress(user.getEmail());
-        setUserName(userHashMap.get("first_name") + " " + userHashMap.get("last_name"));
+        setFirstName((String) userHashMap.get("first_name"));
+        setLastName((String) userHashMap.get("last_name"));
         setImageUrl((String) userHashMap.get("image"));
     }
 
@@ -56,6 +60,9 @@ public class AccountViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> getUserEmailAddress() {
+        if (this.UserEmailAddress == null) {
+            this.UserEmailAddress = new MutableLiveData<String>("no email address");
+        }
         return UserEmailAddress;
     }
 
@@ -66,30 +73,43 @@ public class AccountViewModel extends ViewModel {
         this.UserEmailAddress.setValue(userEmailAddress);
     }
 
-    public MutableLiveData<String> getUserName() {
-        return UserName;
+    public MutableLiveData<String> getFirstName() {
+        if(FirstName == null) { FirstName = new MutableLiveData<String>(""); }
+        return FirstName;
     }
 
-    public void setUserName(String userName) {
-        if(UserName == null) { UserName = new MutableLiveData<String>();}
-        UserName.setValue(userName);
+    public void setFirstName(String firstName) {
+        if(FirstName == null) { FirstName = new MutableLiveData<String>(""); }
+        FirstName.setValue(firstName);
+    }
+
+    public MutableLiveData<String> getLastName() {
+        if(LastName == null) { LastName = new MutableLiveData<String>(""); }
+        return LastName;
+    }
+
+    public void setLastName(String lastName) {
+        if(LastName == null) { LastName = new MutableLiveData<String>(""); }
+        LastName.setValue(lastName);
     }
 
     public MutableLiveData<String> getNumberOfGroups() {
+        if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(""); }
         return NumberOfGroups;
     }
 
     public void setNumberOfGroups(String numberOfGroups) {
-        if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(); }
+        if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(""); }
         NumberOfGroups.setValue(numberOfGroups);
     }
 
     public MutableLiveData<String> getNumberOfTasks() {
+        if(NumberOfTasks == null) { NumberOfTasks = new MutableLiveData<>(""); }
         return NumberOfTasks;
     }
 
     public void setNumberOfTasks(String numberOfTasks) {
-        if(NumberOfTasks == null) { NumberOfTasks = new MutableLiveData<>(); }
+        if(NumberOfTasks == null) { NumberOfTasks = new MutableLiveData<>(""); }
         NumberOfTasks.setValue(numberOfTasks);
     }
 
@@ -97,5 +117,28 @@ public class AccountViewModel extends ViewModel {
         worker.logoutAuthUser();
         LoggedOut.setValue(true);
         return true;
+    }
+
+    public void onFirstNameChange(CharSequence s, int start, int before, int count) {
+        this.setFirstName(s.toString());
+    }
+
+    public void onLastNameChange(CharSequence s, int start, int before, int count) {
+        this.setLastName(s.toString());
+    }
+
+    public void onEmailChange(CharSequence s, int start, int before, int count) {
+        this.setUserEmailAddress(s.toString());
+    }
+
+    //todo add on change and fix the doc updating
+
+    public void changeDetails(IResponseHelper helper) {
+        User user = worker.getAuthenticatedUserDetails();
+        user.setEmail(this.getUserEmailAddress().getValue().toLowerCase());
+        user.setFirstName(this.getFirstName().getValue());
+        user.setLastName(this.getLastName().getValue());
+        user.setImgae(this.getImageUrl());
+        worker.updateAuthUserDetails(user,Uri.parse(this.ImageUrl),helper);
     }
 }

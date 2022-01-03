@@ -79,7 +79,6 @@ public class RegisterFragment extends Fragment implements IResponseHelper {
                     if(result.getResultCode() == Activity.RESULT_OK){
                         Intent data = result.getData();
                         Uri uri = data != null ? data.getData() : null;
-                        _binding.profileImageButton.setImageURI(uri);
                         Picasso.with(_binding.getRoot().getContext()).load(uri).fit().into(_binding.profileImageButton);
                         viewModel.setImageUri(uri);
                     }

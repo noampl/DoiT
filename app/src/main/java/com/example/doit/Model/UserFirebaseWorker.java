@@ -31,7 +31,6 @@ public class UserFirebaseWorker implements IDataWorker{
     // region Members
     private static final String USERS_COLLECTION_NAME = "users";
     private static final String TAG = "User Firebase Worker";
-    private static final String USERS_FIREBASE_MAP = "userMap.";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
     private User _user;
@@ -62,15 +61,15 @@ public class UserFirebaseWorker implements IDataWorker{
 
     private User insertDocumentToUser(DocumentSnapshot doc){
         User newUser = new User();
-        newUser.setPassword((String) doc.get(USERS_FIREBASE_MAP+"password"));
-        newUser.setEmail((String) doc.get(USERS_FIREBASE_MAP+"email"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setFirstName((String) doc.get(USERS_FIREBASE_MAP+"first_name"));
-        newUser.setLastName((String) doc.get(USERS_FIREBASE_MAP+"last_name"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setPhoneCountryCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
-        newUser.setRole(Roles.ROLES.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
-        newUser.setImgae((String) doc.get(USERS_FIREBASE_MAP+"image"));
+        newUser.setPassword((String) doc.get("password"));
+        newUser.setEmail((String) doc.get("email"));
+        newUser.setPhone((String) doc.get("phone"));
+        newUser.setFirstName((String) doc.get("first_name"));
+        newUser.setLastName((String) doc.get("last_name"));
+        newUser.setPhone((String) doc.get("phone"));
+        newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
+        newUser.setRole(Roles.ROLES.valueOf((String) doc.get("role")));
+        newUser.setImgae((String) doc.get("image"));
         return newUser;
     }
 
@@ -160,7 +159,7 @@ public class UserFirebaseWorker implements IDataWorker{
     public void create(User user, IResponseHelper responseHelper ) {
         if(!validateCreateValues(user))
             return;
-        usersRef.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        usersRef.add(user.getUserMap()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -197,7 +196,7 @@ public class UserFirebaseWorker implements IDataWorker{
         _authUser = new User();
         Query findUser = usersRef;
         for (Map.Entry<String,Object> entry: user.entrySet()) {
-            findUser = findUser.whereEqualTo(USERS_FIREBASE_MAP+entry.getKey(), entry.getValue());
+            findUser = findUser.whereEqualTo(entry.getKey(), entry.getValue());
         }
         findUser.limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -239,6 +238,39 @@ public class UserFirebaseWorker implements IDataWorker{
     public void logoutAuthUser() {
         _authUser = new User();
         mAuth.signOut();
+    }
+
+    public void updateAuthUserDetails(User user, Uri image_uri, IResponseHelper helper) {
+        IResponseHelper help_image = new IResponseHelper() {
+            @Override
+            public void actionFinished(boolean actionResult) {
+                user.setImgae(get_image_url());
+                usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                                    String doc_id = doc.getId();
+                                    mAuth.getCurrentUser().updateEmail(user.getEmail().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                usersRef.document(doc_id).update(user.getUserMap());
+                                                getAuthenticatedUser(helper);
+                                                helper.actionFinished(true);
+                                            } else {
+                                                helper.actionFinished(false);
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                        });
+            }
+        };
+        upload_image(image_uri, help_image);
+
     }
 
     public String get_registerErrorReason() {
