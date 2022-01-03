@@ -1,5 +1,6 @@
 package com.example.doit.Model.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -17,9 +18,6 @@ import java.util.List;
 
 @Dao
 public interface GroupDao {
-
-//    @Query("select * from `group` where _users = :user")
-//    MutableLiveData<List<Group>> getAll(User user);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);

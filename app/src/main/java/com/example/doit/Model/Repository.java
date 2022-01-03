@@ -1,5 +1,6 @@
 package com.example.doit.Model;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.common.Consts;
@@ -18,9 +19,9 @@ public class Repository {
     private static Repository instance;
     private FirebaseFirestore _remoteDb;
     private Map<String, IDataWorker> workers;
-    private MutableLiveData<List<User>> _users;
-    private MutableLiveData<User> _curUser;
-    private MutableLiveData<List<Group>> _groups;
+    private LiveData<List<User>> _users;
+    private LiveData<User> _curUser;
+    private LiveData<List<Group>> _groups;
     private final ExecutorService _executorService;
 
     // endregion
@@ -46,17 +47,13 @@ public class Repository {
         return _executorService;
     }
 
-    public MutableLiveData<List<User>> getUsers() {
-        return _users;
-    }
-
-    public MutableLiveData<List<Group>> getGroups() {
+    public LiveData<List<Group>> getGroups() {
         return _groups;
     }
 
-//    private void fetchData(){
-//        _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
-//        _executorService.execute(()-> _groups = LocalDB.db.groupDao().getAll(_curUser.getValue()));
-//
-//    }
+    private void fetchData(){
+        _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
+        _executorService.execute(()-> _curUser = LocalDB.db.userDao().loadUserById("TODO"));
+
+    }
 }

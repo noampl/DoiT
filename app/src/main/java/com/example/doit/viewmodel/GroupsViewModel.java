@@ -1,5 +1,6 @@
 package com.example.doit.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -15,7 +16,7 @@ public class GroupsViewModel extends ViewModel {
 
     // region Members
 
-    private MutableLiveData<List<Group>> _groups;
+    private LiveData<List<Group>> _groups;
 
     // endregion
 

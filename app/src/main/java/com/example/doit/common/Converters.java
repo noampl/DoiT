@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Converters {
+
         @TypeConverter
         public static String userToString(User user) {
             Gson gson = new GsonBuilder().create();

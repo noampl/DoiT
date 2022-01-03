@@ -16,8 +16,8 @@ import java.util.List;
 @Dao
 public interface UserDao {
 
-//    @Query("select * from user")
-//    MutableLiveData<List<User>> getAll();
+    @Query("select * from user")
+    LiveData<List<User>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(User...Users);
@@ -28,6 +28,6 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
-//    @Query("select * from user where _id = :id")
-//    MutableLiveData<User> loadUserById(String id);
+    @Query("select * from user where _id = :id")
+    LiveData<User> loadUserById(String id);
 }

@@ -9,7 +9,7 @@ import com.example.doit.Model.dao.TaskDao;
 import com.example.doit.Model.dao.UserDao;
 import com.example.doit.view.MainActivity;
 
-@Database(entities = {Group.class, User.class, Task.class}, version = 1)
+@Database(entities = {Group.class, User.class, Task.class}, version = 1, exportSchema = false)
 abstract class DoitLocalDB extends RoomDatabase {
     public abstract GroupDao groupDao();
     public abstract TaskDao taskDao();
