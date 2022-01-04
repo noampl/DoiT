@@ -1,95 +1,193 @@
 package com.example.doit.Model;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.example.doit.common.Converters;
+import com.example.doit.common.Roles;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+@Entity
 public class User {
+
+    // region Members
+
     private static final String TAG = "User Model";
-    private final String NO_IMAGE = "no_image";
+    private static final String NO_IMAGE = "no_image";
     private static final String ISRAEL_COUNRTY_CODE = "+972";
-    private Map<String, Object> _user;
+    @PrimaryKey
+    @NonNull
+    private String _id;
     private String _email;
     private String _lastName;
+    private String _firstName;
     private String _password;
     private String _image;
     private String _phone;
     private String _countryPhoneCode;
-    private Roles.ROLES _role;
+    @TypeConverters(Converters.class)
+    private Roles _role;
+    @TypeConverters(Converters.class)
+    private List<Group> _groups;
 
+    // endregion
+
+    // region C'tor
 
     public User() {
-        _user = new HashMap<>();
-        _user.put("email", null);
-        _user.put("first_name", null);
-        _user.put("last_name", null);
-        _user.put("password", null);
-        _user.put("phone", null);
-        _user.put("phone_country_code", ISRAEL_COUNRTY_CODE);
-        _user.put("role", Roles.ROLES.CLIENT);
-        _user.put("image", NO_IMAGE);
     }
 
-    public void setFirstName(String firstName) {
-        _user.put("first_name", firstName.toLowerCase());
+    @Ignore
+    public User(String id,String _email, String firstName, String _lastName, String _password, String _image, String _phone,
+                String _countryPhoneCode, Roles _role, List<Group> groups) {
+        this._id = id;
+        this._email = _email;
+        this._lastName = _lastName;
+        this._password = _password;
+        this._image = _image;
+        this._phone = _phone;
+        this._countryPhoneCode = _countryPhoneCode;
+        this._role = _role;
+        this._firstName = firstName;
+        this._groups = groups;
     }
 
-    public void setLastName(String lastName) {
-        _lastName = lastName.toLowerCase();
-        _user.put("last_name", _lastName);
+    // endregion
+
+    // endregion Properties
+
+    public String get_id() {
+        return _id;
     }
 
-    public void setEmail(String email) {
-        _email = email.toLowerCase();
-        _user.put("email", _email);
+    public void setId(String _id) {
+        this._id = _id;
     }
 
-    public String getEmail() {
-        return this._email;
+    public String get_email() {
+        return _email;
     }
 
-    public String getPassword() {
-        return this._password;
+    public void setEmail(String _email) {
+        this._email = _email;
+
     }
 
-    public void setPassword(String password) {
-        _password = password;
-        _user.put("password", _password);
+    public String get_lastName() {
+        return _lastName;
     }
 
-    public void setPhone(String phone) {
-        _phone = phone;
-        _user.put("phone", _phone);
+    public void setLastName(String _lastName) {
+        this._lastName = _lastName;
+    }
+
+    public String get_firstName() {
+        return _firstName;
+    }
+
+    public void setFirstName(String _firstName) {
+        this._firstName = _firstName;
+    }
+
+    public String get_password() {
+        return _password;
     }
 
     public void setImgae(String image_path){
         _image = image_path;
-        _user.put("image", image_path);
     }
 
     public void setPhoneCountryCode(String phoneCountryCode) {
         _countryPhoneCode = phoneCountryCode;
-        _user.put("phone_country_code", _countryPhoneCode);
     }
 
-    public void setRole(Roles.ROLES role){
-        _role = role;
-        _user.put("role", _role);
+    public void setPassword(String _password) {
+        this._password = _password;
     }
+
+    public String get_image() {
+        return _image;
+    }
+
+    public void setImage(String _image) {
+        this._image = _image;
+    }
+
+    public String get_phone() {
+        return _phone;
+    }
+
+    public void setPhone(String _phone) {
+        this._phone = _phone;
+    }
+
+    public String get_countryPhoneCode() {
+        return _countryPhoneCode;
+    }
+
+    public void setCountryPhoneCode(String _countryPhoneCode) {
+        this._countryPhoneCode = _countryPhoneCode;
+    }
+
+    public Roles get_role() {
+        return _role;
+    }
+
+    public void setRole(Roles _role) {
+        this._role = _role;
+    }
+
+    public List<Group> get_groups() {
+        return _groups;
+    }
+
+    public void set_groups(List<Group> _groups) {
+        this._groups = _groups;
+    }
+
+    // endregion
+
+
 
     //todo: add setImage
 
-    public Map<String, Object> getUserMap(){
-        return _user;
+    public Map<String, Object> create(){
+        Map<String, Object> user = new HashMap<String, Object>();
+        user.put("id",get_id());
+        user.put("firstName",get_firstName());
+        user.put("lastName",get_lastName());
+        user.put("email",get_email());
+        user.put("password",get_password());
+        user.put("role",get_role());
+        user.put("phone",get_phone());
+        user.put("countryCode",get_countryPhoneCode());
+        user.put("image",get_image());
+        user.put("groups",get_groups());
+
+
+        return user;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                ", _id='" + _id + '\'' +
+                ", _email='" + _email + '\'' +
+                ", _lastName='" + _lastName + '\'' +
+                ", _firstName='" + _firstName + '\'' +
+                ", _password='" + _password + '\'' +
+                ", _image='" + _image + '\'' +
+                ", _phone='" + _phone + '\'' +
+                ", _countryPhoneCode='" + _countryPhoneCode + '\'' +
+                ", _role=" + _role +
+                ", _groups=" + _groups +
+                '}';
+    }
 }

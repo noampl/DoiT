@@ -2,25 +2,16 @@ package com.example.doit.viewmodel;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
 import com.example.doit.common.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.Model.Roles;
+import com.example.doit.common.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.Executor;
 
 public class RegisterViewModel extends ViewModel {
 
@@ -38,7 +29,7 @@ public class RegisterViewModel extends ViewModel {
     private String _phoneCountryCode = ISRAEL_COUNTRY_CODE;
     private String _phone = "";
     private String _passwordValidation = "";
-    private Roles.ROLES _role = Roles.ROLES.CLIENT;
+    private Roles _role = Roles.CLIENT;
     private String _image = "";
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
@@ -92,7 +83,7 @@ public class RegisterViewModel extends ViewModel {
         return _passwordValidation;
     }
 
-    public Roles.ROLES get_role() {
+    public Roles get_role() {
         return _role;
     }
 
@@ -144,7 +135,7 @@ public class RegisterViewModel extends ViewModel {
         this._passwordValidation = _passwordValidation;
     }
 
-    public void set_role(Roles.ROLES _role) {
+    public void set_role(Roles _role) {
         this._role = _role;
     }
 

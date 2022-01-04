@@ -14,21 +14,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginViewModel extends ViewModel {
+
     //region members
+
     private static final String TAG = "LoginViewModel";
-    private final Repository repo;
     private String _email;
     private String _password;
     private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
+
     //endregion
 
     public LoginViewModel() {
-        repo = Repository.getInstance();
         _email = "Email";
         _password = "";
-        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+        worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
 
     }
 
