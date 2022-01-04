@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/doit_graph"
-    app:startDestination="@id/logInFragment2">
+    app:startDestination="@id/initFragment">
     <fragment
         android:id="@+id/logInFragment2"
         android:name="com.example.doit.view.LogInFragment"
@@ -66,4 +66,25 @@
         android:name="com.example.doit.view.TasksDetailsFragment"
         android:label="fragment_tasks_details"
         tools:layout="@layout/fragment_tasks_details" />
+    <fragment
+        android:id="@+id/initFragment"
+        android:name="com.example.doit.view.InitFragment"
+        android:label="fragment_init"
+
+        tools:layout="@layout/fragment_init" >
+        <action
+            android:id="@+id/action_initFragment_to_groupsFragment2"
+            app:destination="@id/groupsFragment2"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/groupsFragment2"
+            app:popUpToInclusive="true"
+            />
+        <action
+            android:id="@+id/action_initFragment_to_logInFragment2"
+            app:destination="@id/logInFragment2"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/logInFragment2"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
 </navigation>

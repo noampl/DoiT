@@ -4,13 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/activity_main.xml" value="0.13333333333333333" />
-        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.25" />
+        <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.1859375" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_chosen_group.xml" value="0.1859375" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.1859375" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_log_in.xml" value="0.1" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_my_tasks.xml" value="0.1859375" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_register.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/layout/fragment_tasks_details.xml" value="0.1859375" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_init.xml" value="0.17864583333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_log_in.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_register.xml" value="0.264" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.36666666666666664" />

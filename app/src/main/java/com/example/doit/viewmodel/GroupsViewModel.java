@@ -17,6 +17,8 @@ public class GroupsViewModel extends ViewModel {
     // region Members
 
     private LiveData<List<Group>> _groups;
+    private MutableLiveData<Boolean> _isBottomNavigationUp;
+
 
     // endregion
 
@@ -24,6 +26,19 @@ public class GroupsViewModel extends ViewModel {
 
     public GroupsViewModel(){
         _groups = Repository.getInstance().getGroups();
+        _isBottomNavigationUp = Repository.getInstance().get_isBottomNavigationUp();
+    }
+
+    // endregion
+
+    // region Properties
+
+    public MutableLiveData<Boolean> get_isBottomNavigationUp() {
+        return _isBottomNavigationUp;
+    }
+
+    public void set_isBottomNavigationUp(boolean _isBottomNavigationUp) {
+        this._isBottomNavigationUp.setValue(_isBottomNavigationUp);
     }
 
     // endregion

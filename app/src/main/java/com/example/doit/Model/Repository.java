@@ -23,6 +23,7 @@ public class Repository {
     private LiveData<User> _curUser;
     private LiveData<List<Group>> _groups;
     private final ExecutorService _executorService;
+    private MutableLiveData<Boolean> _isBottomNavigationUp;
 
     // endregion
 
@@ -30,6 +31,7 @@ public class Repository {
         workers = new HashMap<>();
         workers.put(Consts.FIRE_BASE_USERS, new UserFirebaseWorker());
         _executorService = Executors.newFixedThreadPool(4);
+        _isBottomNavigationUp = new MutableLiveData<>(false);
     }
 
     public static Repository getInstance() {
@@ -51,9 +53,18 @@ public class Repository {
         return _groups;
     }
 
+    public MutableLiveData<Boolean> get_isBottomNavigationUp() {
+        return _isBottomNavigationUp;
+    }
+
+    public void set_isBottomNavigationUp(boolean _isBottomNavigationUp) {
+        this._isBottomNavigationUp.postValue(_isBottomNavigationUp);
+    }
+
     private void fetchData(){
         _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
         _executorService.execute(()-> _curUser = LocalDB.db.userDao().loadUserById("TODO"));
 
     }
+
 }
