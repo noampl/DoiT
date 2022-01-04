@@ -29,7 +29,7 @@ public class RegisterViewModel extends ViewModel {
     private String _phoneCountryCode = ISRAEL_COUNTRY_CODE;
     private String _phone = "";
     private String _passwordValidation = "";
-    private Roles.ROLES _role = Roles.ROLES.CLIENT;
+    private Roles _role = Roles.CLIENT;
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;

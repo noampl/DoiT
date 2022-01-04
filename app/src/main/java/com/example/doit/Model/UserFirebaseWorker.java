@@ -69,7 +69,7 @@ public class UserFirebaseWorker implements IDataWorker{
         newUser.setLastName((String) doc.get("last_name"));
         newUser.setPhone((String) doc.get("phone"));
         newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
-        newUser.setRole(Roles.ROLES.valueOf((String) doc.get("role")));
+        newUser.setRole(Roles.valueOf((String) doc.get("role")));
         newUser.setImgae((String) doc.get("image"));
         return newUser;
     }
@@ -167,7 +167,7 @@ public class UserFirebaseWorker implements IDataWorker{
     public void create(User user, IResponseHelper responseHelper ) {
         if(!validateCreateValues(user))
             return;
-        usersRef.add(user.getUserMap()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        usersRef.add(user.create()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -259,11 +259,11 @@ public class UserFirebaseWorker implements IDataWorker{
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
                                     String doc_id = doc.getId();
-                                    mAuth.getCurrentUser().updateEmail(user.getEmail().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    mAuth.getCurrentUser().updateEmail(user.get_email().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
-                                                usersRef.document(doc_id).update(user.getUserMap());
+                                                usersRef.document(doc_id).update(user.create());
                                                 getAuthenticatedUser(helper);
                                                 helper.actionFinished(true);
                                             } else {
@@ -280,9 +280,6 @@ public class UserFirebaseWorker implements IDataWorker{
         if (ImageHasChanged) {upload_image(image_uri, help_image); }
         else { help_image.actionFinished(true); }
     }
-
-    public String get_registerErrorReason() {
-        return _registerErrorReason;
     // endregion
 
     // region Private Methods
@@ -295,24 +292,5 @@ public class UserFirebaseWorker implements IDataWorker{
         }
         return true;
     }
-
-    private User insertDocumentToUser(DocumentSnapshot doc){
-        User newUser = new User();
-        newUser.setId(doc.getId());
-        newUser.setPassword((String) doc.get(USERS_FIREBASE_MAP+"password"));
-        newUser.setEmail((String) doc.get(USERS_FIREBASE_MAP+"email"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setFirstName((String) doc.get(USERS_FIREBASE_MAP+"first_name"));
-        newUser.setLastName((String) doc.get(USERS_FIREBASE_MAP+"last_name"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setCountryPhoneCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
-        newUser.setRole(Roles.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
-
-        //todo: add setImage setGroups
-        // newUser.set_groups((List<Group>) doc.get(USERS_FIREBASE_MAP+"groups"));
-
-        return newUser;
-    }
-
     // endregion
 }
