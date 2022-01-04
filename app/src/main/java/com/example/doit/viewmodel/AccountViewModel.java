@@ -39,12 +39,13 @@ public class AccountViewModel extends ViewModel {
 
     public void updateUserDetails() {
         User user = worker.getAuthenticatedUserDetails();
-        Map<String, Object> userHashMap = user.create();
         setUserEmailAddress(user.get_email());
-        setFirstName((String) userHashMap.get("first_name"));
-        setLastName((String) userHashMap.get("last_name"));
-        setImageUrl((String) userHashMap.get("image"));
+        setFirstName(user.get_firstName());
+        setLastName(user.get_lastName());
+        setImageUrl(user.get_image());
     }
+
+
 
     public MutableLiveData<Boolean> getEditDetails() {
         if(EditDetails == null) { EditDetails = new MutableLiveData<>(false); }
