@@ -61,38 +61,8 @@ public class AccountFragment extends Fragment {
         _binding.profileImage.setEnabled(false);
         viewModel.updateUserDetails();
         viewModel.getLoggedOut().observe(getViewLifecycleOwner(), loggedOutObserver);
-        viewModel.getFirstName().observe(getViewLifecycleOwner(), invalidFirstName);
-        viewModel.getLastName().observe(getViewLifecycleOwner(), invalidLastName);
-        viewModel.getUserEmailAddress().observe(getViewLifecycleOwner(), invalidEmail);
         return _binding.getRoot();
     }
-
-    Observer<String> invalidFirstName = new Observer<String>() {
-        @Override
-        public void onChanged(String s) {
-            if (s.length() == 0) {
-                _binding.FirstNameTextView.setText(" ");
-            }
-        }
-    };
-
-    Observer<String> invalidEmail = new Observer<String>() {
-        @Override
-        public void onChanged(String s) {
-            if (s.length() == 0) {
-                _binding.EmailTextView.setText(" ");
-            }
-        }
-    };
-
-    Observer<String> invalidLastName = new Observer<String>() {
-        @Override
-        public void onChanged(String s) {
-            if (s.length() == 0) {
-                _binding.LastNameTextView.setText(" ");
-            }
-        }
-    };
 
     ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -132,40 +102,25 @@ public class AccountFragment extends Fragment {
     View.OnClickListener userEditButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            editDetails = !editDetails;
-            if (editDetails) {
-                _binding.EmailTextView.setEnabled(true);
-                _binding.EmailTextView.setBackground(new ColorDrawable(Color.rgb(240, 240, 240)));
-                _binding.FirstNameTextView.setEnabled(true);
-                _binding.FirstNameTextView.setBackground(new ColorDrawable(Color.rgb(240, 240, 240)));
-                _binding.LastNameTextView.setEnabled(true);
-                _binding.LastNameTextView.setBackground(new ColorDrawable(Color.rgb(240, 240, 240)));
-                _binding.profileImageText.setText(getString(R.string.replace_image));
-                _binding.profileImage.setClickable(true);
-                _binding.profileImage.setEnabled(true);
-                _binding.userEditButton.setText(R.string.submit_changes);
-            } else {
-                IResponseHelper helper = new IResponseHelper() {
-                    @Override
-                    public void actionFinished(boolean actionResult) {
-                        if (!actionResult) { Toast.makeText(getContext(), "Email is already exist or invalid", Toast.LENGTH_SHORT).show(); }
-                        else { Toast.makeText(getContext(), "User details updated", Toast.LENGTH_SHORT).show(); }
-                        _binding.EmailTextView.setEnabled(false);
-                        _binding.EmailTextView.setBackground(new ColorDrawable(Color.rgb(255, 255, 255)));
-                        _binding.FirstNameTextView.setEnabled(false);
-                        _binding.FirstNameTextView.setBackground(new ColorDrawable(Color.rgb(255, 255, 255)));
-                        _binding.LastNameTextView.setEnabled(false);
-                        _binding.LastNameTextView.setBackground(new ColorDrawable(Color.rgb(255, 255, 255)));
-                        _binding.profileImageText.setText(null);
-                        _binding.profileImage.setClickable(false);
-                        _binding.profileImage.setEnabled(false);
-                        _binding.userEditButton.setText(R.string.user_details_edit);
+            IResponseHelper helper = new IResponseHelper() {
+                @Override
+                public void actionFinished(boolean actionResult) {
+                    if (!actionResult) {
+                        Toast.makeText(getContext(), "Email is already exist or invalid", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "User details updated", Toast.LENGTH_SHORT).show();
                     }
-                };
+                }
+            };
+            Boolean editDetails = viewModel.getEditDetails().getValue();
+            if(Boolean.FALSE.equals(editDetails)){
+                viewModel.setImageChanged(false);
+                viewModel.setEditDetails(true);
+            } else {
+                viewModel.setEditDetails(false);
                 viewModel.changeDetails(helper);
             }
         }
     };
+};
     // endregion
-
-}

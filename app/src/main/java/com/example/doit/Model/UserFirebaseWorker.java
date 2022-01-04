@@ -245,7 +245,7 @@ public class UserFirebaseWorker implements IDataWorker{
             @Override
             public void actionFinished(boolean actionResult) {
                 user.setImgae(get_image_url());
-                usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
+                usersRef.whereEqualTo("email", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())
                         .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

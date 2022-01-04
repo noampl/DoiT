@@ -14,4 +14,5 @@
     <string name="replace_image">click me for replace</string>
     <string name="submit_changes">Submit changes</string>
     <string name="user_details_edit">user details edit</string>
+    <string name="logout">Logout</string>
 </resources>

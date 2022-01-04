@@ -1,7 +1,6 @@
 package com.example.doit.viewmodel;
 
 import android.net.Uri;
-import android.widget.ImageButton;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,7 +11,6 @@ import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 import com.example.doit.common.Consts;
 
-import java.util.Locale;
 import java.util.Map;
 
 public class AccountViewModel extends ViewModel {
@@ -27,6 +25,7 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> NumberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
     private MutableLiveData<Boolean> LoggedOut;
+    private MutableLiveData<Boolean> EditDetails;
     private boolean ImageChanged = false;
     private String ImageUrl;
     //endregion
@@ -45,6 +44,15 @@ public class AccountViewModel extends ViewModel {
         setFirstName((String) userHashMap.get("first_name"));
         setLastName((String) userHashMap.get("last_name"));
         setImageUrl((String) userHashMap.get("image"));
+    }
+
+    public MutableLiveData<Boolean> getEditDetails() {
+        if(EditDetails == null) { EditDetails = new MutableLiveData<>(false); }
+        return EditDetails;
+    }
+
+    public void setEditDetails(Boolean editDetails) {
+        EditDetails.setValue(editDetails);
     }
 
     public MutableLiveData<Boolean> getLoggedOut() {

@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 
@@ -17,4 +18,11 @@ public class AccountBindingAdapter {
                 Picasso.with(v.getContext()).load(image).fit().into(v);
             }
         }
+        @BindingAdapter("textUpdate")
+    public static void setText(TextView textView, boolean isLast){
+            if(isLast){
+                textView.setText(" ");
+            }
+        }
+
     }
