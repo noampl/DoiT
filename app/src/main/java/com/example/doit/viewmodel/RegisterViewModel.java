@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.IResponseHelper;
 import com.example.doit.common.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.Model.Roles;
+import com.example.doit.common.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 
@@ -82,7 +82,7 @@ public class RegisterViewModel extends ViewModel {
         return _passwordValidation;
     }
 
-    public Roles.ROLES get_role() {
+    public Roles get_role() {
         return _role;
     }
 
@@ -130,7 +130,7 @@ public class RegisterViewModel extends ViewModel {
         this._passwordValidation = _passwordValidation;
     }
 
-    public void set_role(Roles.ROLES _role) {
+    public void set_role(Roles _role) {
         this._role = _role;
     }
 

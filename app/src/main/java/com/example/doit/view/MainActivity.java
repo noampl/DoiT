@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
+import android.content.Context;
 import android.os.Bundle;
 
 import com.example.doit.R;
@@ -14,11 +16,16 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding _binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initNavigation();
+    }
+
+    public static Context getContext(){
+        return getContext();
     }
 
     private void initNavigation(){
