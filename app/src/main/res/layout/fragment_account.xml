@@ -1,20 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.AccountFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="AccountViewModel"
+            type="com.example.doit.viewmodel.AccountViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_image_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@null"
+            android:contentDescription="@string/user_profile_image"
+            android:scaleType="centerCrop"
+            app:image="@{AccountViewModel.imageUrl}"
+            android:clickable="@{AccountViewModel.getEditDetails() ? true : false}"
+            android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/profile_image_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:gravity="center"
+            />
+
+    </androidx.cardview.widget.CardView>
+
+    <EditText
+        android:id="@+id/FirstNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCOUNT"
+        android:text="@{AccountViewModel.firstName}"
+        app:textUpdate="@{AccountViewModel.firstName.length() == 0}"
+        android:onTextChanged="@{AccountViewModel::onFirstNameChange}"
+        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/numberOfGroupsMember"
+        app:layout_constraintEnd_toStartOf="@+id/LastNameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/EmailTextView" />
+
+
+    <EditText
+        android:id="@+id/LastNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{AccountViewModel.lastName}"
+        app:textUpdate="@{AccountViewModel.lastName.length() == 0}"
+        android:onTextChanged="@{AccountViewModel::onLastNameChange}"
+        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/numberOfGroupsMember"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FirstNameTextView"
+        app:layout_constraintTop_toBottomOf="@id/EmailTextView" />
+
+    <EditText
+        android:id="@+id/EmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:inputType="textEmailAddress"
+        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
+        app:textUpdate="@{AccountViewModel.userEmailAddress.length() == 0}"
+        android:text="@{AccountViewModel.userEmailAddress}"
+        android:onTextChanged="@{AccountViewModel::onEmailChange}"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_layout"
+        app:layout_constraintBottom_toTopOf="@id/LastNameTextView"/>
+
+    <Button
+        android:id="@+id/userEditButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@{AccountViewModel.getEditDetails() ? @string/submit_changes : @string/user_details_edit }"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="40sp"/>
+        app:layout_constraintTop_toBottomOf="@id/numberOfTasksMade" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/logout"
+        android:onClick="@{() -> AccountViewModel.onClickLogoutButton()}"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userEditButton" />
+
+    <TextView
+        android:id="@+id/numberOfGroupsMember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{AccountViewModel.numberOfGroups}"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintTop_toBottomOf="@id/LastNameTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/numberOfTasksMade"
+        />
+
+    <TextView
+        android:id="@+id/numberOfTasksMade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="@{AccountViewModel.numberOfTasks}"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/userEditButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/numberOfGroupsMember" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

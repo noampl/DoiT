@@ -29,7 +29,11 @@
         android:id="@+id/accountFragment2"
         android:name="com.example.doit.view.AccountFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment2_to_logInFragment2"
+            app:destination="@id/logInFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/groupsFragment2"
         android:name="com.example.doit.view.GroupsFragment"

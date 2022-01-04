@@ -29,12 +29,11 @@ public class RegisterViewModel extends ViewModel {
     private String _phoneCountryCode = ISRAEL_COUNTRY_CODE;
     private String _phone = "";
     private String _passwordValidation = "";
-    private Roles _role = Roles.CLIENT;
-    private String _image = "";
+    private Roles.ROLES _role = Roles.ROLES.CLIENT;
     private IResponseHelper responseHelper;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
-    private Uri image_uri;
+    private Uri ImageUri;
     private MutableLiveData<Boolean> _registering_job_run;
 
     // endregion
@@ -47,12 +46,12 @@ public class RegisterViewModel extends ViewModel {
         passwordsIdentical.setValue(true);
     }
 
-    public Uri getImage_uri() {
-        return image_uri;
+    public Uri getImageUri() {
+        return ImageUri;
     }
 
-    public void setImage_uri(Uri image_uri) {
-        this.image_uri = image_uri;
+    public void setImageUri(Uri imageUri) {
+        this.ImageUri = imageUri;
     }
 
     public String get_firstName() {
@@ -85,10 +84,6 @@ public class RegisterViewModel extends ViewModel {
 
     public Roles get_role() {
         return _role;
-    }
-
-    public String get_image() {
-        return _image;
     }
 
     public MutableLiveData<Boolean> get_registering_job_run() {
@@ -137,10 +132,6 @@ public class RegisterViewModel extends ViewModel {
 
     public void set_role(Roles _role) {
         this._role = _role;
-    }
-
-    public void set_image(String _image) {
-        this._image = _image;
     }
 
     public MutableLiveData<Boolean> getPasswordsIdentical() {
@@ -205,7 +196,7 @@ public class RegisterViewModel extends ViewModel {
                     worker.create(_user, responseHelper);
                 }
             };
-            worker.upload_image(this.getImage_uri(), a);
+            worker.upload_image(this.getImageUri(), a);
             return true;
         }
         set_registering_job_run(false);

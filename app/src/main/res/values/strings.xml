@@ -11,4 +11,8 @@
     <string name="phone_number">Phone Number</string>
     <string name="password">Password</string>
     <string name="user_profile_image">user profile image</string>
+    <string name="replace_image">click me for replace</string>
+    <string name="submit_changes">Submit changes</string>
+    <string name="user_details_edit">user details edit</string>
+    <string name="logout">Logout</string>
 </resources>

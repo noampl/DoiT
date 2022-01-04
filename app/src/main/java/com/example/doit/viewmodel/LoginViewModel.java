@@ -27,7 +27,8 @@ public class LoginViewModel extends ViewModel {
     //endregion
 
     public LoginViewModel() {
-        _email = "Email";
+        repo = Repository.getInstance();
+        _email = "";
         _password = "";
         worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
 
