@@ -56,33 +56,11 @@ public class UserFirebaseWorker implements IDataWorker{
     // endregion
 
     // region Properties
-  
-    private boolean validateCreateValues(User user) {
-        Map<String, Object> userMap = user.getUserMap();
-        for(Map.Entry<String, Object> entry : userMap.entrySet()){
-            if (entry.getValue() == null || entry.getValue() == "")
-                return false;
-        }
-        return true;
-    }
 
     public String get_image_url() {
         return _image_url;
     }
 
-    private User insertDocumentToUser(DocumentSnapshot doc){
-        User newUser = new User();
-        newUser.setPassword((String) doc.get(USERS_FIREBASE_MAP+"password"));
-        newUser.setEmail((String) doc.get(USERS_FIREBASE_MAP+"email"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setFirstName((String) doc.get(USERS_FIREBASE_MAP+"first_name"));
-        newUser.setLastName((String) doc.get(USERS_FIREBASE_MAP+"last_name"));
-        newUser.setPhone((String) doc.get(USERS_FIREBASE_MAP+"phone"));
-        newUser.setPhoneCountryCode((String) doc.get(USERS_FIREBASE_MAP+"phone_country_code"));
-        newUser.setRole(Roles.ROLES.valueOf((String) doc.get(USERS_FIREBASE_MAP+"role")));
-        //todo: add setImage
-        return newUser;
-    }
 
     public User getAuthenticatedUserDetails() {
         return _authUser;
