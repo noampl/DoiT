@@ -1,5 +1,7 @@
 package com.example.doit.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 public class LogInFragment extends Fragment implements IResponseHelper {
+
     //region members
     private static final String TAG = "Login Fragment";
     private FragmentLogInBinding _binding;
@@ -52,6 +55,7 @@ public class LogInFragment extends Fragment implements IResponseHelper {
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
         viewModel.setResponseHelper(this);
+        viewModel.set_isBottomNavUp(false);
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
         return _binding.getRoot();
@@ -65,11 +69,20 @@ public class LogInFragment extends Fragment implements IResponseHelper {
             if (authUser != null) {
                 Toast.makeText(getContext(), authUser.get_email() + " is connected", Toast.LENGTH_SHORT).show();
             }
+            saveUserForLater();
             Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                     R.id.action_logInFragment2_to_groupsFragment2);
         } else {
             Log.d(TAG, "User is not find");
             Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveUserForLater(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.email), viewModel.getAuthUser().get_email());
+        editor.putString(getString(R.string.password), viewModel.getAuthUser().get_password()); // TODO figure out if needed to hash?
+        editor.apply();
     }
 }

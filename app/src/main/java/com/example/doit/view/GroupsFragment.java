@@ -2,13 +2,18 @@ package com.example.doit.view;
 
 import android.os.Bundle;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.databinding.FragmentGroupsBinding;
+import com.example.doit.viewmodel.GroupsViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,14 +22,9 @@ import com.example.doit.R;
  */
 public class GroupsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private GroupsViewModel _groupsViewModel;
+    private FragmentGroupsBinding _binding;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -41,26 +41,24 @@ public class GroupsFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static GroupsFragment newInstance(String param1, String param2) {
         GroupsFragment fragment = new GroupsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups, container, false);
+        _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
+        _groupsViewModel.set_isBottomNavigationUp(true);
+        _binding.setLifecycleOwner(this);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_groups, container, false);
+        return _binding.getRoot();
     }
 }

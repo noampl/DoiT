@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toStartOf="@id/register_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:onClick="@{() -> loginViewModel.Login()}" />
+        android:onClick="@{() -> loginViewModel.Login(loginViewModel.getUserName, loginViewModel.password)}" />
 
 
 

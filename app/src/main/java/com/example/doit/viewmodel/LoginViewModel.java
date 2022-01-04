@@ -2,6 +2,7 @@ package com.example.doit.viewmodel;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
@@ -23,6 +24,7 @@ public class LoginViewModel extends ViewModel {
     private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
+    private MutableLiveData<Boolean> _isBottomNavUp;
 
     //endregion
 
@@ -30,6 +32,7 @@ public class LoginViewModel extends ViewModel {
         _email = "";
         _password = "";
         worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
+        _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
 
     }
 
@@ -61,12 +64,20 @@ public class LoginViewModel extends ViewModel {
         this._password = s.toString();
     }
 
-    public boolean Login(){
-        Log.d(TAG, "Login: " + this._email);
-        Log.d(TAG, "Password: " + this._password);
+    public MutableLiveData<Boolean> get_isBottomNavUp() {
+        return _isBottomNavUp;
+    }
+
+    public void set_isBottomNavUp(boolean _isBottomNavUp) {
+        this._isBottomNavUp.setValue(_isBottomNavUp);
+    }
+
+    public boolean Login(String email, String password){
+        Log.d(TAG, "Login: " + email);
+        Log.d(TAG, "Password: " + password);
         Map<String, Object> user = new HashMap<>();
-        user.put("email", this._email);
-        user.put("password", this._password);
+        user.put("email", email);
+        user.put("password", password);
         worker.login(user, this.responseHelper);
         return true;
     }
