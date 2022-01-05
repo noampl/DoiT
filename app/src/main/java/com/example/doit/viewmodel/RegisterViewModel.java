@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.common.Consts;
+import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.common.Roles;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
+import com.example.doit.common.Roles;
 
 public class RegisterViewModel extends ViewModel {
 

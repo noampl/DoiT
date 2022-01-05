@@ -3,15 +3,16 @@ package com.example.doit.viewmodel;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
+import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
-import com.example.doit.common.Consts;
 
-import java.util.Map;
+import kotlin._Assertions;
 
 public class AccountViewModel extends ViewModel {
     //region members
@@ -26,26 +27,31 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> NumberOfTasks;
     private MutableLiveData<Boolean> LoggedOut;
     private MutableLiveData<Boolean> EditDetails;
+    private MutableLiveData<User> _authUser;
     private boolean ImageChanged = false;
     private String ImageUrl;
     //endregion
 
     public AccountViewModel() {
         repo = Repository.getInstance();
-        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+        //worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
+        _authUser = repo.get_authUser();
         setNumberOfGroups("Num Of Groups: XXX");
         setNumberOfTasks("Num Of Tasks: XXX");
     }
 
     public void updateUserDetails() {
-        User user = worker.getAuthenticatedUserDetails();
+        User user = _authUser.getValue();
+        assert user != null;
         setUserEmailAddress(user.get_email());
         setFirstName(user.get_firstName());
         setLastName(user.get_lastName());
         setImageUrl(user.get_image());
     }
 
-
+    public MutableLiveData<User> get_authUser() {
+        return _authUser;
+    }
 
     public MutableLiveData<Boolean> getEditDetails() {
         if(EditDetails == null) { EditDetails = new MutableLiveData<>(false); }
@@ -148,7 +154,8 @@ public class AccountViewModel extends ViewModel {
     //todo add on change and fix the doc updating
 
     public void changeDetails(IResponseHelper helper) {
-        User user = worker.getAuthenticatedUserDetails();
+        User user = this._authUser.getValue();
+        assert user != null;
         user.setEmail(this.getUserEmailAddress().getValue().toLowerCase());
         user.setFirstName(this.getFirstName().getValue());
         user.setLastName(this.getLastName().getValue());

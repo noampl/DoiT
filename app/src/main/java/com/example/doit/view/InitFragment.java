@@ -6,9 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavAction;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -63,15 +61,19 @@ public class InitFragment extends Fragment {
                 if (actionResult) {
                     Log.d("Peleg" ,"it's here 1");
                     Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
-                            .navigate(InitFragmentD);
+                            .navigate(R.id.action_initFragment_to_groupsFragment2);
                 }
                 else {
                     Log.d("peleg","user failed to connect firebase");
+                    Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
+                            .navigate(R.id.action_initFragment_to_logInFragment2);
                 }
             });
             _loginViewModel.Login(_email, _password);
+        }else {
+            Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
+                    .navigate(R.id.action_initFragment_to_logInFragment2);
         }
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_init, container, false);
     }

@@ -18,11 +18,13 @@ import java.util.Map;
 public class User {
 
     // region Members
-
+    @Ignore
     private static final String TAG = "User Model";
+    @Ignore
     private static final String NO_IMAGE = "no_image";
+    @Ignore
     private static final String ISRAEL_COUNRTY_CODE = "+972";
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @NonNull
     private String _id;
     private String _email;
@@ -45,7 +47,7 @@ public class User {
     }
 
     @Ignore
-    public User(String id,String _email, String firstName, String _lastName, String _password, String _image, String _phone,
+    public User(@NonNull String id, String _email, String firstName, String _lastName, String _password, String _image, String _phone,
                 String _countryPhoneCode, Roles _role, List<Group> groups) {
         this._id = id;
         this._email = _email;
@@ -65,10 +67,6 @@ public class User {
 
     public String get_id() {
         return _id;
-    }
-
-    public void setId(String _id) {
-        this._id = _id;
     }
 
     public String get_email() {
@@ -102,6 +100,10 @@ public class User {
 
     public void setImgae(String image_path){
         _image = image_path;
+    }
+
+    public void set_id(@NonNull String _id) {
+        this._id = _id;
     }
 
     public void setPhoneCountryCode(String phoneCountryCode) {

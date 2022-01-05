@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.User;
-import com.example.doit.common.Consts;
+import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
+import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 
 import java.util.HashMap;
@@ -78,7 +78,8 @@ public class LoginViewModel extends ViewModel {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
-        worker.login(user, this.responseHelper);
+        Repository.getInstance().saveAuthUser(user, this.responseHelper);
+        //worker.login(user, this.responseHelper);
         return true;
     }
 }
