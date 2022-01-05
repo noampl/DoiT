@@ -78,8 +78,7 @@ public class LoginViewModel extends ViewModel {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
-        Repository.getInstance().saveAuthUser(user, this.responseHelper);
-        //worker.login(user, this.responseHelper);
+        Repository.getInstance().login(user, this.responseHelper);
         return true;
     }
 }

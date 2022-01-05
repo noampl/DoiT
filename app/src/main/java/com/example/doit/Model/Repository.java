@@ -76,7 +76,7 @@ public class Repository {
         this._isBottomNavigationUp.postValue(_isBottomNavigationUp);
     }
 
-    public void saveAuthUser(Map<String, Object> user, IResponseHelper responseHelper) {
+    public void login(Map<String, Object> user, IResponseHelper responseHelper) {
         IResponseHelper repoHelper = new IResponseHelper() {
             @Override
             public void actionFinished(boolean actionResult) {
