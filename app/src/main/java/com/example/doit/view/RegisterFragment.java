@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.doit.IResponseHelper;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentRegisterBinding;
 import com.example.doit.viewmodel.RegisterViewModel;
