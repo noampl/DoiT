@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.User;
+import com.example.doit.Model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentRegisterBinding;
 import com.example.doit.viewmodel.RegisterViewModel;
@@ -61,7 +61,7 @@ public class RegisterFragment extends Fragment{
         viewModel.get_authUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                if (user.get_id() != null) {
+                if (user.get_userId() != null) {
                     Toast.makeText(getContext(), "hello " + user.get_firstName(), Toast.LENGTH_SHORT).show();
                     Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                             R.id.action_registerFragment2_to_groupsFragment2);

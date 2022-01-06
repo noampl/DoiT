@@ -94,7 +94,7 @@ public class AccountFragment extends Fragment {
     private final Observer<User> authUserChange = new Observer<User>() {
         @Override
         public void onChanged(User user) {
-            if (user.get_id() == null && Boolean.FALSE.equals(viewModel.get_authSuccess().getValue())) {
+            if (user.get_userId() == null && Boolean.FALSE.equals(viewModel.get_authSuccess().getValue())) {
                 Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                         R.id.action_accountFragment2_to_logInFragment2);
                 return;
