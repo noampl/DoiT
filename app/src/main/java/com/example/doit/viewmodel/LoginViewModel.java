@@ -21,7 +21,6 @@ public class LoginViewModel extends ViewModel {
     private static final String TAG = "LoginViewModel";
     private String _email;
     private String _password;
-    private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
     private MutableLiveData<Boolean> _isBottomNavUp;
@@ -36,14 +35,6 @@ public class LoginViewModel extends ViewModel {
         worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
         _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
 
-    }
-
-    public IResponseHelper getResponseHelper() {
-        return responseHelper;
-    }
-
-    public void setResponseHelper(IResponseHelper responseHelper) {
-        this.responseHelper = responseHelper;
     }
 
     public String getUserName(){
@@ -91,7 +82,7 @@ public class LoginViewModel extends ViewModel {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
-        Repository.getInstance().login(user, this.responseHelper);
+        Repository.getInstance().login(user);
         return true;
     }
 }

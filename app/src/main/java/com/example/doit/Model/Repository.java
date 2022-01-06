@@ -77,7 +77,7 @@ public class Repository {
         this._isBottomNavigationUp.postValue(_isBottomNavigationUp);
     }
 
-    public void login(Map<String, Object> user, IResponseHelper responseHelper) {
+    public void login(Map<String, Object> user) {
         IResponseHelper repoHelper = new IResponseHelper() {
             @Override
             public void actionFinished(boolean actionResult) {
@@ -85,10 +85,9 @@ public class Repository {
                     _authUser.setValue(userFirebaseWorker.getAuthenticatedUserDetails());
                     saveOrUpdateUser(_authUser.getValue());
                     set_authSuccess(true);
-                    //responseHelper.actionFinished(true);
                 } else {
                     set_authSuccess(false);
-                    //responseHelper.actionFinished(true);
+                    _authUser.setValue(new User());
                 }
             }
         };
