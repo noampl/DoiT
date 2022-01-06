@@ -7,14 +7,15 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.google.android.gms.tasks.Task;
+
+import com.example.doit.Model.entities.Task;
 
 import java.util.List;
 
 @Dao
 public interface TaskDao {
 
-    /*@Query("select * from Task")
+    @Query("select * from Task")
     List<Task> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -24,6 +25,7 @@ public interface TaskDao {
     void update(Task task);
 
     @Delete
-    void delete(Task task);*/
+    void delete(Task task);
+
 
 }

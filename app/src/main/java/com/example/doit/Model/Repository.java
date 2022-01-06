@@ -1,18 +1,18 @@
 package com.example.doit.Model;
 
-import android.util.Log;
+import android.net.Uri;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
-import com.example.doit.IResponseHelper;
 import com.example.doit.Model.dao.UserDao;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.example.doit.Model.entities.Group;
+import com.example.doit.Model.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +35,9 @@ public class Repository {
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private UserDao userDao;
     private MutableLiveData<User> _authUser;
-    private MutableLiveData<Boolean> _authSuccess;
+    private MutableLiveData<Boolean> _loggedIn;
     private UserFirebaseWorker userFirebaseWorker;
+    private MutableLiveData<String> _fireBaseError;
     // endregion
 
     private Repository() {
@@ -77,22 +78,10 @@ public class Repository {
         this._isBottomNavigationUp.postValue(_isBottomNavigationUp);
     }
 
-    public void login(Map<String, Object> user, IResponseHelper responseHelper) {
-        IResponseHelper repoHelper = new IResponseHelper() {
-            @Override
-            public void actionFinished(boolean actionResult) {
-                if (actionResult) {
-                    _authUser.setValue(userFirebaseWorker.getAuthenticatedUserDetails());
-                    saveOrUpdateUser(_authUser.getValue());
-                    set_authSuccess(true);
-                    //responseHelper.actionFinished(true);
-                } else {
-                    set_authSuccess(false);
-                    //responseHelper.actionFinished(true);
-                }
-            }
-        };
-        userFirebaseWorker.login(user, repoHelper);
+    public MutableLiveData<String> get_fireBaseError() { return userFirebaseWorker.get_firebaseError(); }
+
+    public void login(Map<String, Object> user) {
+        userFirebaseWorker.login(user, _loggedIn);
     }
 
     public MutableLiveData<User> get_authUser() {
@@ -100,18 +89,41 @@ public class Repository {
         return _authUser;
     }
 
-    private void set_authSuccess(Boolean aBoolean) {
-        if (_authSuccess == null) { _authSuccess = new MutableLiveData<>(); }
-        _authSuccess.setValue(aBoolean);
+    private void set_loggedIn(Boolean aBoolean) {
+        if (_loggedIn == null) { _loggedIn = new MutableLiveData<>(); }
+        _loggedIn.setValue(aBoolean);
     }
 
-    public MutableLiveData<Boolean> get_authSuccess() {
-        if (_authSuccess == null) { _authSuccess = new MutableLiveData<>(); }
-        return _authSuccess;
+    public MutableLiveData<Boolean> get_loggedIn() {
+        if (_loggedIn == null) { _loggedIn = new MutableLiveData<>(false); }
+        return _loggedIn;
     }
 
     public void saveOrUpdateUser(User user) {
         _executorService.execute(() -> userDao.insertAll(user));
+    }
+
+    public void logout() {
+        set_loggedIn(false);
+        userFirebaseWorker.logoutAuthUser(get_loggedIn());
+    }
+
+    public void register(String image_uri, User user) {
+        user.setImgae(image_uri);
+        Task<AuthResult> createUser = userFirebaseWorker.create(user, get_loggedIn());
+        createUser.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+            }
+        });
+    }
+
+    public void updateAuthUserDetails(User user, Uri uri, Boolean ImageChanged, Boolean emailChanged) {
+        userFirebaseWorker.updateUser(user);
+        if(ImageChanged) { userFirebaseWorker.upload_image(uri.toString(), user); }
+        if(emailChanged) { userFirebaseWorker.updateUserEmail(user); }
+        saveOrUpdateUser(user);
     }
 
     private void fetchData(){

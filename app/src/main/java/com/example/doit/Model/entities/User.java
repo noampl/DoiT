@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.Model.entities;
 
 
 import androidx.annotation.NonNull;
@@ -26,7 +26,7 @@ public class User {
     private static final String ISRAEL_COUNRTY_CODE = "+972";
     @PrimaryKey(autoGenerate = false)
     @NonNull
-    private String _id;
+    private String _userId;
     private String _email;
     private String _lastName;
     private String _firstName;
@@ -44,12 +44,14 @@ public class User {
     // region C'tor
 
     public User() {
+        _role = Roles.CLIENT;
+        _countryPhoneCode = "+972";
     }
 
     @Ignore
     public User(@NonNull String id, String _email, String firstName, String _lastName, String _password, String _image, String _phone,
                 String _countryPhoneCode, Roles _role, List<Group> groups) {
-        this._id = id;
+        this._userId = id;
         this._email = _email;
         this._lastName = _lastName;
         this._password = _password;
@@ -65,8 +67,8 @@ public class User {
 
     // endregion Properties
 
-    public String get_id() {
-        return _id;
+    public String get_userId() {
+        return _userId;
     }
 
     public String get_email() {
@@ -102,8 +104,8 @@ public class User {
         _image = image_path;
     }
 
-    public void set_id(@NonNull String _id) {
-        this._id = _id;
+    public void set_userId(@NonNull String _userId) {
+        this._userId = _userId;
     }
 
     public void setPhoneCountryCode(String phoneCountryCode) {
@@ -162,11 +164,9 @@ public class User {
 
     public Map<String, Object> create(){
         Map<String, Object> user = new HashMap<String, Object>();
-        user.put("id",get_id());
+        user.put("id", get_userId());
         user.put("firstName",get_firstName());
         user.put("lastName",get_lastName());
-        user.put("email",get_email());
-        user.put("password",get_password());
         user.put("role",get_role());
         user.put("phone",get_phone());
         user.put("countryCode",get_countryPhoneCode());
@@ -180,7 +180,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                ", _id='" + _id + '\'' +
+                ", _id='" + _userId + '\'' +
                 ", _email='" + _email + '\'' +
                 ", _lastName='" + _lastName + '\'' +
                 ", _firstName='" + _firstName + '\'' +

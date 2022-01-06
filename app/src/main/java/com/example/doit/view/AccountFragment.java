@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.User;
+import com.example.doit.Model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentAccountBinding;
 import com.example.doit.viewmodel.AccountViewModel;
@@ -59,8 +59,8 @@ public class AccountFragment extends Fragment {
         _binding.profileImage.setClickable(false);
         _binding.profileImage.setEnabled(false);
         viewModel.updateUserDetails();
-        viewModel.getLoggedOut().observe(getViewLifecycleOwner(), loggedOutObserver);
         viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
+        viewModel.get_operationError().observe(getViewLifecycleOwner(),errorHandler());
         return _binding.getRoot();
     }
 
@@ -81,17 +81,25 @@ public class AccountFragment extends Fragment {
             }
     );
 
-    Observer<User> authUserChange = new Observer<User>() {
+    private Observer<String> errorHandler() {
+        return new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+                viewModel.updateUserDetails();
+            }
+        };
+    }
+
+    private final Observer<User> authUserChange = new Observer<User>() {
         @Override
         public void onChanged(User user) {
+            if (user.get_id() == null && Boolean.FALSE.equals(viewModel.get_authSuccess().getValue())) {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                        R.id.action_accountFragment2_to_logInFragment2);
+                return;
+            }
             viewModel.updateUserDetails();
-        }
-    };
-
-    Observer<Boolean> loggedOutObserver = aBoolean -> {
-        if (aBoolean) {
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                    R.id.action_accountFragment2_to_logInFragment2);
         }
     };
 
@@ -106,30 +114,18 @@ public class AccountFragment extends Fragment {
         }
     };
 
-
-
     View.OnClickListener userEditButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            IResponseHelper helper = new IResponseHelper() {
-                @Override
-                public void actionFinished(boolean actionResult) {
-                    if (!actionResult) {
-                        Toast.makeText(getContext(), "Email is already exist or invalid", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "User details updated", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            };
             Boolean editDetails = viewModel.getEditDetails().getValue();
             if(Boolean.FALSE.equals(editDetails)){
                 viewModel.setImageChanged(false);
                 viewModel.setEditDetails(true);
             } else {
                 viewModel.setEditDetails(false);
-                viewModel.changeDetails(helper);
+                viewModel.changeDetails();
             }
         }
     };
-};
+}
     // endregion

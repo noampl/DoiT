@@ -2,9 +2,9 @@ package com.example.doit.common;
 
 import androidx.room.TypeConverter;
 
-import com.example.doit.Model.Group;
-import com.example.doit.Model.User;
-import com.google.android.gms.tasks.Task;
+import com.example.doit.Model.entities.Group;
+import com.example.doit.Model.entities.Task;
+import com.example.doit.Model.entities.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

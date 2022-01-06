@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.IResponseHelper;
 import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.Model.User;
+import com.example.doit.Model.entities.User;
 import com.example.doit.Model.UserFirebaseWorker;
 import com.example.doit.common.Roles;
 
@@ -30,7 +30,7 @@ public class RegisterViewModel extends ViewModel {
     private String _phone = "";
     private String _passwordValidation = "";
     private Roles _role = Roles.CLIENT;
-    private IResponseHelper responseHelper;
+    private MutableLiveData<User> _authUser;
     private final MutableLiveData<Boolean> passwordsIdentical;
     private final UserFirebaseWorker worker;
     private Uri ImageUri;
@@ -42,6 +42,7 @@ public class RegisterViewModel extends ViewModel {
         repo = Repository.getInstance();
         worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
         _user = new User();
+        _authUser = repo.get_authUser();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
     }
@@ -71,6 +72,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public String get_phoneCountryCode() {
+        if (_phoneCountryCode == null) { _phoneCountryCode = "+972"; }
         return _phoneCountryCode;
     }
 
@@ -78,11 +80,16 @@ public class RegisterViewModel extends ViewModel {
         return _phone;
     }
 
+    public MutableLiveData<User> get_authUser() {
+        return _authUser;
+    }
+
     public String get_passwordValidation() {
         return _passwordValidation;
     }
 
     public Roles get_role() {
+        if (_role == null) { _role = Roles.CLIENT; }
         return _role;
     }
 
@@ -142,14 +149,6 @@ public class RegisterViewModel extends ViewModel {
         this.passwordsIdentical.setValue(passwordsIdentical);
     }
 
-    public IResponseHelper getResponseHelper() {
-        return responseHelper;
-    }
-
-    public void setResponseHelper(IResponseHelper responseHelper) {
-        this.responseHelper = responseHelper;
-    }
-
     public void onFirstNameChange(CharSequence s, int start, int before, int count) {
         _firstName = s.toString().toLowerCase();
         _user.setFirstName(_firstName);
@@ -187,20 +186,8 @@ public class RegisterViewModel extends ViewModel {
 
     public boolean register(){
         Log.d(TAG, "Trying to register");
-        set_registering_job_run(true);
-        if (Boolean.TRUE.equals(passwordsIdentical.getValue())){
-            IResponseHelper a = new IResponseHelper() {
-                @Override
-                public void actionFinished(boolean actionResult) {
-                    _user.setImgae(worker.get_image_url());
-                    worker.create(_user, responseHelper);
-                }
-            };
-            worker.upload_image(this.getImageUri(), a);
-            return true;
-        }
-        set_registering_job_run(false);
-        return false;
+        repo.register(this.getImageUri().toString(), _user);
+        return true;
     }
 
     public String getErrorReason(){

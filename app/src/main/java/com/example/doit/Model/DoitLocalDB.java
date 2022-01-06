@@ -8,8 +8,12 @@ import com.example.MyApplication;
 import com.example.doit.Model.dao.GroupDao;
 import com.example.doit.Model.dao.TaskDao;
 import com.example.doit.Model.dao.UserDao;
+import com.example.doit.Model.entities.Group;
+import com.example.doit.Model.entities.Task;
+import com.example.doit.Model.entities.User;
+import com.example.doit.Model.entities.relations.UsersGroupsCrossRef;
 
-@Database(entities = {Group.class, User.class, Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 1, exportSchema = false)
 abstract class DoitLocalDB extends RoomDatabase {
     public abstract GroupDao groupDao();
     public abstract TaskDao taskDao();
