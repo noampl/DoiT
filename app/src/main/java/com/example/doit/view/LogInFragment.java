@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.doit.IResponseHelper;
 import com.example.doit.Model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentLogInBinding;
@@ -52,7 +51,7 @@ public class LogInFragment extends Fragment {
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
         viewModel.set_isBottomNavUp(false);
-        viewModel.get_authSuccess().observe(getViewLifecycleOwner(),onUserAuthentication());
+        viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
         return _binding.getRoot();
