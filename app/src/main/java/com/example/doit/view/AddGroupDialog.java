@@ -1,6 +1,7 @@
 package com.example.doit.view;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -52,15 +53,17 @@ public class AddGroupDialog extends DialogFragment {
 
     private void initListeners(){
         _binding.avatarImg.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("IntentReset")
             @Override
             public void onClick(View v) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     pickPhoto.setType("image/*");
                     pickPhotoResultLauncher.launch(pickPhoto);
                 }
-            }
-        });
+            });
     }
+
     ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -70,7 +73,7 @@ public class AddGroupDialog extends DialogFragment {
                         Intent data = result.getData();
                         Uri uri = data != null ? data.getData() : null;
                         Picasso.with(_binding.getRoot().getContext()).load(uri).fit().into(_binding.avatarImg);
-                        _groupsViewModel.setImageUri(uri);
+//                        _groupsViewModel.setImageUri(uri);
                     }
                 }
             }
