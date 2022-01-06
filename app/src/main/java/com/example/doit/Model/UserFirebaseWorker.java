@@ -120,6 +120,7 @@ public class UserFirebaseWorker implements IDataWorker{
     public User getAuthenticatedUserDetails() {
         Objects.requireNonNull(authUser.getValue())
                 .setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+        authUser.getValue().set_id(mAuth.getCurrentUser().getUid());
         return authUser.getValue();
     }
 
@@ -186,6 +187,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                     Log.d(TAG, insertDocumentToUser(doc).toString());
                                     User newUser = insertDocumentToUser(doc);
                                     newUser.setEmail(mAuth.getCurrentUser().getEmail());
+                                    newUser.set_id(mAuth.getCurrentUser().getUid());
                                     authUser.setValue(newUser);
                                     set_authDocRef();
                                 }
@@ -213,15 +215,16 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
     }
 
-    public void create(User user, MutableLiveData<Boolean> logedIn) {
-        mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password()).addOnCompleteListener(
+    public Task<AuthResult> create(User user, MutableLiveData<Boolean> logedIn) {
+        return mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password()).addOnCompleteListener(
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "createUserWithEmail:success");
                                     mAuth.signInWithEmailAndPassword(user.get_email(), user.get_password());
-                                    user.set_id(Objects.requireNonNull(mAuth.getUid()));
+                                    getAuthenticatedUser();
+                                    user.set_id(Objects.requireNonNull(mAuth.getCurrentUser().getUid()));
                                     createNewUserDoc(user);
                                     logedIn.setValue(true);
                                 } else {

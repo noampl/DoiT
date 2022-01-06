@@ -2,10 +2,14 @@ package com.example.doit.Model;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.Model.dao.UserDao;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -104,13 +108,20 @@ public class Repository {
 
     public void register(String image_uri, User user) {
         user.setImgae(image_uri);
-        userFirebaseWorker.create(user, get_loggedIn());
+        Task<AuthResult> createUser = userFirebaseWorker.create(user, get_loggedIn());
+        createUser.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+            }
+        });
     }
 
     public void updateAuthUserDetails(User user, Uri uri, Boolean ImageChanged, Boolean emailChanged) {
         userFirebaseWorker.updateUser(user);
         if(ImageChanged) { userFirebaseWorker.upload_image(uri.toString(), user); }
         if(emailChanged) { userFirebaseWorker.updateUserEmail(user); }
+        saveOrUpdateUser(user);
     }
 
     private void fetchData(){
