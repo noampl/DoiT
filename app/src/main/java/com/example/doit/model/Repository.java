@@ -1,12 +1,12 @@
-package com.example.doit.Model;
+package com.example.doit.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.dao.UserDao;
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.dao.UserDao;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;

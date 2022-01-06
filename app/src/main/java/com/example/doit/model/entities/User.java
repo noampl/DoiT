@@ -1,4 +1,4 @@
-package com.example.doit.Model.entities;
+package com.example.doit.model.entities;
 
 
 import androidx.annotation.NonNull;

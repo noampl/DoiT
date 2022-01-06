@@ -1,4 +1,4 @@
-package com.example.doit.Model.dao;
+package com.example.doit.model.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,10 +9,9 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.example.doit.Model.entities.User;
-import com.example.doit.Model.entities.relations.GroupWithUsers;
-import com.example.doit.Model.entities.relations.UserWithGroups;
-import com.example.doit.Model.entities.relations.UsersGroupsCrossRef;
+import com.example.doit.model.entities.User;
+import com.example.doit.model.entities.relations.GroupWithUsers;
+import com.example.doit.model.entities.relations.UsersGroupsCrossRef;
 
 import java.util.List;
 

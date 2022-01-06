@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.model;
 
 import android.net.Uri;
 import android.util.Log;
@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
