@@ -43,7 +43,6 @@ public class UserFirebaseWorker implements IDataWorker{
     private User _user;
     private String _registerErrorReason;
     private FirebaseAuth mAuth;
-    private User _authUser;
     private String _image_url;
     private DocumentReference authDocRef;
     private MutableLiveData<User> authUser;
@@ -56,8 +55,8 @@ public class UserFirebaseWorker implements IDataWorker{
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
         mAuth = FirebaseAuth.getInstance();
-        if (_authUser != null) {
-            authDocRef = usersRef.document(_authUser.get_id());
+        if (authUser != null) {
+            authDocRef = usersRef.document(authUser.getValue().get_id());
         }
     }
 
@@ -89,7 +88,7 @@ public class UserFirebaseWorker implements IDataWorker{
     }
 
     public User getAuthenticatedUserDetails() {
-        return _authUser;
+        return authUser.getValue();
     }
 
     public String get_registerErrorReason() {
@@ -136,7 +135,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void getAuthenticatedUser(IResponseHelper responseHelper) {
         if(mAuth.getCurrentUser() != null){
-            _authUser = new User();
+            authUser.setValue(new User());
             usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
                     .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -147,8 +146,8 @@ public class UserFirebaseWorker implements IDataWorker{
                         for (DocumentSnapshot doc: documents) {
                             if (doc.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
-                                _authUser =  insertDocumentToUser(doc);
-                                authDocRef = usersRef.document(_authUser.get_id());
+                                authUser.setValue(insertDocumentToUser(doc));
+                                authDocRef = usersRef.document(authUser.getValue().get_id());
                                 authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -232,7 +231,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void login(Map<String, Object> user, IResponseHelper responseHelper) {
         Log.d(TAG, "looking for user");
-        _authUser = new User();
+        authUser.setValue(new User());
         Query findUser = usersRef;
         for (Map.Entry<String,Object> entry: user.entrySet()) {
             findUser = findUser.whereEqualTo(entry.getKey(), entry.getValue());
@@ -274,7 +273,7 @@ public class UserFirebaseWorker implements IDataWorker{
     }
 
     public void logoutAuthUser() {
-        _authUser = new User();
+        authUser.setValue(new User());
         mAuth.signOut();
     }
 
