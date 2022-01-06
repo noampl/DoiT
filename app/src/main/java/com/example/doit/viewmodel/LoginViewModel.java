@@ -25,6 +25,8 @@ public class LoginViewModel extends ViewModel {
     private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
     private MutableLiveData<Boolean> _isBottomNavUp;
+    private MutableLiveData<User> _authUser;
+    private MutableLiveData<Boolean> _authSuccess;
 
     //endregion
 
@@ -71,6 +73,17 @@ public class LoginViewModel extends ViewModel {
     public void set_isBottomNavUp(boolean _isBottomNavUp) {
         this._isBottomNavUp.setValue(_isBottomNavUp);
     }
+
+    public MutableLiveData<User> get_authUser() {
+        _authUser = Repository.getInstance().get_authUser();
+        return _authUser;
+    }
+
+    public MutableLiveData<Boolean> get_authSuccess() {
+        _authSuccess = Repository.getInstance().get_authSuccess();
+        return _authSuccess;
+    }
+
 
     public boolean Login(String email, String password){
         Log.d(TAG, "Login: " + email);

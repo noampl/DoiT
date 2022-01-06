@@ -134,6 +134,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public boolean onClickLogoutButton() {
+        UserFirebaseWorker worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
         worker.logoutAuthUser();
         LoggedOut.setValue(true);
         return true;

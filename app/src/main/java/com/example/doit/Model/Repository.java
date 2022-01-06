@@ -35,6 +35,7 @@ public class Repository {
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private UserDao userDao;
     private MutableLiveData<User> _authUser;
+    private MutableLiveData<Boolean> _authSuccess;
     private UserFirebaseWorker userFirebaseWorker;
     // endregion
 
@@ -83,9 +84,11 @@ public class Repository {
                 if (actionResult) {
                     _authUser.setValue(userFirebaseWorker.getAuthenticatedUserDetails());
                     saveOrUpdateUser(_authUser.getValue());
-                    responseHelper.actionFinished(true);
+                    set_authSuccess(true);
+                    //responseHelper.actionFinished(true);
                 } else {
-                    responseHelper.actionFinished(true);
+                    set_authSuccess(false);
+                    //responseHelper.actionFinished(true);
                 }
             }
         };
@@ -93,7 +96,18 @@ public class Repository {
     }
 
     public MutableLiveData<User> get_authUser() {
+        if (_authUser == null) { _authUser = new MutableLiveData<User>(); }
         return _authUser;
+    }
+
+    private void set_authSuccess(Boolean aBoolean) {
+        if (_authSuccess == null) { _authSuccess = new MutableLiveData<>(); }
+        _authSuccess.setValue(aBoolean);
+    }
+
+    public MutableLiveData<Boolean> get_authSuccess() {
+        if (_authSuccess == null) { _authSuccess = new MutableLiveData<>(); }
+        return _authSuccess;
     }
 
     public void saveOrUpdateUser(User user) {
