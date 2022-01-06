@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.IResponseHelper;
+import com.example.doit.Model.entities.User;
 import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,7 +58,7 @@ public class UserFirebaseWorker implements IDataWorker{
         usersRef = db.collection(USERS_COLLECTION_NAME);
         mAuth = FirebaseAuth.getInstance();
         if (_authUser != null) {
-            authDocRef = usersRef.document(_authUser.get_id());
+            authDocRef = usersRef.document(_authUser.get_userId());
         }
     }
 
@@ -75,7 +76,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public User insertDocumentToUser(DocumentSnapshot doc){
         User newUser = new User();
-        newUser.set_id((String) doc.getId());
+        newUser.set_userId((String) doc.getId());
         newUser.setPassword((String) doc.get("password"));
         newUser.setEmail((String) doc.get("email"));
         newUser.setPhone((String) doc.get("phone"));
@@ -148,7 +149,7 @@ public class UserFirebaseWorker implements IDataWorker{
                             if (doc.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                                 _authUser =  insertDocumentToUser(doc);
-                                authDocRef = usersRef.document(_authUser.get_id());
+                                authDocRef = usersRef.document(_authUser.get_userId());
                                 authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
