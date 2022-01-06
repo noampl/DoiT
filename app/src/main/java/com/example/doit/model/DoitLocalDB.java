@@ -13,7 +13,7 @@ import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.entities.relations.UsersGroupsCrossRef;
 
-@Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 1, exportSchema = false)
+@Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 2, exportSchema = false)
 abstract class DoitLocalDB extends RoomDatabase {
     public abstract GroupDao groupDao();
     public abstract TaskDao taskDao();
