@@ -91,7 +91,7 @@ public class AccountFragment extends Fragment {
         };
     }
 
-    Observer<User> authUserChange = new Observer<User>() {
+    private final Observer<User> authUserChange = new Observer<User>() {
         @Override
         public void onChanged(User user) {
             if (user.get_id() == null && Boolean.FALSE.equals(viewModel.get_authSuccess().getValue())) {

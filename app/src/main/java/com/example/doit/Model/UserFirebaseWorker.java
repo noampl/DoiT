@@ -83,7 +83,7 @@ public class UserFirebaseWorker implements IDataWorker{
                         if(value != null && value.exists()){
                             User newUser = insertDocumentToUser(value);
                             newUser.setEmail(mAuth.getCurrentUser().getEmail());
-                            authUser.setValue(newUser);
+                            authUser.postValue(newUser);
                         }
                     }
                 });
@@ -177,7 +177,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void getAuthenticatedUser() {
         if(mAuth.getCurrentUser() != null){
-            authUser.setValue(new User());
+            authUser.postValue(new User());
             usersRef.whereEqualTo("id", mAuth.getCurrentUser().getUid())
                     .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -188,7 +188,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                     User newUser = insertDocumentToUser(doc);
                                     newUser.setEmail(mAuth.getCurrentUser().getEmail());
                                     newUser.set_id(mAuth.getCurrentUser().getUid());
-                                    authUser.setValue(newUser);
+                                    authUser.postValue(newUser);
                                     set_authDocRef();
                                 }
                             }
@@ -226,11 +226,11 @@ public class UserFirebaseWorker implements IDataWorker{
                                     getAuthenticatedUser();
                                     user.set_id(Objects.requireNonNull(mAuth.getCurrentUser().getUid()));
                                     createNewUserDoc(user);
-                                    logedIn.setValue(true);
+                                    logedIn.postValue(true);
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
-                                    logedIn.setValue(false);
+                                    logedIn.postValue(false);
                                 }
                             }
                         }
@@ -251,7 +251,7 @@ public class UserFirebaseWorker implements IDataWorker{
                                 if (task.isSuccessful()){
                                     User newUser = insertDocumentToUser(Objects.requireNonNull(task.getResult()));
                                     newUser.setEmail(mAuth.getCurrentUser().getEmail());
-                                    authUser.setValue(newUser);
+                                    authUser.postValue(newUser);
                                     set_authDocRef();
                                 }
                             }
@@ -293,7 +293,7 @@ public class UserFirebaseWorker implements IDataWorker{
                 } else {
                     Log.w(TAG,"Failed to change password", task.getException());
                     getAuthenticatedUser();
-                    _firebaseError.setValue("Failed to change email");
+                    _firebaseError.postValue("Failed to change email");
                 }
             }
         });
@@ -304,14 +304,14 @@ public class UserFirebaseWorker implements IDataWorker{
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG,"Failed to change password", e);
-                _firebaseError.setValue("Failed to change password");
+                _firebaseError.postValue("Failed to change password");
             }
         });
     }
 
     public void login(Map<String, Object> user, MutableLiveData<Boolean> loggedIn) {
         Log.d(TAG, "looking for user");
-        authUser.setValue(new User());
+        authUser.postValue(new User());
         String email = (String) user.get("email");
         String password = (String) user.get("password");
         assert email != null && password != null;
@@ -322,22 +322,22 @@ public class UserFirebaseWorker implements IDataWorker{
                             Log.d(TAG, "signInWithEmail:success");
                             getAuthenticatedUser();
                             authUser.getValue().setEmail(mAuth.getCurrentUser().getEmail());
-                            loggedIn.setValue(true);
+                            loggedIn.postValue(true);
                             set_authDocRef();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "signInWithEmail:failure", e);
-                            loggedIn.setValue(false);
+                            loggedIn.postValue(false);
             }
         });
     }
 
     public void logoutAuthUser(MutableLiveData<Boolean> loggedIn) {
-        authUser.setValue(new User());
+        authUser.postValue(new User());
         mAuth.signOut();
-        loggedIn.setValue(false);
+        loggedIn.postValue(false);
     }
 
     public void updateAuthUserDetails(User user, Uri image_uri, Boolean ImageHasChanged) {
