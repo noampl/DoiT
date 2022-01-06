@@ -1,26 +1,25 @@
-package com.example.doit.Model.entities.relations;
+package com.example.doit.model.entities.relations;
+
 
 import androidx.room.Embedded;
-import androidx.room.Junction;
 import androidx.room.Relation;
 
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.Task;
 
 import java.util.List;
 
 /**
  * Helper for one to many relation
  */
-public class GroupWithUsers {
+public class GroupWithTasks {
     @Embedded
     Group group;
     @Relation(
             parentColumn = "_groupId",
-            entityColumn = "_userId",
-            associateBy = @Junction(UsersGroupsCrossRef.class)
+            entityColumn = "_groupId"
     )
-    public List<User> users;
+    public List<Task> tasks;
 
     public Group getGroup() {
         return group;

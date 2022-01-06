@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.model;
 
 public interface IDataWorker {
 }

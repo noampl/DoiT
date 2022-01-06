@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.model;
 
 import android.net.Uri;
 
@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.doit.Model.dao.UserDao;
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.dao.UserDao;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

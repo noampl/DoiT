@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.Repository;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.Repository;
+import com.example.doit.view.interfaces.IGroupDialogHelper;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class GroupsViewModel extends ViewModel {
 
     private LiveData<List<Group>> _groups;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
-
+    private IGroupDialogHelper _iGroupDialogHelper;
 
     // endregion
 
@@ -33,12 +34,46 @@ public class GroupsViewModel extends ViewModel {
 
     // region Properties
 
+
+    public IGroupDialogHelper get_iGroupDialogHelper() {
+        return _iGroupDialogHelper;
+    }
+
+    public void set_iGroupDialogHelper(IGroupDialogHelper _iGroupDialogHelper) {
+        this._iGroupDialogHelper = _iGroupDialogHelper;
+    }
+
     public MutableLiveData<Boolean> get_isBottomNavigationUp() {
         return _isBottomNavigationUp;
     }
 
     public void set_isBottomNavigationUp(boolean _isBottomNavigationUp) {
         this._isBottomNavigationUp.setValue(_isBottomNavigationUp);
+    }
+
+    public LiveData<List<Group>> get_groups() {
+        return _groups;
+    }
+
+    public void set_groups(LiveData<List<Group>> _groups) {
+        this._groups = _groups;
+    }
+
+    // endregion
+
+    // region Public Methods
+
+    /**
+     * Handling add Group Dialog
+     * @return true
+     */
+    public boolean addGroup(){
+        _iGroupDialogHelper.openDialog();
+        return true;
+    }
+
+    public void updateGroup() {
+        
     }
 
     // endregion

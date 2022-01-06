@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_groupsFragment2_to_chosenGroupFragment"
             app:destination="@id/chosenGroupFragment" />
+        <action
+            android:id="@+id/action_groupsFragment2_to_addGroupDialog"
+            app:destination="@id/addGroupDialog" />
     </fragment>
     <fragment
         android:id="@+id/chosenGroupFragment"
@@ -87,4 +90,9 @@
             app:popUpToInclusive="true"
             />
     </fragment>
+    <dialog
+        android:id="@+id/addGroupDialog"
+        android:name="com.example.doit.view.AddGroupDialog"
+        android:label="dialog_fragment_add_group"
+        tools:layout="@layout/dialog_fragment_add_group" />
 </navigation>

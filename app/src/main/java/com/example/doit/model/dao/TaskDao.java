@@ -1,4 +1,4 @@
-package com.example.doit.Model.dao;
+package com.example.doit.model.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,7 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 
-import com.example.doit.Model.entities.Task;
+import com.example.doit.model.entities.Task;
 
 import java.util.List;
 
