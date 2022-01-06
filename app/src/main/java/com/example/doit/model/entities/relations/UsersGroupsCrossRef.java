@@ -1,4 +1,4 @@
-package com.example.doit.Model.entities.relations;
+package com.example.doit.model.entities.relations;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

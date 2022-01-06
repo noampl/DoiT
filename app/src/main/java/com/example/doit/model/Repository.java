@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.model;
 
 import android.net.Uri;
 
@@ -12,6 +12,10 @@ import com.example.doit.Model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.example.doit.IResponseHelper;
+import com.example.doit.model.dao.UserDao;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;

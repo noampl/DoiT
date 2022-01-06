@@ -1,12 +1,11 @@
-package com.example.doit.Model.entities.relations;
+package com.example.doit.model.entities.relations;
 
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.entities.Task;
-import com.example.doit.Model.entities.User;
+import com.example.doit.model.entities.Task;
+import com.example.doit.model.entities.User;
 
 import java.util.List;
 

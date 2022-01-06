@@ -1,4 +1,4 @@
-package com.example.doit.Model.entities;
+package com.example.doit.model.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 import com.example.doit.common.Converters;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Group {
@@ -100,6 +101,19 @@ public class Group {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return _groupId.equals(group._groupId) && _name.equals(group._name) && _description.equals(group._description) && Objects.equals(_users, group._users) && Objects.equals(admins, group.admins) && Objects.equals(_image, group._image) && Objects.equals(tasks, group.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_groupId, _name, _description, _users, admins, _image, tasks);
     }
 
     // endregion

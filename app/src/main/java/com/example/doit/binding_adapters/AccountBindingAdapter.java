@@ -8,13 +8,15 @@ import androidx.databinding.BindingAdapter;
 import com.squareup.picasso.Picasso;
 
 public class AccountBindingAdapter {
-        @BindingAdapter("image")
-        public static void setImage(ImageButton v, String image) {
-            if (image != null) {
-                Picasso.with(v.getContext()).load(image).fit().into(v);
-            }
+
+    @BindingAdapter("image")
+    public static void setImage(ImageButton v, String image) {
+        if (image != null) {
+            Picasso.with(v.getContext()).load(image).fit().into(v);
         }
-        @BindingAdapter("textUpdate")
+    }
+
+    @BindingAdapter("textUpdate")
     public static void setText(TextView textView, boolean isLast){
             if(isLast){
                 textView.setText(" ");

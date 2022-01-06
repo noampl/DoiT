@@ -1,4 +1,4 @@
-package com.example.doit.Model.dao;
+package com.example.doit.model.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,10 +8,9 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.example.doit.Model.entities.Group;
-import com.example.doit.Model.entities.relations.GroupWithTasks;
-import com.example.doit.Model.entities.relations.UserWithGroups;
-import com.example.doit.Model.entities.relations.UsersGroupsCrossRef;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.relations.GroupWithTasks;
+import com.example.doit.model.entities.relations.UserWithGroups;
 
 import java.util.List;
 
