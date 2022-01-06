@@ -3,8 +3,6 @@ package com.example.doit.view;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -24,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.doit.IResponseHelper;
+import com.example.doit.Model.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentAccountBinding;
 import com.example.doit.viewmodel.AccountViewModel;
@@ -50,7 +49,7 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_account, container,false);
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container,false);
         viewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         _binding.setAccountViewModel(viewModel);
         _binding.setLifecycleOwner(this);
@@ -61,6 +60,7 @@ public class AccountFragment extends Fragment {
         _binding.profileImage.setEnabled(false);
         viewModel.updateUserDetails();
         viewModel.getLoggedOut().observe(getViewLifecycleOwner(), loggedOutObserver);
+        viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
         return _binding.getRoot();
     }
 
@@ -81,6 +81,13 @@ public class AccountFragment extends Fragment {
             }
     );
 
+    Observer<User> authUserChange = new Observer<User>() {
+        @Override
+        public void onChanged(User user) {
+            viewModel.updateUserDetails();
+        }
+    };
+
     Observer<Boolean> loggedOutObserver = aBoolean -> {
         if (aBoolean) {
             Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
@@ -98,6 +105,8 @@ public class AccountFragment extends Fragment {
             pickPhotoResultLauncher.launch(pickPhoto);
         }
     };
+
+
 
     View.OnClickListener userEditButtonListener = new View.OnClickListener() {
         @Override

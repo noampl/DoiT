@@ -23,8 +23,8 @@ public class Group {
     @TypeConverters(Converters.class)
     private List<User> admins;
     private String _image;
-    @TypeConverters(Converters.class)
-    private List<Task> tasks;
+    /*@TypeConverters(Converters.class)
+    private List<Task> tasks;*/
 
     // endregion
 
@@ -39,7 +39,7 @@ public class Group {
         this._users = _users;
         this.admins = _admins;
         this._image = _image;
-        this.tasks = _tasks;
+        //this.tasks = _tasks;
     }
 
     // endregion
@@ -94,13 +94,13 @@ public class Group {
         this._image = _image;
     }
 
-    public List<Task> getTasks() {
+    /*public List<Task> getTasks() {
         return tasks;
     }
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
-    }
+    }*/
 
     // endregion
 }

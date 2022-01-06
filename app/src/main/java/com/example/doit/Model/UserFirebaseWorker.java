@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.IResponseHelper;
 import com.example.doit.common.Roles;
@@ -16,7 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -41,6 +45,8 @@ public class UserFirebaseWorker implements IDataWorker{
     private FirebaseAuth mAuth;
     private User _authUser;
     private String _image_url;
+    private DocumentReference authDocRef;
+    private MutableLiveData<User> authUser;
   
     // endregion
 
@@ -50,6 +56,9 @@ public class UserFirebaseWorker implements IDataWorker{
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
         mAuth = FirebaseAuth.getInstance();
+        if (_authUser != null) {
+            authDocRef = usersRef.document(_authUser.get_id());
+        }
     }
 
     // endregion
@@ -60,13 +69,18 @@ public class UserFirebaseWorker implements IDataWorker{
         return _image_url;
     }
 
-    private User insertDocumentToUser(DocumentSnapshot doc){
+    public void setAuthUser(MutableLiveData<User> authUser) {
+        this.authUser = authUser;
+    }
+
+    public User insertDocumentToUser(DocumentSnapshot doc){
         User newUser = new User();
+        newUser.set_id((String) doc.getId());
         newUser.setPassword((String) doc.get("password"));
         newUser.setEmail((String) doc.get("email"));
         newUser.setPhone((String) doc.get("phone"));
-        newUser.setFirstName((String) doc.get("first_name"));
-        newUser.setLastName((String) doc.get("last_name"));
+        newUser.setFirstName((String) doc.get("firstName"));
+        newUser.setLastName((String) doc.get("lastName"));
         newUser.setPhone((String) doc.get("phone"));
         newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
         newUser.setRole(Roles.valueOf((String) doc.get("role")));
@@ -85,6 +99,8 @@ public class UserFirebaseWorker implements IDataWorker{
     // endregion
 
     // region Public Methods
+
+
 
     public void upload_image(Uri uri, IResponseHelper resHelper){
         if (uri == null){
@@ -132,6 +148,21 @@ public class UserFirebaseWorker implements IDataWorker{
                             if (doc.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                                 _authUser =  insertDocumentToUser(doc);
+                                authDocRef = usersRef.document(_authUser.get_id());
+                                authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        if (error != null) {
+                                            Log.w(TAG, "Failed listen to auth user", error);
+                                        }
+                                        if (value != null && value.exists()) {
+                                            // here!
+                                            User updatedUser = insertDocumentToUser(value);
+                                            Repository.getInstance().saveOrUpdateUser(updatedUser);
+                                            authUser.setValue(updatedUser);
+                                        }
+                                    }
+                                });
                                 responseHelper.actionFinished(true);
                             } else {
                                 Log.d(TAG, "No such document");
@@ -222,7 +253,6 @@ public class UserFirebaseWorker implements IDataWorker{
                                             if (task.isSuccessful()) {
                                                 // Sign in success, update UI with the signed-in user's information
                                                 Log.d(TAG, "signInWithEmail:success");
-                                                //responseHelper.actionFinished(true);
                                                 getAuthenticatedUser(responseHelper);
                                             } else {
                                                 // If sign in fails, display a message to the user.
@@ -280,6 +310,8 @@ public class UserFirebaseWorker implements IDataWorker{
         if (ImageHasChanged) {upload_image(image_uri, help_image); }
         else { help_image.actionFinished(true); }
     }
+
+
     // endregion
 
     // region Private Methods

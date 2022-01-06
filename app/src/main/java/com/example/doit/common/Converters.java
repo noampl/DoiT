@@ -1,17 +1,13 @@
 package com.example.doit.common;
 
-import android.app.role.RoleManager;
-
 import androidx.room.TypeConverter;
 
 import com.example.doit.Model.Group;
-import com.example.doit.Model.Task;
 import com.example.doit.Model.User;
-import com.google.common.reflect.TypeToken;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -18,13 +18,9 @@ import android.widget.Toast;
 
 import com.example.doit.IResponseHelper;
 import com.example.doit.Model.User;
-import com.example.doit.viewmodel.LoginViewModel;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentLogInBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
+import com.example.doit.viewmodel.LoginViewModel;
 
 public class LogInFragment extends Fragment implements IResponseHelper {
 
