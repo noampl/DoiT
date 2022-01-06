@@ -44,6 +44,8 @@ public class User {
     // region C'tor
 
     public User() {
+        _role = Roles.CLIENT;
+        _countryPhoneCode = "+972";
     }
 
     @Ignore
@@ -165,8 +167,6 @@ public class User {
         user.put("id",get_id());
         user.put("firstName",get_firstName());
         user.put("lastName",get_lastName());
-        // user.put("email",get_email());
-        // user.put("password",get_password());
         user.put("role",get_role());
         user.put("phone",get_phone());
         user.put("countryCode",get_countryPhoneCode());

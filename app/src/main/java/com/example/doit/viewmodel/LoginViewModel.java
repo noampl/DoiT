@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.IResponseHelper;
 import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.User;
@@ -25,7 +24,7 @@ public class LoginViewModel extends ViewModel {
     private long mLastClickTime = 0;
     private MutableLiveData<Boolean> _isBottomNavUp;
     private MutableLiveData<User> _authUser;
-    private MutableLiveData<Boolean> _authSuccess;
+    private MutableLiveData<Boolean> _logedIn;
 
     //endregion
 
@@ -70,9 +69,9 @@ public class LoginViewModel extends ViewModel {
         return _authUser;
     }
 
-    public MutableLiveData<Boolean> get_authSuccess() {
-        _authSuccess = Repository.getInstance().get_authSuccess();
-        return _authSuccess;
+    public MutableLiveData<Boolean> get_logedIn() {
+        _logedIn = Repository.getInstance().get_loggedIn();
+        return _logedIn;
     }
 
 

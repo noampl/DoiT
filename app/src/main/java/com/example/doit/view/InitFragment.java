@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,12 +54,10 @@ public class InitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         _loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        _loginViewModel.get_authSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        _loginViewModel.get_logedIn().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(isUserExist()) {
                     if (aBoolean) {
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
                                 .navigate(R.id.action_initFragment_to_groupsFragment2);
@@ -68,13 +65,15 @@ public class InitFragment extends Fragment {
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
                                 .navigate(R.id.action_initFragment_to_logInFragment2);
                     }
-                } else {
-                    Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
-                            .navigate(R.id.action_initFragment_to_logInFragment2);
-                }
             }
         });
-        _loginViewModel.Login(_email, _password);
+         if(isUserExist()) {
+            _loginViewModel.Login(_email, _password);
+         }
+         else {
+            Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
+                    .navigate(R.id.action_initFragment_to_logInFragment2);
+         }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_init, container, false);
     }

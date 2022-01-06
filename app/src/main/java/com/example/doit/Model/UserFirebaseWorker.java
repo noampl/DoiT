@@ -23,6 +23,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,6 +48,7 @@ public class UserFirebaseWorker implements IDataWorker{
     private String _image_url;
     private DocumentReference authDocRef;
     private MutableLiveData<User> authUser;
+    private MutableLiveData<String> _firebaseError;
   
     // endregion
 
@@ -56,14 +58,39 @@ public class UserFirebaseWorker implements IDataWorker{
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
         mAuth = FirebaseAuth.getInstance();
-        if (authUser != null) {
-            authDocRef = usersRef.document(authUser.getValue().get_id());
-        }
+        _firebaseError = new MutableLiveData<>();
     }
 
     // endregion
 
     // region Properties
+
+    public void set_authDocRef() {
+        Task<QuerySnapshot> uAuthDoc = usersRef.whereEqualTo("id", mAuth.getCurrentUser()
+                .getUid()).limit(1).get();
+        uAuthDoc.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot doc : queryDocumentSnapshots){
+                    authDocRef = usersRef.document(doc.getId());
+                }
+                authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error != null) {
+                            Log.w(TAG, "Listen to auth user failsd.", error);
+                        }
+                        if(value != null && value.exists()){
+                            User newUser = insertDocumentToUser(value);
+                            newUser.setEmail(mAuth.getCurrentUser().getEmail());
+                            authUser.setValue(newUser);
+                        }
+                    }
+                });
+            }
+        });
+
+    }
 
     public String get_image_url() {
         return _image_url;
@@ -75,7 +102,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public User insertDocumentToUser(DocumentSnapshot doc){
         User newUser = new User();
-        newUser.set_id((String) doc.getId());
+        newUser.set_id((String) Objects.requireNonNull(doc.get("id")));
         newUser.setPassword((String) doc.get("password"));
         newUser.setEmail((String) doc.get("email"));
         newUser.setPhone((String) doc.get("phone"));
@@ -91,6 +118,8 @@ public class UserFirebaseWorker implements IDataWorker{
     }
 
     public User getAuthenticatedUserDetails() {
+        Objects.requireNonNull(authUser.getValue())
+                .setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
         return authUser.getValue();
     }
 
@@ -98,11 +127,13 @@ public class UserFirebaseWorker implements IDataWorker{
         return _registerErrorReason;
     }
 
+    public MutableLiveData<String> get_firebaseError() {
+        return _firebaseError;
+    }
+
     // endregion
 
     // region Public Methods
-
-
 
     public void upload_image(String uri, User user){
         if (uri == null){
@@ -121,65 +152,50 @@ public class UserFirebaseWorker implements IDataWorker{
                         String url = uri.toString();
                         Log.d(TAG, "url " + url);
                         user.setPassword(null);
-                        user.setImgae(uri.toString());
-                        usersRef.document(user.get_id()).update(user.create());
+                        user.setImgae(url);
+                        usersRef.whereEqualTo("id", user.get_id()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        usersRef.document(document.getId()).update(user.create());
+                                    }
+                                }
+                            }
+                        });
                     }
-
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error on uploading user profile image", e);
                     }
-                });;
+                });
             }
         });
-
     }
 
-    public void getAuthenticatedUser(IResponseHelper responseHelper) {
+    public void getAuthenticatedUser() {
         if(mAuth.getCurrentUser() != null){
             authUser.setValue(new User());
-            usersRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail())
+            usersRef.whereEqualTo("id", mAuth.getCurrentUser().getUid())
                     .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        QuerySnapshot documents = task.getResult();
-                        assert documents != null;
-                        for (DocumentSnapshot doc: documents) {
-                            if (doc.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
-                                authUser.setValue(insertDocumentToUser(doc));
-                                authDocRef = usersRef.document(authUser.getValue().get_id());
-                                authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                                        if (error != null) {
-                                            Log.w(TAG, "Failed listen to auth user", error);
-                                        }
-                                        if (value != null && value.exists()) {
-                                            // here!
-                                            User updatedUser = insertDocumentToUser(value);
-                                            Repository.getInstance().saveOrUpdateUser(updatedUser);
-                                            authUser.setValue(updatedUser);
-                                        }
-                                    }
-                                });
-                                responseHelper.actionFinished(true);
-                            } else {
-                                Log.d(TAG, "No such document");
-                                responseHelper.actionFinished(false);
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                for(DocumentSnapshot doc : task.getResult()){
+                                    Log.d(TAG, insertDocumentToUser(doc).toString());
+                                    User newUser = insertDocumentToUser(doc);
+                                    newUser.setEmail(mAuth.getCurrentUser().getEmail());
+                                    authUser.setValue(newUser);
+                                    set_authDocRef();
+                                }
                             }
                         }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                        responseHelper.actionFinished(false);
-                    }
-                }
-            });
+                    });
+            }
 
-        }
     }
+
 
     public void deleteUser(DocumentReference documentReference){
         usersRef.document(documentReference.getId()).delete()
@@ -197,17 +213,21 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
     }
 
-    public void create(User user) {
+    public void create(User user, MutableLiveData<Boolean> logedIn) {
         mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password()).addOnCompleteListener(
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "createUserWithEmail:success");
+                                    mAuth.signInWithEmailAndPassword(user.get_email(), user.get_password());
+                                    user.set_id(Objects.requireNonNull(mAuth.getUid()));
                                     createNewUserDoc(user);
+                                    logedIn.setValue(true);
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
+                                    logedIn.setValue(false);
                                 }
                             }
                         }
@@ -221,13 +241,15 @@ public class UserFirebaseWorker implements IDataWorker{
                     public void onSuccess(DocumentReference documentReference) {
                         Task<DocumentSnapshot> docTask = documentReference.get();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        user.set_id(documentReference.getId());
                         upload_image(user.get_image(), user);
                         docTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()){
-                                    authUser.setValue(insertDocumentToUser(Objects.requireNonNull(task.getResult())));
+                                    User newUser = insertDocumentToUser(Objects.requireNonNull(task.getResult()));
+                                    newUser.setEmail(mAuth.getCurrentUser().getEmail());
+                                    authUser.setValue(newUser);
+                                    set_authDocRef();
                                 }
                             }
                         });
@@ -243,86 +265,98 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
     }
 
-    public void login(Map<String, Object> user, IResponseHelper responseHelper) {
-        Log.d(TAG, "looking for user");
-        authUser.setValue(new User());
-        Query findUser = usersRef;
-        for (Map.Entry<String,Object> entry: user.entrySet()) {
-            findUser = findUser.whereEqualTo(entry.getKey(), entry.getValue());
-        }
-        findUser.limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        List<DocumentSnapshot> documents = Objects.requireNonNull(task.getResult()).getDocuments();
-                        if (!documents.isEmpty()) {
-                            String email = (String) user.get("email");
-                            String password = (String) user.get("password");
-                            assert email != null && password != null;
-                            mAuth.signInWithEmailAndPassword(email,password)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (task.isSuccessful()) {
-                                                // Sign in success, update UI with the signed-in user's information
-                                                Log.d(TAG, "signInWithEmail:success");
-                                                getAuthenticatedUser(responseHelper);
-                                            } else {
-                                                // If sign in fails, display a message to the user.
-                                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                                responseHelper.actionFinished(false);
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Log.d(TAG, "User is not exist");
-                            responseHelper.actionFinished(false);
+    public void updateUser(User user){
+        usersRef.whereEqualTo("id", user.get_id()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                usersRef.document(document.getId()).update(user.create());
+                            }
+                            getAuthenticatedUser();
                         }
-                    } else {
-                        Log.d(TAG, "Failed to query users");
-                        responseHelper.actionFinished(false);
                     }
+                });
+
+    }
+
+    public void updateUserEmail(User user) {
+        mAuth.getCurrentUser().updateEmail(user.get_email()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "Changed user email");
+                    getAuthenticatedUser();
+                } else {
+                    Log.w(TAG,"Failed to change password", task.getException());
+                    getAuthenticatedUser();
+                    _firebaseError.setValue("Failed to change email");
                 }
+            }
         });
     }
 
-    public void logoutAuthUser() {
+    public void updateUserPassword(User user) {
+        mAuth.getCurrentUser().updatePassword(user.get_email()).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG,"Failed to change password", e);
+                _firebaseError.setValue("Failed to change password");
+            }
+        });
+    }
+
+    public void login(Map<String, Object> user, MutableLiveData<Boolean> loggedIn) {
+        Log.d(TAG, "looking for user");
+        authUser.setValue(new User());
+        String email = (String) user.get("email");
+        String password = (String) user.get("password");
+        assert email != null && password != null;
+        mAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            getAuthenticatedUser();
+                            authUser.getValue().setEmail(mAuth.getCurrentUser().getEmail());
+                            loggedIn.setValue(true);
+                            set_authDocRef();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "signInWithEmail:failure", e);
+                            loggedIn.setValue(false);
+            }
+        });
+    }
+
+    public void logoutAuthUser(MutableLiveData<Boolean> loggedIn) {
         authUser.setValue(new User());
         mAuth.signOut();
+        loggedIn.setValue(false);
     }
 
-    public void updateAuthUserDetails(User user, Uri image_uri, IResponseHelper helper, Boolean ImageHasChanged) {
-        IResponseHelper help_image = new IResponseHelper() {
-            @Override
-            public void actionFinished(boolean actionResult) {
-                user.setImgae(get_image_url());
-                usersRef.whereEqualTo("email", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())
-                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
-                                    String doc_id = doc.getId();
-                                    mAuth.getCurrentUser().updateEmail(user.get_email().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                usersRef.document(doc_id).update(user.create());
-                                                getAuthenticatedUser(helper);
-                                                helper.actionFinished(true);
-                                            } else {
-                                                helper.actionFinished(false);
-                                            }
-                                        }
-                                    });
-
-                                }
-                            }
-                        });
-            }
-        };
+    public void updateAuthUserDetails(User user, Uri image_uri, Boolean ImageHasChanged) {
         if (ImageHasChanged) {upload_image(image_uri.toString(), user); }
-        else { help_image.actionFinished(true); }
-    }
+        user.create().remove("image");
+        mAuth.getCurrentUser().updateEmail(user.get_email().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    usersRef.whereEqualTo("id", mAuth.getCurrentUser().getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        usersRef.document(document.getId()).update(user.create());
+                                    }
+                                }
+                            });
+                       }
+                    }
+                });
+            }
 
 
     // endregion

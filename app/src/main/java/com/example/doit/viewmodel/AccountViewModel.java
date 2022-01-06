@@ -3,16 +3,14 @@ package com.example.doit.viewmodel;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.User;
 import com.example.doit.Model.UserFirebaseWorker;
 
-import kotlin._Assertions;
+import java.util.Objects;
 
 public class AccountViewModel extends ViewModel {
     //region members
@@ -28,13 +26,14 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<Boolean> EditDetails;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _authSuccess;
-    private boolean ImageChanged = false;
+    private MutableLiveData<String> _firebaseError;
+    private boolean emailChanged = false;
+    private boolean imageChanged = false;
     private String ImageUrl;
     //endregion
 
     public AccountViewModel() {
         repo = Repository.getInstance();
-        //worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
         _authUser = repo.get_authUser();
         setNumberOfGroups("Num Of Groups: XXX");
         setNumberOfTasks("Num Of Tasks: XXX");
@@ -49,12 +48,17 @@ public class AccountViewModel extends ViewModel {
         setImageUrl(user.get_image());
     }
 
+    public MutableLiveData<String> get_operationError(){
+        if (_firebaseError == null) { _firebaseError = repo.get_fireBaseError(); }
+        return _firebaseError;
+    }
+
     public MutableLiveData<User> get_authUser() {
         return _authUser;
     }
 
     public MutableLiveData<Boolean> get_authSuccess() {
-        return repo.get_authSuccess();
+        return repo.get_loggedIn();
     }
 
     public MutableLiveData<Boolean> getEditDetails() {
@@ -114,7 +118,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void setImageChanged(Boolean aBoolean) {
-        ImageChanged = aBoolean;
+        imageChanged = aBoolean;
     }
 
     public void setNumberOfGroups(String numberOfGroups) {
@@ -147,17 +151,18 @@ public class AccountViewModel extends ViewModel {
 
     public void onEmailChange(CharSequence s, int start, int before, int count) {
         this.setUserEmailAddress(s.toString());
+        emailChanged = true;
     }
 
-    //todo add on change and fix the doc updating
-
-    public void changeDetails(IResponseHelper helper) {
+    public void changeDetails() {
         User user = this._authUser.getValue();
         assert user != null;
-        user.setEmail(this.getUserEmailAddress().getValue().toLowerCase());
+        user.setEmail(Objects.requireNonNull(this.getUserEmailAddress().getValue()).toLowerCase());
         user.setFirstName(this.getFirstName().getValue());
         user.setLastName(this.getLastName().getValue());
         user.setImgae(this.getImageUrl());
-        worker.updateAuthUserDetails(user,Uri.parse(this.ImageUrl),helper, ImageChanged);
+        repo.updateAuthUserDetails(user,Uri.parse(this.ImageUrl), imageChanged, emailChanged);
+        emailChanged = false;
+        imageChanged = false;
     }
 }
