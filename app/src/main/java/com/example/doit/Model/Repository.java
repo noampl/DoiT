@@ -113,6 +113,11 @@ public class Repository {
         _executorService.execute(() -> userDao.insertAll(user));
     }
 
+    public void logout() {
+        set_authSuccess(false);
+        userFirebaseWorker.logoutAuthUser();
+    }
+
     private void fetchData(){
         _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
         _executorService.execute(()-> _curUser = LocalDB.db.userDao().loadUserById("TODO"));

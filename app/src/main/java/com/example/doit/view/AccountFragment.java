@@ -59,7 +59,6 @@ public class AccountFragment extends Fragment {
         _binding.profileImage.setClickable(false);
         _binding.profileImage.setEnabled(false);
         viewModel.updateUserDetails();
-        viewModel.getLoggedOut().observe(getViewLifecycleOwner(), loggedOutObserver);
         viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
         return _binding.getRoot();
     }
@@ -84,14 +83,12 @@ public class AccountFragment extends Fragment {
     Observer<User> authUserChange = new Observer<User>() {
         @Override
         public void onChanged(User user) {
+            if (user.get_id() == null && Boolean.FALSE.equals(viewModel.get_authSuccess().getValue())) {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                        R.id.action_accountFragment2_to_logInFragment2);
+                return;
+            }
             viewModel.updateUserDetails();
-        }
-    };
-
-    Observer<Boolean> loggedOutObserver = aBoolean -> {
-        if (aBoolean) {
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                    R.id.action_accountFragment2_to_logInFragment2);
         }
     };
 
@@ -105,8 +102,6 @@ public class AccountFragment extends Fragment {
             pickPhotoResultLauncher.launch(pickPhoto);
         }
     };
-
-
 
     View.OnClickListener userEditButtonListener = new View.OnClickListener() {
         @Override
@@ -131,5 +126,5 @@ public class AccountFragment extends Fragment {
             }
         }
     };
-};
+}
     // endregion

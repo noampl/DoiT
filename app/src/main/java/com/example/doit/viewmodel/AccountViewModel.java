@@ -25,9 +25,9 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> LastName;
     private MutableLiveData<String> NumberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
-    private MutableLiveData<Boolean> LoggedOut;
     private MutableLiveData<Boolean> EditDetails;
     private MutableLiveData<User> _authUser;
+    private MutableLiveData<Boolean> _authSuccess;
     private boolean ImageChanged = false;
     private String ImageUrl;
     //endregion
@@ -53,6 +53,10 @@ public class AccountViewModel extends ViewModel {
         return _authUser;
     }
 
+    public MutableLiveData<Boolean> get_authSuccess() {
+        return repo.get_authSuccess();
+    }
+
     public MutableLiveData<Boolean> getEditDetails() {
         if(EditDetails == null) { EditDetails = new MutableLiveData<>(false); }
         return EditDetails;
@@ -60,11 +64,6 @@ public class AccountViewModel extends ViewModel {
 
     public void setEditDetails(Boolean editDetails) {
         EditDetails.setValue(editDetails);
-    }
-
-    public MutableLiveData<Boolean> getLoggedOut() {
-        if (LoggedOut == null) { LoggedOut = new MutableLiveData<Boolean>(false); }
-        return LoggedOut;
     }
 
     public String getImageUrl() {
@@ -134,9 +133,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public boolean onClickLogoutButton() {
-        UserFirebaseWorker worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
-        worker.logoutAuthUser();
-        LoggedOut.setValue(true);
+        repo.logout();
         return true;
     }
 
