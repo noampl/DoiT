@@ -57,16 +57,14 @@ public class InitFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         _loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        _loginViewModel.get_authSuccess().observe(this, new Observer<Boolean>() {
+        _loginViewModel.get_authSuccess().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(isUserExist()) {
                     if (aBoolean) {
-                        Log.d("Peleg", "it's here 1");
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
                                 .navigate(R.id.action_initFragment_to_groupsFragment2);
                     } else {
-                        Log.d("peleg", "user failed to connect firebase");
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
                                 .navigate(R.id.action_initFragment_to_logInFragment2);
                     }

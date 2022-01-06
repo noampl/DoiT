@@ -51,29 +51,12 @@ public class LogInFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
-        /*viewModel.setResponseHelper(this);*/
         viewModel.set_isBottomNavUp(false);
-        /*viewModel.get_authUser().observe(getViewLifecycleOwner(), onUserAuthenticated());*/
         viewModel.get_authSuccess().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
         return _binding.getRoot();
     }
-/*
-    private Observer<User> onUserAuthenticated() {
-            return new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    if (user != null) {
-                        Log.d(TAG, "User has been found");
-                        Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
-                        saveUserForLater();
-                        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                                R.id.action_logInFragment2_to_groupsFragment2);
-                    }
-                }
-            };
-    }*/
 
     private Observer<Boolean> onUserAuthentication() {
         return new Observer<Boolean>() {
@@ -88,34 +71,13 @@ public class LogInFragment extends Fragment {
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                                 R.id.action_logInFragment2_to_groupsFragment2);
                     } else {
-                        Log.d(TAG, "User is not find");
+                        Log.d(TAG, "User is not found");
                         Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         };
     }
-
-/*
-    @Override
-    public void actionFinished(boolean actionResult) {
-        if (actionResult){
-            */
-/*Log.d(TAG, "User has been found");
-            User authUser = viewModel.getAuthUser();
-            if (authUser != null) {
-                Toast.makeText(getContext(), authUser.get_email() + " is connected", Toast.LENGTH_SHORT).show();
-            }
-            saveUserForLater();
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                    R.id.action_logInFragment2_to_groupsFragment2);*//*
-
-        } else {
-            Log.d(TAG, "User is not find");
-            Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
-        }
-    }
-*/
 
     private void saveUserForLater(){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
