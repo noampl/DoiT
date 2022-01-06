@@ -5,7 +5,9 @@
     tools:context=".view.AddGroupDialog">
 
     <data>
-
+        <variable
+            name="groupsViewModel"
+            type="com.example.doit.viewmodel.GroupsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +21,9 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
 
         <EditText
             android:id="@+id/group_name"

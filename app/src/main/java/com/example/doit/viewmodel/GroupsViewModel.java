@@ -72,6 +72,10 @@ public class GroupsViewModel extends ViewModel {
         return true;
     }
 
+    public void updateGroup() {
+        
+    }
+
     // endregion
 
 }
