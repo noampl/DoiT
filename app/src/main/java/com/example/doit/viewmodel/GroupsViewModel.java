@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.Model.Group;
+import com.example.doit.Model.entities.Group;
 import com.example.doit.Model.Repository;
 
 import java.util.List;

@@ -3,16 +3,12 @@ package com.example.doit.viewmodel;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.IResponseHelper;
-import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.Model.User;
+import com.example.doit.Model.entities.User;
 import com.example.doit.Model.UserFirebaseWorker;
-
-import kotlin._Assertions;
 
 public class AccountViewModel extends ViewModel {
     //region members

@@ -1,18 +1,13 @@
 package com.example.doit.Model;
 
-import android.util.Log;
-
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.example.doit.IResponseHelper;
 import com.example.doit.Model.dao.UserDao;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.example.doit.Model.entities.Group;
+import com.example.doit.Model.entities.User;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.List;
