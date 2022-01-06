@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.Model.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -15,7 +15,7 @@ public class Group {
     // region Members
     @PrimaryKey
     @NonNull
-    private String _id; // the id of the firebase
+    private String _groupId; // the id of the firebase
     private String _name;
     private String _description;
     @TypeConverters(Converters.class)
@@ -23,8 +23,8 @@ public class Group {
     @TypeConverters(Converters.class)
     private List<User> admins;
     private String _image;
-    /*@TypeConverters(Converters.class)
-    private List<Task> tasks;*/
+    @TypeConverters(Converters.class)
+    private List<Task> tasks;
 
     // endregion
 
@@ -33,25 +33,25 @@ public class Group {
     public Group(){}
 
     public Group(String id, String _name, String _description, List<User> _users, List<User> _admins, String _image, List<Task> _tasks) {
-        this._id = id;
+        this._groupId = id;
         this._name = _name;
         this._description = _description;
         this._users = _users;
         this.admins = _admins;
         this._image = _image;
-        //this.tasks = _tasks;
+        this.tasks = _tasks;
     }
 
     // endregion
 
     // region Properties
 
-    public String get_id() {
-        return _id;
+    public String get_groupId() {
+        return _groupId;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void set_groupId(String _groupId) {
+        this._groupId = _groupId;
     }
 
     public String get_name() {
@@ -94,13 +94,13 @@ public class Group {
         this._image = _image;
     }
 
-    /*public List<Task> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
-    }*/
+    }
 
     // endregion
 }

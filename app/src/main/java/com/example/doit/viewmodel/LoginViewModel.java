@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.IResponseHelper;
 import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
-import com.example.doit.Model.User;
+import com.example.doit.Model.entities.User;
 import com.example.doit.Model.UserFirebaseWorker;
 
 import java.util.HashMap;

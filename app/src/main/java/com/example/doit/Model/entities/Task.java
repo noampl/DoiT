@@ -1,4 +1,4 @@
-package com.example.doit.Model;
+package com.example.doit.Model.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -18,7 +18,7 @@ public class Task {
     @PrimaryKey
     @NonNull
     private String _taskId;
-    private String _groupID;
+    private String _groupId;
     private String _name;
     private String _description;
     @TypeConverters(Converters.class)
@@ -27,10 +27,8 @@ public class Task {
     private Date _targetDate;
     @TypeConverters(Converters.class)
     private Date _finishDate;
-    @TypeConverters(Converters.class)
-    private User _createdBy;
-    @TypeConverters(Converters.class)
-    private User _assignee;
+    private String _createdById;
+    private String _assigneeId;
     private int _value;
     private String _image;
 
@@ -42,15 +40,15 @@ public class Task {
     }
 
     @Ignore
-    public Task(String taskId, String _groupID, String _name, String _description, Date _createdDate, Date _targetDate, User _createdBy, User _assignee, int _value, String _image) {
+    public Task(String taskId, String _groupID, String _name, String _description, Date _createdDate, Date _targetDate, String _createdBy, String _assignee, int _value, String _image) {
         this._taskId = taskId;
-        this._groupID = _groupID;
+        this._groupId = _groupID;
         this._name = _name;
         this._description = _description;
         this._createdDate = _createdDate;
         this._targetDate = _targetDate;
-        this._createdBy = _createdBy;
-        this._assignee = _assignee;
+        this._createdById = _createdBy;
+        this._assigneeId = _assignee;
         this._value = _value;
         this._image = _image;
     }
@@ -67,12 +65,12 @@ public class Task {
         this._taskId = _taskId;
     }
 
-    public String get_groupID() {
-        return _groupID;
+    public String get_groupId() {
+        return _groupId;
     }
 
-    public void set_groupID(String _groupID) {
-        this._groupID = _groupID;
+    public void set_groupId(String _groupId) {
+        this._groupId = _groupId;
     }
 
     public String get_name() {
@@ -115,20 +113,20 @@ public class Task {
         this._finishDate = _finishDate;
     }
 
-    public User get_createdBy() {
-        return _createdBy;
+    public String get_createdById() {
+        return _createdById;
     }
 
-    public void set_createdBy(User _createdBy) {
-        this._createdBy = _createdBy;
+    public void set_createdById(String _createdById) {
+        this._createdById = _createdById;
     }
 
-    public User get_assignee() {
-        return _assignee;
+    public String get_assigneeId() {
+        return _assigneeId;
     }
 
-    public void set_assignee(User _assignee) {
-        this._assignee = _assignee;
+    public void set_assigneeId(String _assigneeId) {
+        this._assigneeId = _assigneeId;
     }
 
     public int get_value() {
