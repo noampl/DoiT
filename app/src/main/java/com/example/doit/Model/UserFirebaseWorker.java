@@ -12,6 +12,7 @@ import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,7 +83,9 @@ public class UserFirebaseWorker implements IDataWorker{
         newUser.setLastName((String) doc.get("lastName"));
         newUser.setPhone((String) doc.get("phone"));
         newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
-        newUser.setRole(Roles.valueOf((String) doc.get("role")));
+        if (doc.get("role") != null) {
+            newUser.setRole(Roles.valueOf((String) doc.get("role")));
+        }
         newUser.setImgae((String) doc.get("image"));
         return newUser;
     }
@@ -101,15 +104,15 @@ public class UserFirebaseWorker implements IDataWorker{
 
 
 
-    public void upload_image(Uri uri, IResponseHelper resHelper){
+    public void upload_image(String uri, User user){
         if (uri == null){
             return;
         }
-        File file = new File(String.valueOf(uri));
+        File file = new File(uri);
         String imageName = file.getName();
         StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("profile_images")
                 .child(System.currentTimeMillis()+imageName);
-        fileRef.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        fileRef.putFile(Uri.parse(uri)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -117,15 +120,15 @@ public class UserFirebaseWorker implements IDataWorker{
                     public void onSuccess(Uri uri) {
                         String url = uri.toString();
                         Log.d(TAG, "url " + url);
-                        _image_url = url;
-                        resHelper.actionFinished(true);
+                        user.setPassword(null);
+                        user.setImgae(uri.toString());
+                        usersRef.document(user.get_id()).update(user.create());
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error on uploading user profile image", e);
-                        resHelper.actionFinished(false);
                     }
                 });;
             }
@@ -194,37 +197,48 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
     }
 
-    public void create(User user, IResponseHelper responseHelper ) {
-        if(!validateCreateValues(user))
-            return;
+    public void create(User user) {
+        mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password()).addOnCompleteListener(
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    createNewUserDoc(user);
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
+                                }
+                            }
+                        }
+        );
+    }
+
+    private void createNewUserDoc(User user){
+        user.setPassword(null);
         usersRef.add(user.create()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        Task<DocumentSnapshot> docTask = documentReference.get();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password())
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d(TAG, "createUserWithEmail:success");
-                                            getAuthenticatedUser(responseHelper);
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                            _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
-                                            responseHelper.actionFinished(false);
-                                            deleteUser(documentReference);
-                                        }
-                                    }
-                                });
+                        user.set_id(documentReference.getId());
+                        upload_image(user.get_image(), user);
+                        docTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    authUser.setValue(insertDocumentToUser(Objects.requireNonNull(task.getResult())));
+                                }
+                            }
+                        });
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
-                        responseHelper.actionFinished(false);
                     }
                 });
     }
@@ -306,7 +320,7 @@ public class UserFirebaseWorker implements IDataWorker{
                         });
             }
         };
-        if (ImageHasChanged) {upload_image(image_uri, help_image); }
+        if (ImageHasChanged) {upload_image(image_uri.toString(), user); }
         else { help_image.actionFinished(true); }
     }
 
@@ -315,13 +329,5 @@ public class UserFirebaseWorker implements IDataWorker{
 
     // region Private Methods
 
-    private boolean validateCreateValues(User user) {
-        Map<String, Object> userMap = user.create();
-        for(Map.Entry<String, Object> entry : userMap.entrySet()){
-            if (entry.getValue() == null)
-                return false;
-        }
-        return true;
-    }
     // endregion
 }

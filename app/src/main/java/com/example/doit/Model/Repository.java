@@ -118,6 +118,11 @@ public class Repository {
         userFirebaseWorker.logoutAuthUser();
     }
 
+    public void register(String image_uri, User user) {
+        user.setImgae(image_uri);
+        userFirebaseWorker.create(user);
+    }
+
     private void fetchData(){
         _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
         _executorService.execute(()-> _curUser = LocalDB.db.userDao().loadUserById("TODO"));

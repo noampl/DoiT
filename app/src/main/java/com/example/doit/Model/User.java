@@ -165,8 +165,8 @@ public class User {
         user.put("id",get_id());
         user.put("firstName",get_firstName());
         user.put("lastName",get_lastName());
-        user.put("email",get_email());
-        user.put("password",get_password());
+        // user.put("email",get_email());
+        // user.put("password",get_password());
         user.put("role",get_role());
         user.put("phone",get_phone());
         user.put("countryCode",get_countryPhoneCode());
