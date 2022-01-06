@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -16,13 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.doit.IResponseHelper;
 import com.example.doit.Model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentLogInBinding;
 import com.example.doit.viewmodel.LoginViewModel;
 
-public class LogInFragment extends Fragment implements IResponseHelper {
+public class LogInFragment extends Fragment {
 
     //region members
     private static final String TAG = "Login Fragment";
@@ -50,28 +50,32 @@ public class LogInFragment extends Fragment implements IResponseHelper {
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         _binding.setLoginViewModel(viewModel);
         _binding.setLifecycleOwner(this);
-        viewModel.setResponseHelper(this);
         viewModel.set_isBottomNavUp(false);
+        viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
         return _binding.getRoot();
     }
 
-    @Override
-    public void actionFinished(boolean actionResult) {
-        if (actionResult){
-            Log.d(TAG, "User has been found");
-            User authUser = viewModel.getAuthUser();
-            if (authUser != null) {
-                Toast.makeText(getContext(), authUser.get_email() + " is connected", Toast.LENGTH_SHORT).show();
+    private Observer<Boolean> onUserAuthentication() {
+        return new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean != null) {
+                    if(aBoolean) {
+                        User user = viewModel.get_authUser().getValue();
+                        Log.d(TAG, "User has been found");
+                        Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
+                        saveUserForLater();
+                        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                                R.id.action_logInFragment2_to_groupsFragment2);
+                    } else {
+                        Log.d(TAG, "User is not found");
+                        Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
-            saveUserForLater();
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                    R.id.action_logInFragment2_to_groupsFragment2);
-        } else {
-            Log.d(TAG, "User is not find");
-            Toast.makeText(getContext(), "User is not connected", Toast.LENGTH_SHORT).show();
-        }
+        };
     }
 
     private void saveUserForLater(){

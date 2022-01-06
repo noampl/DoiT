@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.IResponseHelper;
 import com.example.doit.Model.Consts;
 import com.example.doit.Model.Repository;
 import com.example.doit.Model.entities.User;
@@ -21,10 +20,11 @@ public class LoginViewModel extends ViewModel {
     private static final String TAG = "LoginViewModel";
     private String _email;
     private String _password;
-    private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
     private MutableLiveData<Boolean> _isBottomNavUp;
+    private MutableLiveData<User> _authUser;
+    private MutableLiveData<Boolean> _logedIn;
 
     //endregion
 
@@ -34,14 +34,6 @@ public class LoginViewModel extends ViewModel {
         worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
         _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
 
-    }
-
-    public IResponseHelper getResponseHelper() {
-        return responseHelper;
-    }
-
-    public void setResponseHelper(IResponseHelper responseHelper) {
-        this.responseHelper = responseHelper;
     }
 
     public String getUserName(){
@@ -72,13 +64,24 @@ public class LoginViewModel extends ViewModel {
         this._isBottomNavUp.setValue(_isBottomNavUp);
     }
 
+    public MutableLiveData<User> get_authUser() {
+        _authUser = Repository.getInstance().get_authUser();
+        return _authUser;
+    }
+
+    public MutableLiveData<Boolean> get_logedIn() {
+        _logedIn = Repository.getInstance().get_loggedIn();
+        return _logedIn;
+    }
+
+
     public boolean Login(String email, String password){
         Log.d(TAG, "Login: " + email);
         Log.d(TAG, "Password: " + password);
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
-        Repository.getInstance().login(user, this.responseHelper);
+        Repository.getInstance().login(user);
         return true;
     }
 }
