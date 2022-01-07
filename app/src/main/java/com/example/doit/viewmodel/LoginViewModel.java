@@ -82,7 +82,9 @@ public class LoginViewModel extends ViewModel {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
-        Repository.getInstance().login(user);
+        if(email != null && !email.equals("") &&  password != null && !password.equals("")){
+            Repository.getInstance().login(user);
+        }
         return true;
     }
 }
