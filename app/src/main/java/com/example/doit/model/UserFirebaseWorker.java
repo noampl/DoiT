@@ -50,7 +50,7 @@ public class UserFirebaseWorker implements IDataWorker{
     private DocumentReference authDocRef;
     private MutableLiveData<User> authUser;
     private MutableLiveData<String> _firebaseError;
-  
+
     // endregion
 
     // region C'tor
@@ -331,6 +331,7 @@ public class UserFirebaseWorker implements IDataWorker{
             public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "signInWithEmail:failure", e);
                             loggedIn.postValue(false);
+                            get_firebaseError().postValue(e.getLocalizedMessage());
             }
         });
     }

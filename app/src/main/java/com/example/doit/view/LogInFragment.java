@@ -55,6 +55,14 @@ public class LogInFragment extends Fragment {
         viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
+        viewModel.get_firebaseError().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s.length() > 0){
+                    Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return _binding.getRoot();
     }
 
@@ -66,7 +74,11 @@ public class LogInFragment extends Fragment {
                     if(aBoolean) {
                         User user = viewModel.get_authUser().getValue();
                         Log.d(TAG, "User has been found");
-                        Toast.makeText(getContext(), viewModel.getUserName() + " is connected", Toast.LENGTH_SHORT).show();
+                        if (viewModel.getUserName() != null){
+                            Toast.makeText(getContext(), viewModel.getUserName() + " is connected", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
+                        }
                         saveUserForLater();
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                                 R.id.action_logInFragment2_to_groupsFragment2);

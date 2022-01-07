@@ -75,6 +75,10 @@ public class LoginViewModel extends ViewModel {
         return _logedIn;
     }
 
+    public MutableLiveData<String> get_firebaseError() {
+        return Repository.getInstance().get_fireBaseError();
+    }
+
 
     public boolean Login(String email, String password){
         Log.d(TAG, "Login: " + email);
