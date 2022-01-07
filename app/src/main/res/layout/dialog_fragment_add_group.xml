@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/avatar_img"
@@ -55,6 +55,7 @@
             android:layout_width="@dimen/large_avatar"
             android:layout_height="@dimen/large_avatar"
             android:background="@drawable/ic_baseline_account_circle_24"
+            android:onClick="@{()->groupsViewModel.addAdminsDialog()}"
             app:layout_constraintStart_toStartOf="@id/cancel_button"
             app:layout_constraintEnd_toEndOf="@id/cancel_button"
             app:layout_constraintTop_toBottomOf="@id/group_dec" />
@@ -74,6 +75,7 @@
             android:layout_height="@dimen/large_avatar"
             android:background="@drawable/ic_baseline_group_24"
             app:layout_constraintEnd_toEndOf="@id/create"
+            android:onClick="@{()->groupsViewModel.addMembersDialog()}"
             app:layout_constraintStart_toStartOf="@id/create"
             app:layout_constraintTop_toBottomOf="@id/group_dec" />
 
@@ -106,7 +108,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/cancel_button"
             app:layout_constraintTop_toBottomOf="@id/admins_text" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

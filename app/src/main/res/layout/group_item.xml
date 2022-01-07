@@ -58,8 +58,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="@dimen/margin"
-            android:src="@{group._users.get(0)._image, default = @drawable/ic_baseline_account_circle_24}"
+            android:src="@{@drawable/ic_baseline_account_circle_24}"
             />
+        <!--TODO make the picture above change-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
