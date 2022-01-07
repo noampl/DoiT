@@ -98,6 +98,7 @@ public class RegisterFragment extends Fragment{
             public void onChanged(User user) {
                 if (user.get_userId() != null) {
                     Toast.makeText(getContext(), "hello " + user.get_firstName(), Toast.LENGTH_SHORT).show();
+                    saveUserForLater();
                     Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                             R.id.action_registerFragment2_to_groupsFragment2);
                 }
@@ -136,7 +137,7 @@ public class RegisterFragment extends Fragment{
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.email), viewModel.get_email().getValue());
-        editor.putString(getString(R.string.password), viewModel.get_password().getValue()); // TODO figure out if needed to hash?
+        editor.putString(getString(R.string.password), viewModel.get_password().getValue());
         editor.apply();
     }
 }
