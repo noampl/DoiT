@@ -1,4 +1,4 @@
-package com.example.doit;
+package com.example.doit.interfaces;
 
 public interface IResponseHelper {
 

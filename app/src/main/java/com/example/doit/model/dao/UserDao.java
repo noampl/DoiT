@@ -33,9 +33,6 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
-    @Query("select * from user where _userId = :id")
-    LiveData<User> loadUserById(String id);
-
     @Transaction
     @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
     List<GroupWithUsers> getGroupsWithUsers(String groupId);

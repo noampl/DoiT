@@ -5,7 +5,7 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.IResponseHelper;
+import com.example.doit.interfaces.IResponseHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.UserFirebaseWorker;

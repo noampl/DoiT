@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doit.R;
 import com.example.doit.databinding.GroupItemBinding;
 import com.example.doit.model.entities.Group;
 import com.example.doit.viewmodel.GroupsViewModel;
@@ -53,7 +54,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
     @Override
     public GroupsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         GroupItemBinding _binding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()), viewType, parent, false);
+                LayoutInflater.from(parent.getContext()), R.layout.group_item, parent, false);
         return new GroupsViewHolder(_binding , _groupsViewModel);
     }
 

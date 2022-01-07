@@ -6,17 +6,18 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentGroupsBinding;
+import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.interfaces.IGroupDialogHelper;
 import com.example.doit.model.entities.Group;
-import com.example.doit.view.interfaces.IGroupDialogHelper;
 import com.example.doit.viewmodel.GroupsViewModel;
 
 import java.util.List;
@@ -64,10 +65,14 @@ public class GroupsFragment extends Fragment implements IGroupDialogHelper {
 
     private void initAdapter() {
         GroupsAdapter adapter = new GroupsAdapter(_groupsViewModel);
-        if(_groupsViewModel.get_groups() != null) {
-            adapter.submitList(_groupsViewModel.get_groups().getValue());
-          _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), adapter::submitList);
-        }
+        adapter.submitList(_groupsViewModel.get_groups().getValue());
+        _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
+            @Override
+            public void onChanged(List<Group> groups) {
+                adapter.submitList(groups);
+                Log.d("PELEG", "submit group list ");
+            }
+        });
         _binding.groupsList.setAdapter(adapter);
     }
 
