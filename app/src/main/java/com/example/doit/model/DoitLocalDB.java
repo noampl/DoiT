@@ -15,6 +15,7 @@ import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.entities.relations.UsersGroupsCrossRef;
 
+
 @Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract class DoitLocalDB extends RoomDatabase {

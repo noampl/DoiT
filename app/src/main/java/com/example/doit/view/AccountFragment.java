@@ -27,6 +27,8 @@ import com.example.doit.databinding.FragmentAccountBinding;
 import com.example.doit.viewmodel.AccountViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 public class AccountFragment extends Fragment {
     //region members
     private static final String TAG = "Account Fragment";
@@ -84,8 +86,11 @@ public class AccountFragment extends Fragment {
         return new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-                viewModel.updateUserDetails();
+                if(!Objects.equals(s, "")) {
+                    Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+                    viewModel.updateUserDetails();
+                    viewModel.get_operationError().postValue("");
+                }
             }
         };
     }

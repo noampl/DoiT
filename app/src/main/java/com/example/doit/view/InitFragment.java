@@ -69,6 +69,7 @@ public class InitFragment extends Fragment {
         });
          if(isUserExist()) {
             _loginViewModel.Login(_email, _password);
+            saveUserForLater();
          }
          else {
             Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
@@ -83,5 +84,13 @@ public class InitFragment extends Fragment {
         _email = sharedPref.getString(getString(R.string.email), "NONE");
         _password  = sharedPref.getString(getString(R.string.password), "NONE");
         return !(_email.equals("NONE") || _password.equals("NONE"));
+    }
+
+    private void saveUserForLater(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.email), _email);
+        editor.putString(getString(R.string.password), _password);
+        editor.apply();
     }
 }
