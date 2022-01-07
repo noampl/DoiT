@@ -23,6 +23,10 @@
     <string name="cancel">cancel</string>
     <string name="create">Create</string>
     <string name="add_group">add group</string>
+    <string name="login_to_your_account">Login to your Account</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
 
 
 </resources>
