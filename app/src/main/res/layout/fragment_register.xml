@@ -46,7 +46,7 @@
             android:layout_width="150dp"
             android:background="@null"
             android:layout_height="150dp"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@drawable/no_profile_picture" />
 
         </androidx.cardview.widget.CardView>
 
@@ -60,7 +60,11 @@
             android:autofillHints="name"
             android:hint="@string/first_name"
             android:layout_marginTop="20dp"
+            app:isValid="@{RegisterViewModel.attrValid}"
+            app:isClicked="@{RegisterViewModel.isClicked.get(@string/isClickedFirstName)}"
+            app:regularValidation="@{RegisterViewModel._firstName}"
             android:onTextChanged="@{RegisterViewModel::onFirstNameChange}"
+            style="@style/Widget.AppCompat.EditText"
             app:layout_constraintTop_toBottomOf="@id/profile_image_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,6 +77,10 @@
             android:autofillHints="name"
             android:ems="10"
             android:inputType="textPersonName"
+            style="@style/Widget.AppCompat.EditText"
+            app:isValid="@{RegisterViewModel.attrValid}"
+            app:regularValidation="@{RegisterViewModel._lastName}"
+            app:isClicked="@{RegisterViewModel.isClicked.get(@string/isClickedLastName)}"
             android:hint="@string/last_name"
             android:layout_marginTop="10dp"
             android:onTextChanged="@{RegisterViewModel::onLastNameChange}"
@@ -88,7 +96,10 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textEmailAddress"
+            style="@style/Widget.AppCompat.EditText"
             android:hint="@string/email"
+            app:isValid="@{RegisterViewModel.attrValid}"
+            app:emailValidation="@{RegisterViewModel._email}"
             android:layout_marginTop="10dp"
             android:onTextChanged="@{RegisterViewModel::onEmailChange}"
             app:layout_constraintTop_toBottomOf="@id/last_name"
@@ -101,6 +112,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autofillHints="phone"
+            app:isValid="@{RegisterViewModel.attrValid}"
+            app:regularValidation="@{RegisterViewModel._phone}"
+            app:isClicked="@{RegisterViewModel.isClicked.get(@string/isClickedPhone)}"
+            style="@style/Widget.AppCompat.EditText"
             android:ems="10"
             android:inputType="phone"
             android:hint="@string/phone_number"
@@ -115,6 +130,7 @@
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.EditText"
             android:autofillHints="password"
             android:ems="10"
             android:inputType="textPassword"
@@ -130,7 +146,7 @@
             android:id="@+id/validatPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@{ RegisterViewModel.passwordsIdentical ? @android:color/transparent : @color/design_default_color_error}"
+            style="@style/Widget.AppCompat.EditText"
             android:ems="10"
             android:autofillHints="password"
             android:inputType="textPassword"
@@ -155,7 +171,7 @@
             android:layout_marginTop="20dp"
             />
 
-        <ProgressBar
+        <!--<ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
@@ -164,7 +180,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

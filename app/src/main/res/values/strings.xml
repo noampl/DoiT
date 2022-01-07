@@ -10,6 +10,11 @@
     <string name="email">Email</string>
     <string name="phone_number">Phone Number</string>
     <string name="password">Password</string>
+    <string name="isClickedPassword">password</string>
+    <string name="isClickedFirstName">firstName</string>
+    <string name="isClickedLastName">lastName</string>
+    <string name="isClickedPhone">phone</string>
+    <string name="isClickedEmail">email</string>
     <string name="user_profile_image">user profile image</string>
     <string name="replace_image">click me for replace</string>
     <string name="submit_changes">Submit changes</string>
@@ -23,6 +28,10 @@
     <string name="cancel">cancel</string>
     <string name="create">Create</string>
     <string name="add_group">add group</string>
+    <string name="login_to_your_account">Login to your Account</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
 
 
 </resources>
