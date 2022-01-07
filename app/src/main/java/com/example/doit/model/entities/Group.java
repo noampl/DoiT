@@ -3,10 +3,11 @@ package com.example.doit.model.entities;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
-import com.example.doit.common.Converters;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,28 +20,25 @@ public class Group {
     private String _groupId; // the id of the firebase
     private String _name;
     private String _description;
-    @TypeConverters(Converters.class)
-    private List<User> _users;
-    @TypeConverters(Converters.class)
-    private List<User> admins;
+    private List<String> membersId;
+    private List<String> _adminsId;
+    private List<String> _tasksId;
     private String _image;
-    @TypeConverters(Converters.class)
-    private List<Task> tasks;
 
     // endregion
 
-    // reigon C'tor
+    // region C'tor
 
     public Group(){}
 
-    public Group(String id, String _name, String _description, List<User> _users, List<User> _admins, String _image, List<Task> _tasks) {
+    public Group(String id, String _name, String _description, List<String> _membersID, List<String> _admins, String _image, List<String> _tasks) {
         this._groupId = id;
         this._name = _name;
         this._description = _description;
-        this._users = _users;
-        this.admins = _admins;
+        this.membersId = _membersID;
+        this._adminsId = _admins;
         this._image = _image;
-        this.tasks = _tasks;
+        this._tasksId = _tasks;
     }
 
     // endregion
@@ -71,20 +69,20 @@ public class Group {
         this._description = _description;
     }
 
-    public List<User> get_users() {
-        return _users;
+    public List<String> getMembersId() {
+        return membersId;
     }
 
-    public void set_users(List<User> _users) {
-        this._users = _users;
+    public void setMembersId(List<String> membersId) {
+        this.membersId = membersId;
     }
 
-    public List<User> getAdmins() {
-        return admins;
+    public List<String> get_adminsId() {
+        return _adminsId;
     }
 
-    public void setAdmins(List<User> admins) {
-        this.admins = admins;
+    public void set_adminsId(List<String> _adminsId) {
+        this._adminsId = _adminsId;
     }
 
     public String get_image() {
@@ -95,12 +93,29 @@ public class Group {
         this._image = _image;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public List<String> get_tasksId() {
+        return _tasksId;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void set_tasksId(List<String> _tasksId) {
+        this._tasksId = _tasksId;
+    }
+
+    // endregion
+
+    //region Public Methods
+
+    public HashMap<String, Object> create(){
+        HashMap<String, Object> groupMap = new HashMap<>();
+        groupMap.put("id",_groupId);
+        groupMap.put("name",_name);
+        groupMap.put("description",_description);
+        groupMap.put("image",_image);
+        groupMap.put("membersId",membersId);
+        groupMap.put("adminsId",_adminsId);
+        groupMap.put("taskId",_tasksId);
+
+        return groupMap;
     }
 
     @Override
@@ -108,13 +123,15 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return _groupId.equals(group._groupId) && _name.equals(group._name) && _description.equals(group._description) && Objects.equals(_users, group._users) && Objects.equals(admins, group.admins) && Objects.equals(_image, group._image) && Objects.equals(tasks, group.tasks);
+        return _groupId.equals(group._groupId) && _name.equals(group._name) && _description.equals(group._description) && Objects.equals(membersId, group.membersId) && Objects.equals(_adminsId, group._adminsId) && Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_groupId, _name, _description, _users, admins, _image, tasks);
+        return Objects.hash(_groupId, _name, _description, membersId, _adminsId, _image, _tasksId);
     }
 
     // endregion
+
+
 }

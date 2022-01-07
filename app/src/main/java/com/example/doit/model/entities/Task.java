@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 import com.example.doit.common.Converters;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Task {
@@ -21,12 +22,9 @@ public class Task {
     private String _groupId;
     private String _name;
     private String _description;
-    @TypeConverters(Converters.class)
-    private Date _createdDate;
-    @TypeConverters(Converters.class)
-    private Date _targetDate;
-    @TypeConverters(Converters.class)
-    private Date _finishDate;
+    private long _createdDate;
+    private long _targetDate;
+    private long _finishDate;
     private String _createdById;
     private String _assigneeId;
     private int _value;
@@ -40,7 +38,7 @@ public class Task {
     }
 
     @Ignore
-    public Task(String taskId, String _groupID, String _name, String _description, Date _createdDate, Date _targetDate, String _createdBy, String _assignee, int _value, String _image) {
+    public Task(String taskId, String _groupID, String _name, String _description, long _createdDate, long _targetDate, String _createdBy, String _assignee, int _value, String _image) {
         this._taskId = taskId;
         this._groupId = _groupID;
         this._name = _name;
@@ -89,27 +87,27 @@ public class Task {
         this._description = _description;
     }
 
-    public Date get_createdDate() {
+    public long get_createdDate() {
         return _createdDate;
     }
 
-    public void set_createdDate(Date _createdDate) {
+    public void set_createdDate(long _createdDate) {
         this._createdDate = _createdDate;
     }
 
-    public Date get_targetDate() {
+    public long get_targetDate() {
         return _targetDate;
     }
 
-    public void set_targetDate(Date _targetDate) {
+    public void set_targetDate(long _targetDate) {
         this._targetDate = _targetDate;
     }
 
-    public Date get_finishDate() {
+    public long get_finishDate() {
         return _finishDate;
     }
 
-    public void set_finishDate(Date _finishDate) {
+    public void set_finishDate(long _finishDate) {
         this._finishDate = _finishDate;
     }
 
@@ -147,4 +145,16 @@ public class Task {
 
     // endregion
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return _createdDate == task._createdDate && _targetDate == task._targetDate && _finishDate == task._finishDate && _value == task._value && _taskId.equals(task._taskId) && _groupId.equals(task._groupId) && _name.equals(task._name) && Objects.equals(_description, task._description) && _createdById.equals(task._createdById) && Objects.equals(_assigneeId, task._assigneeId) && Objects.equals(_image, task._image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_taskId, _groupId, _name, _description, _createdDate, _targetDate, _finishDate, _createdById, _assigneeId, _value, _image);
+    }
 }

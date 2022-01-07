@@ -1,5 +1,7 @@
 package com.example.doit.model.dao;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -16,6 +18,9 @@ import java.util.List;
 
 @Dao
 public interface GroupDao {
+
+    @Query("SELECT * FROM `group`")
+    List<Group> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);
