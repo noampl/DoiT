@@ -7,13 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.doit.IResponseHelper;
+import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,7 +29,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,9 +37,11 @@ public class UserFirebaseWorker implements IDataWorker{
     // region Members
 
     private static final String USERS_COLLECTION_NAME = "users";
+    private static final String GROUPS_COLLECTION_NAME = "groups";
     private static final String TAG = "User Firebase Worker";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
+    private final CollectionReference groupsRef;
     private User _user;
     private String _registerErrorReason;
     private FirebaseAuth mAuth;
@@ -58,6 +57,7 @@ public class UserFirebaseWorker implements IDataWorker{
     public UserFirebaseWorker() {
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
+        groupsRef = db.collection(GROUPS_COLLECTION_NAME);
         mAuth = FirebaseAuth.getInstance();
         _firebaseError = new MutableLiveData<>();
     }
@@ -312,7 +312,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     public void login(Map<String, Object> user, MutableLiveData<Boolean> loggedIn) {
         Log.d(TAG, "looking for user");
-        authUser.postValue(new User());
+        authUser.setValue((new User()));
         String email = (String) user.get("email");
         String password = (String) user.get("password");
         assert email != null && password != null;
@@ -362,7 +362,6 @@ public class UserFirebaseWorker implements IDataWorker{
                     }
                 });
             }
-
 
     // endregion
 

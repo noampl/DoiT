@@ -36,8 +36,7 @@ public class User {
     private String _countryPhoneCode;
     @TypeConverters(Converters.class)
     private Roles _role;
-    @TypeConverters(Converters.class)
-    private List<Group> _groups;
+    private List<String> _groupsId;
 
     // endregion
 
@@ -50,7 +49,7 @@ public class User {
 
     @Ignore
     public User(@NonNull String id, String _email, String firstName, String _lastName, String _password, String _image, String _phone,
-                String _countryPhoneCode, Roles _role, List<Group> groups) {
+                String _countryPhoneCode, Roles _role, List<String> groups) {
         this._userId = id;
         this._email = _email;
         this._lastName = _lastName;
@@ -60,7 +59,7 @@ public class User {
         this._countryPhoneCode = _countryPhoneCode;
         this._role = _role;
         this._firstName = firstName;
-        this._groups = groups;
+        this._groupsId = groups;
     }
 
     // endregion
@@ -148,12 +147,12 @@ public class User {
         this._role = _role;
     }
 
-    public List<Group> get_groups() {
-        return _groups;
+    public List<String> get_groupsId() {
+        return _groupsId;
     }
 
-    public void set_groups(List<Group> _groups) {
-        this._groups = _groups;
+    public void set_groupsId(List<String> _groupsId) {
+        this._groupsId = _groupsId;
     }
 
     // endregion
@@ -171,7 +170,7 @@ public class User {
         user.put("phone",get_phone());
         user.put("countryCode",get_countryPhoneCode());
         user.put("image",get_image());
-        user.put("groups",get_groups());
+        user.put("groups", get_groupsId());
 
 
         return user;
@@ -189,7 +188,7 @@ public class User {
                 ", _phone='" + _phone + '\'' +
                 ", _countryPhoneCode='" + _countryPhoneCode + '\'' +
                 ", _role=" + _role +
-                ", _groups=" + _groups +
+                ", _groups=" + _groupsId +
                 '}';
     }
 }

@@ -3,8 +3,10 @@ package com.example.doit.model;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.example.MyApplication;
+import com.example.doit.common.Converters;
 import com.example.doit.model.dao.GroupDao;
 import com.example.doit.model.dao.TaskDao;
 import com.example.doit.model.dao.UserDao;
@@ -13,7 +15,9 @@ import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.entities.relations.UsersGroupsCrossRef;
 
-@Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 2, exportSchema = false)
+
+@Database(entities = {Group.class, User.class, Task.class, UsersGroupsCrossRef.class}, version = 4, exportSchema = false)
+@TypeConverters({Converters.class})
 abstract class DoitLocalDB extends RoomDatabase {
     public abstract GroupDao groupDao();
     public abstract TaskDao taskDao();
@@ -22,7 +26,7 @@ abstract class DoitLocalDB extends RoomDatabase {
 }
 
 class LocalDB {
-    static public DoitLocalDB db =
+    static volatile public DoitLocalDB db =
             Room.databaseBuilder(MyApplication.getAppContext(),
                     DoitLocalDB.class,
                     "DoitLocalDB.db")

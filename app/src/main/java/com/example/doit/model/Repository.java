@@ -1,11 +1,13 @@
 package com.example.doit.model;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
@@ -14,6 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +33,30 @@ public class Repository {
     private static Repository instance;
     private FirebaseFirestore _remoteDb;
     private Map<String, IDataWorker> workers;
-    private LiveData<List<User>> _users;
-    private LiveData<User> _curUser;
-    private LiveData<List<Group>> _groups;
+    private MutableLiveData<List<User>> _users = new MutableLiveData<>(new ArrayList<>()); // FIXME
+    private MutableLiveData<List<Group>> _groups = new MutableLiveData<>(new ArrayList<>()); // FIXME
+    private MutableLiveData<List<com.example.doit.model.entities.Task>> _tasks = new MutableLiveData<>(new ArrayList<>()); // FIXME
     private final ExecutorService _executorService;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private UserDao userDao;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _loggedIn;
     private UserFirebaseWorker userFirebaseWorker;
+    private GroupFirebaseWorker groupFirebaseWorker;
     private MutableLiveData<String> _fireBaseError;
+
+    /**
+     * Uses for addGroup dialog
+     */
+    private MutableLiveData<List<User>> _newGroupUsers;
+    /**
+     * Uses for addGroup dialog
+     */
+    private MutableLiveData<List<User>> _newGroupAdmins;
+
     // endregion
+
+    // region Singeltone
 
     private Repository() {
         workers = new HashMap<>();
@@ -48,7 +66,11 @@ public class Repository {
         _authUser = new MutableLiveData<User>(new User());
         userDao = LocalDB.db.userDao();
         userFirebaseWorker = (UserFirebaseWorker) createWorker(Consts.FIRE_BASE_USERS);
+        groupFirebaseWorker = new GroupFirebaseWorker();
         userFirebaseWorker.setAuthUser(_authUser);
+        _newGroupAdmins = new MutableLiveData<>(new ArrayList<>());
+        _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
+
     }
 
     public static Repository getInstance() {
@@ -58,6 +80,10 @@ public class Repository {
         return instance;
     }
 
+    // endregion
+
+    // region Properties
+
     public IDataWorker createWorker(String worker) {
         return workers.get(worker);
     }
@@ -66,7 +92,7 @@ public class Repository {
         return _executorService;
     }
 
-    public LiveData<List<Group>> getGroups() {
+    public MutableLiveData<List<Group>> getGroups() {
         return _groups;
     }
 
@@ -74,15 +100,7 @@ public class Repository {
         return _isBottomNavigationUp;
     }
 
-    public void set_isBottomNavigationUp(boolean _isBottomNavigationUp) {
-        this._isBottomNavigationUp.postValue(_isBottomNavigationUp);
-    }
-
     public MutableLiveData<String> get_fireBaseError() { return userFirebaseWorker.get_firebaseError(); }
-
-    public void login(Map<String, Object> user) {
-        userFirebaseWorker.login(user, _loggedIn);
-    }
 
     public MutableLiveData<User> get_authUser() {
         if (_authUser == null) { _authUser = new MutableLiveData<User>(); }
@@ -97,6 +115,22 @@ public class Repository {
     public MutableLiveData<Boolean> get_loggedIn() {
         if (_loggedIn == null) { _loggedIn = new MutableLiveData<>(false); }
         return _loggedIn;
+    }
+
+    public MutableLiveData<List<User>> get_newGroupUsers() {
+        return _newGroupUsers;
+    }
+
+    public MutableLiveData<List<User>> get_newGroupAdmins() {
+        return _newGroupAdmins;
+    }
+
+    // endregion
+
+    // region Public Methods
+
+    public void login(Map<String, Object> user) {
+        userFirebaseWorker.login(user, _loggedIn);
     }
 
     public void saveOrUpdateUser(User user) {
@@ -126,10 +160,28 @@ public class Repository {
         saveOrUpdateUser(user);
     }
 
-    private void fetchData(){
-        _executorService.execute(()-> _users = LocalDB.db.userDao().getAll());
-        _executorService.execute(()-> _curUser = LocalDB.db.userDao().loadUserById("TODO"));
+    public void insertGroup(Group group){
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                groupFirebaseWorker.createNewGroup(group);
+                Log.d("PELEG", "update groups");
+            }
+        });
     }
+
+
+    public void insertGroupLocal(Group group){
+        _executorService.execute(new Runnable() {
+             @Override
+             public void run() {
+                 LocalDB.db.groupDao().insertAll(group);
+                 _groups.postValue(LocalDB.db.groupDao().getAll());
+             }
+         });
+    }
+
+    // endregion
 
     // region event listeners
 

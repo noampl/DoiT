@@ -18,6 +18,12 @@ public interface TaskDao {
     @Query("select * from Task")
     List<Task> getAll();
 
+    @Query("select * from Task WHERE _assigneeId =:assigneeId")
+    List<Task> getTasksByAssignee(String assigneeId);
+
+    @Query("select * from Task WHERE _groupId =:groupId")
+    List<Task> getTasksByGroup(String groupId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Task...Tasks);
 
@@ -26,6 +32,5 @@ public interface TaskDao {
 
     @Delete
     void delete(Task task);
-
 
 }

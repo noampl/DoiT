@@ -1,13 +1,19 @@
 package com.example.doit.viewmodel;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.interfaces.IGroupDialogHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.Repository;
-import com.example.doit.view.interfaces.IGroupDialogHelper;
+import com.example.doit.model.entities.Task;
+import com.example.doit.model.entities.User;
+import com.example.doit.interfaces.IDialogNavigationHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,9 +23,14 @@ public class GroupsViewModel extends ViewModel {
 
     // region Members
 
-    private LiveData<List<Group>> _groups;
+    private MutableLiveData<List<Group>> _groups;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
+    private IDialogNavigationHelper _iDialogNavigationHelper;
     private IGroupDialogHelper _iGroupDialogHelper;
+
+    private MutableLiveData<Integer> _selectedPosition;
+    private MutableLiveData<List<User>> _newGroupMembers;
+    private MutableLiveData<List<User>> _newGroupAdmins;
 
     // endregion
 
@@ -28,19 +39,48 @@ public class GroupsViewModel extends ViewModel {
     public GroupsViewModel(){
         _groups = Repository.getInstance().getGroups();
         _isBottomNavigationUp = Repository.getInstance().get_isBottomNavigationUp();
+        _newGroupAdmins = Repository.getInstance().get_newGroupAdmins();
+        _newGroupMembers = Repository.getInstance().get_newGroupUsers();
     }
 
     // endregion
 
     // region Properties
 
-
-    public IGroupDialogHelper get_iGroupDialogHelper() {
-        return _iGroupDialogHelper;
-    }
-
     public void set_iGroupDialogHelper(IGroupDialogHelper _iGroupDialogHelper) {
         this._iGroupDialogHelper = _iGroupDialogHelper;
+    }
+
+    public MutableLiveData<Integer> get_selectedPosition() {
+        return _selectedPosition;
+    }
+
+    public void set_selectedPosition(MutableLiveData<Integer> _selectedPosition) {
+        this._selectedPosition = _selectedPosition;
+    }
+
+    public MutableLiveData<List<User>> get_newGroupMembers() {
+        return _newGroupMembers;
+    }
+
+    public void set_newGroupMembers(List<User> _newGroupMembers) {
+        this._newGroupMembers.setValue(_newGroupMembers);
+    }
+
+    public MutableLiveData<List<User>> get_newGroupAdmins() {
+        return _newGroupAdmins;
+    }
+
+    public void set_newGroupAdmins(List<User> _newGroupAdmins) {
+        this._newGroupAdmins.setValue(_newGroupAdmins);
+    }
+
+    public IDialogNavigationHelper get_iDialogNavigationHelper() {
+        return _iDialogNavigationHelper;
+    }
+
+    public void set_iDialogNavigationHelper(IDialogNavigationHelper _iDialogNavigationHelper) {
+        this._iDialogNavigationHelper = _iDialogNavigationHelper;
     }
 
     public MutableLiveData<Boolean> get_isBottomNavigationUp() {
@@ -55,8 +95,8 @@ public class GroupsViewModel extends ViewModel {
         return _groups;
     }
 
-    public void set_groups(LiveData<List<Group>> _groups) {
-        this._groups = _groups;
+    public void set_groups(List<Group> _groups) {
+        this._groups.setValue(_groups);
     }
 
     // endregion
@@ -67,13 +107,49 @@ public class GroupsViewModel extends ViewModel {
      * Handling add Group Dialog
      * @return true
      */
-    public boolean addGroup(){
+    public boolean addGroupDialog(){
+        _newGroupMembers.getValue().add(Repository.getInstance().get_authUser().getValue());
+        _newGroupAdmins.getValue().add(Repository.getInstance().get_authUser().getValue());
         _iGroupDialogHelper.openDialog();
+
+        // consume the btn press
         return true;
     }
 
-    public void updateGroup() {
-        
+    public boolean addAdminsDialog(){
+
+        // TODO implement later
+        return true;
+    }
+
+    public boolean addMembersDialog(){
+
+        // TODO implement later
+
+        return true;
+    }
+
+    public void clearNewGroup(){
+        _newGroupAdmins.getValue().clear();
+        _newGroupMembers.getValue().clear();
+    }
+
+    public boolean addNewGroup(Uri imgUri, String name, String desc, List<User> admins, List<User> members) {
+        if(name == null || name.equals("")){
+            return false;
+        }
+        Uri uri = imgUri != null ? imgUri : Uri.parse("");
+        String description = desc != null ? desc : "";
+
+        List<String> membersId = new ArrayList<>(), adminsId = new ArrayList<>();
+        members.forEach((u)->membersId.add(u.get_userId()));
+        admins.forEach((u)->adminsId.add(u.get_userId()));
+
+
+        Group group = new Group("", name , description, membersId, adminsId, uri.toString() , new ArrayList<String>());
+        Repository.getInstance().insertGroup(group);
+
+        return true;
     }
 
     // endregion
