@@ -10,6 +10,11 @@
     <string name="email">Email</string>
     <string name="phone_number">Phone Number</string>
     <string name="password">Password</string>
+    <string name="isClickedPassword">password</string>
+    <string name="isClickedFirstName">firstName</string>
+    <string name="isClickedLastName">lastName</string>
+    <string name="isClickedPhone">phone</string>
+    <string name="isClickedEmail">email</string>
     <string name="user_profile_image">user profile image</string>
     <string name="replace_image">click me for replace</string>
     <string name="submit_changes">Submit changes</string>

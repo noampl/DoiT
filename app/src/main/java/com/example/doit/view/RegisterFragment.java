@@ -27,6 +27,7 @@ import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentRegisterBinding;
 import com.example.doit.viewmodel.RegisterViewModel;
+import com.google.rpc.context.AttributeContext;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -56,7 +57,43 @@ public class RegisterFragment extends Fragment{
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
         viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-        viewModel.get_authUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+        viewModel.get_authUser().observe(getViewLifecycleOwner(), loggedInObserver());
+        viewModel.getPasswordsIdentical().observe(getViewLifecycleOwner(), passwordIdenticalObserver());
+        viewModel.getRegisterError().observe(getViewLifecycleOwner(), errorObserver());
+        _binding.setRegisterViewModel(viewModel);
+        _binding.setLifecycleOwner(this);
+        _binding.profileImageButton.setOnClickListener(replaceImage());
+        Picasso.with(_binding.getRoot().getContext()).load(R.drawable.no_profile_picture).fit()
+                .into(_binding.profileImageButton);
+        return _binding.getRoot();
+    }
+
+    private Observer<Boolean> passwordIdenticalObserver(){
+        return new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(!aBoolean){
+                    _binding.validatPassword.setError("Passwords is not identical");
+                } else {
+                    _binding.validatPassword.setError(null,null);
+                }
+            }
+        };
+    }
+
+    private Observer<String> errorObserver(){
+        return new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s != null && !s.equals("")){
+                    Toast.makeText(getContext(), s,Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    private Observer<User> loggedInObserver(){
+        return new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 if (user.get_userId() != null) {
@@ -65,11 +102,7 @@ public class RegisterFragment extends Fragment{
                             R.id.action_registerFragment2_to_groupsFragment2);
                 }
             }
-        });
-        _binding.setRegisterViewModel(viewModel);
-        _binding.setLifecycleOwner(this);
-        _binding.profileImageButton.setOnClickListener(replaceImage());
-        return _binding.getRoot();
+        };
     }
 
     private final ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
@@ -102,8 +135,8 @@ public class RegisterFragment extends Fragment{
     private void saveUserForLater(){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), viewModel.get_email());
-        editor.putString(getString(R.string.password), viewModel.get_password()); // TODO figure out if needed to hash?
+        editor.putString(getString(R.string.email), viewModel.get_email().getValue());
+        editor.putString(getString(R.string.password), viewModel.get_password().getValue()); // TODO figure out if needed to hash?
         editor.apply();
     }
 }
