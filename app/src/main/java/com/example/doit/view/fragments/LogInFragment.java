@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentLogInBinding;
@@ -80,6 +81,7 @@ public class LogInFragment extends Fragment {
                             Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
                         }
                         saveUserForLater();
+                        Repository.getInstance().getAllAuthUserGroups();
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                                 R.id.action_logInFragment2_to_groupsFragment2);
                     } else {
