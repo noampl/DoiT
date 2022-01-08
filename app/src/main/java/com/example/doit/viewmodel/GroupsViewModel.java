@@ -26,7 +26,6 @@ public class GroupsViewModel extends ViewModel {
     private MutableLiveData<List<Group>> _groups;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private IDialogNavigationHelper _iDialogNavigationHelper;
-    private IGroupDialogHelper _iGroupDialogHelper;
 
     private MutableLiveData<Integer> _selectedPosition;
     private MutableLiveData<List<User>> _newGroupMembers;
@@ -46,10 +45,6 @@ public class GroupsViewModel extends ViewModel {
     // endregion
 
     // region Properties
-
-    public void set_iGroupDialogHelper(IGroupDialogHelper _iGroupDialogHelper) {
-        this._iGroupDialogHelper = _iGroupDialogHelper;
-    }
 
     public MutableLiveData<Integer> get_selectedPosition() {
         return _selectedPosition;
@@ -110,7 +105,7 @@ public class GroupsViewModel extends ViewModel {
     public boolean addGroupDialog(){
         _newGroupMembers.getValue().add(Repository.getInstance().get_authUser().getValue());
         _newGroupAdmins.getValue().add(Repository.getInstance().get_authUser().getValue());
-        _iGroupDialogHelper.openDialog();
+        _iDialogNavigationHelper.openDialog();
 
         // consume the btn press
         return true;
@@ -124,7 +119,7 @@ public class GroupsViewModel extends ViewModel {
 
     public boolean addMembersDialog(){
 
-        // TODO implement later
+        _iDialogNavigationHelper.openDialog();
 
         return true;
     }

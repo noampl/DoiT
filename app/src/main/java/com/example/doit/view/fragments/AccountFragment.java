@@ -1,4 +1,4 @@
-package com.example.doit.view;
+package com.example.doit.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

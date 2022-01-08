@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.RegisterFragment">
+    tools:context=".view.fragments.RegisterFragment">
 
     <data>
         <variable
@@ -38,7 +38,6 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="250dp"
             android:layout_gravity="center">
-
 
         <ImageButton
             android:contentDescription="@string/user_profile_image"
