@@ -86,7 +86,7 @@ public class RegisterViewModel extends ViewModel {
 
     public void setImageUri(Uri imageUri) {
         this.ImageUri = imageUri;
-        _user.setImage(imageUri.toString());
+        _user.set_image(imageUri.toString());
     }
 
     public MutableLiveData<String> get_firstName() {

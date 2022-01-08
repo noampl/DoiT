@@ -7,5 +7,6 @@
     <dimen name="group_title">20sp</dimen>
     <dimen name="xl_avatar">100dp</dimen>
     <dimen name="dialog_btn">100dp</dimen>
+    <dimen name="addition_dialog_max_height">300dp</dimen>
 
 </resources>

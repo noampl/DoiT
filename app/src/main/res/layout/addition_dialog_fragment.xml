@@ -9,44 +9,53 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="500dp">
 
-        <EditText
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/search_box"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin"
+            android:layout_marginTop="30dp"
             android:hint="TODO add hInt"
+            android:background="#F1F0F0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="@dimen/addition_dialog_max_height"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="@id/search_box"
+            app:layout_constraintStart_toStartOf="@id/search_box"
+            app:layout_constraintTop_toBottomOf="@id/search_box" />
+
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="@dimen/dialog_btn"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
+            android:layout_height="50dp"
             android:text="@string/cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintBottom_toBottomOf="@+id/submit_button"
             app:layout_constraintEnd_toStartOf="@+id/submit_button"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_box" />
+            app:layout_constraintTop_toTopOf="@+id/submit_button" />
 
         <Button
             android:id="@+id/submit_button"
             android:layout_width="@dimen/dialog_btn"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin"
+            android:layout_height="50dp"
+            android:layout_marginTop="142dp"
             android:layout_marginBottom="@dimen/margin"
-            android:text="@string/cancel"
+            android:text="@string/submit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-
             app:layout_constraintStart_toEndOf="@+id/cancel_button"
-            app:layout_constraintTop_toBottomOf="@id/search_box" />
+            app:layout_constraintTop_toBottomOf="@+id/list_item" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,10 +4,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
@@ -17,8 +15,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +29,15 @@ public class Repository {
     private static Repository instance;
     private FirebaseFirestore _remoteDb;
     private Map<String, IDataWorker> workers;
-    private MutableLiveData<List<User>> _users = new MutableLiveData<>(new ArrayList<>()); // FIXME
-    private MutableLiveData<List<Group>> _groups = new MutableLiveData<>(new ArrayList<>()); // FIXME
+    /**
+     * Uses for add users / admins query in addition dialog
+     */
+    private MutableLiveData<List<User>> _users = new MutableLiveData<>(new ArrayList<>());
+
+    /**
+     * THe User Groups
+     */
+    private MutableLiveData<List<Group>> _groups = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<List<com.example.doit.model.entities.Task>> _tasks = new MutableLiveData<>(new ArrayList<>()); // FIXME
     private final ExecutorService _executorService;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
@@ -83,6 +86,10 @@ public class Repository {
     // endregion
 
     // region Properties
+
+    public MutableLiveData<List<User>> get_users() {
+        return _users;
+    }
 
     public IDataWorker createWorker(String worker) {
         return workers.get(worker);
@@ -179,6 +186,12 @@ public class Repository {
                  _groups.postValue(LocalDB.db.groupDao().getAll());
              }
          });
+    }
+
+    public void searchUsersByNameOrMail(String query) {
+//        TODO imlpelment this
+        // put the result in the users
+
     }
 
     // endregion
