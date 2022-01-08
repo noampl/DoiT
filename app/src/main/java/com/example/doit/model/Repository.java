@@ -96,6 +96,7 @@ public class Repository {
     }
 
     public MutableLiveData<List<Group>> getGroups() {
+        if(_groups == null){ _groups = new MutableLiveData<>(); }
         return _groups;
     }
 

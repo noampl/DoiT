@@ -79,6 +79,7 @@ public class UserFirebaseWorker implements IDataWorker{
                 for(DocumentSnapshot doc : queryDocumentSnapshots){
                     authDocRef = usersRef.document(doc.getId());
                 }
+                if(authDocRef == null) {return;}
                 authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -87,7 +88,7 @@ public class UserFirebaseWorker implements IDataWorker{
                         }
                         if(value != null && value.exists()){
                             User newUser = insertDocumentToUser(value);
-                            if(newUser.get_groupsId().size() > authUser.getValue().get_groupsId().size()){
+                            if(newUser.get_groupsId().size() != authUser.getValue().get_groupsId().size()){
                                 Repository.getInstance().getAllAuthUserGroups();
                             }
                             newUser.setEmail(mAuth.getCurrentUser().getEmail());
