@@ -36,7 +36,7 @@ public class Group {
         this._name = _name;
         this._description = _description;
         this.membersId = _membersID;
-        this._adminsId = _admins;
+        this._adminsId = _admins; //TODO: Noam -> delete?
         this._image = _image;
         this._tasksId = _tasks;
     }

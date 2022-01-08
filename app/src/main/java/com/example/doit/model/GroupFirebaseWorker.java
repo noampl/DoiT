@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.model.entities.Group;
@@ -17,14 +18,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.List;
 
 public class GroupFirebaseWorker implements IDataWorker{
 
@@ -43,6 +43,7 @@ public class GroupFirebaseWorker implements IDataWorker{
     private DocumentReference authDocRef;
     private MutableLiveData<User> authUser;
     private MutableLiveData<String> _firebaseError;
+    private LiveData<List<Group>> _authUserGroups;
 
     // endregion
 
@@ -141,9 +142,6 @@ public class GroupFirebaseWorker implements IDataWorker{
     }
 
 
-    public void getAllUserGroups(){
-    }
-
     private void addGroupToUser(User user, Group group){
         usersRef.whereEqualTo("id", user.get_userId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -157,7 +155,7 @@ public class GroupFirebaseWorker implements IDataWorker{
                     for(DocumentSnapshot doc : queryDocumentSnapshot.getDocuments()){
                         DocumentReference documentReference = doc.getReference();
                         if(!user.get_groupsId().contains(group.get_groupId())){
-                            user.addGroup(group);
+                            user.addGroupOrUpdate(group);
                         }
                         documentReference.update("groups", user.get_groupsId())
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -166,7 +164,7 @@ public class GroupFirebaseWorker implements IDataWorker{
                                 if(task.isSuccessful()){
                                     Log.d(TAG, "Group added to user");
                                 } else {
-                                    Log.w(TAG, "Had a problen with adding group to user");
+                                    Log.w(TAG, "Had a problem with adding group to user");
                                 }
                             }
                         });

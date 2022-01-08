@@ -14,6 +14,8 @@ import com.example.doit.common.Roles;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 @Entity
 public class User {
 
@@ -111,7 +113,12 @@ public class User {
         _countryPhoneCode = phoneCountryCode;
     }
 
-    public void addGroup(Group group){
+    public void addGroupOrUpdate(Group group){
+        for(String groupId : _groupsId){
+            if(Objects.equals(groupId, group.get_groupId())){
+                return;
+            }
+        }
         _groupsId.add(group.get_groupId());
     }
 

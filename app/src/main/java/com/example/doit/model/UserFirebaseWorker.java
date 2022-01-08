@@ -1,5 +1,8 @@
 package com.example.doit.model;
 
+import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToGroup;
+import static com.example.doit.model.firebaseUtils.getGroupListener;
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -362,6 +365,32 @@ public class UserFirebaseWorker implements IDataWorker{
                     }
                 });
             }
+
+    public void getAllAuthUserGroups(){
+        Log.d(TAG, "Getting all Authenticated user groups");
+        if(authUser.getValue() == null){
+            Log.w(TAG, "There is no connected user");
+            return;
+        }
+        User user = authUser.getValue();
+        for (String groupID : user.get_groupsId()){
+            groupsRef.document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot groupDoc = task.getResult();
+                    if(groupDoc == null){
+                        Log.w(TAG, "Couldn't find group");
+                        return;
+                    }
+                    groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser));
+                    Group group = convertFirebaseDocumentToGroup(groupDoc);
+                    authUser.getValue().addGroupOrUpdate(group);
+                    Repository.getInstance().insertGroupLocal(group);
+                }
+            });
+        }
+
+    }
 
     // endregion
 
