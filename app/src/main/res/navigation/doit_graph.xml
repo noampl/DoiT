@@ -6,7 +6,7 @@
     app:startDestination="@id/initFragment">
     <fragment
         android:id="@+id/logInFragment2"
-        android:name="com.example.doit.view.LogInFragment"
+        android:name="com.example.doit.view.fragments.LogInFragment"
         android:label="fragment_log_in"
         tools:layout="@layout/fragment_log_in" >
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment2"
-        android:name="com.example.doit.view.RegisterFragment"
+        android:name="com.example.doit.view.fragments.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountFragment2"
-        android:name="com.example.doit.view.AccountFragment"
+        android:name="com.example.doit.view.fragments.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" >
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/groupsFragment2"
-        android:name="com.example.doit.view.GroupsFragment"
+        android:name="com.example.doit.view.fragments.GroupsFragment"
         android:label="fragment_groups"
         tools:layout="@layout/fragment_groups" >
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/chosenGroupFragment"
-        android:name="com.example.doit.view.ChosenGroupFragment"
+        android:name="com.example.doit.view.fragments.ChosenGroupFragment"
         android:label="fragment_chosen_group"
         tools:layout="@layout/fragment_chosen_group" >
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/myTasksFragment"
-        android:name="com.example.doit.view.MyTasksFragment"
+        android:name="com.example.doit.view.fragments.MyTasksFragment"
         android:label="fragment_my_tasks"
         tools:layout="@layout/fragment_my_tasks" >
         <action
@@ -66,12 +66,12 @@
     </fragment>
     <fragment
         android:id="@+id/tasksDetails"
-        android:name="com.example.doit.view.TasksDetailsFragment"
+        android:name="com.example.doit.view.fragments.TasksDetailsFragment"
         android:label="fragment_tasks_details"
         tools:layout="@layout/fragment_tasks_details" />
     <fragment
         android:id="@+id/initFragment"
-        android:name="com.example.doit.view.InitFragment"
+        android:name="com.example.doit.view.fragments.InitFragment"
         android:label="fragment_init"
 
         tools:layout="@layout/fragment_init" >
@@ -92,7 +92,15 @@
     </fragment>
     <dialog
         android:id="@+id/addGroupDialog"
-        android:name="com.example.doit.view.AddGroupDialog"
+        android:name="com.example.doit.view.dialogs.AddGroupDialog"
         android:label="dialog_fragment_add_group"
-        tools:layout="@layout/dialog_fragment_add_group" />
+        tools:layout="@layout/dialog_fragment_add_group" >
+        <action
+            android:id="@+id/action_addGroupDialog_to_additionDialog"
+            app:destination="@id/additionDialog" />
+    </dialog>
+    <dialog
+        android:id="@+id/additionDialog"
+        android:name="com.example.doit.view.dialogs.AdditionDialog"
+        android:label="AdditionDialog" />
 </navigation>

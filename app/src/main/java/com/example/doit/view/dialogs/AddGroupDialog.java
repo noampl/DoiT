@@ -1,4 +1,4 @@
-package com.example.doit.view;
+package com.example.doit.view.dialogs;
 
 
 import android.annotation.SuppressLint;
@@ -22,6 +22,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.doit.R;
 import com.example.doit.databinding.DialogFragmentAddGroupBinding;
@@ -30,7 +31,7 @@ import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.GroupsViewModel;
 import com.squareup.picasso.Picasso;
 
-public class AddGroupDialog extends DialogFragment {
+public class AddGroupDialog extends DialogFragment implements IDialogNavigationHelper {
 
     // region Members
 
@@ -56,6 +57,7 @@ public class AddGroupDialog extends DialogFragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_add_group, container, false);
         _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _groupsViewModel.set_isBottomNavigationUp(true);
+        _groupsViewModel.set_iDialogNavigationHelper(this);
         _binding.setGroupsViewModel(_groupsViewModel);
         initListeners();
         _binding.setLifecycleOwner(this);
@@ -116,4 +118,9 @@ public class AddGroupDialog extends DialogFragment {
             }
     );
 
+    @Override
+    public void openDialog() {
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                R.id.action_addGroupDialog_to_additionDialog);
+    }
 }

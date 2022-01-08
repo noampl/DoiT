@@ -1,7 +1,6 @@
-package com.example.doit.view;
+package com.example.doit.view.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -15,8 +14,6 @@ import com.example.doit.databinding.GroupItemBinding;
 import com.example.doit.model.entities.Group;
 import com.example.doit.viewmodel.GroupsViewModel;
 
-import java.util.List;
-
 public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHolder>{
 
     // region Members
@@ -27,7 +24,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
 
     // region C'tor
 
-    protected GroupsAdapter(GroupsViewModel groupsViewModel) {
+    public GroupsAdapter(GroupsViewModel groupsViewModel) {
         super(new DiffUtil.ItemCallback<Group>() {
             @Override
             public boolean areItemsTheSame(@NonNull Group oldItem, @NonNull Group newItem) {
