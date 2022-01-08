@@ -111,6 +111,10 @@ public class User {
         _countryPhoneCode = phoneCountryCode;
     }
 
+    public void addGroup(Group group){
+        _groupsId.add(group.get_groupId());
+    }
+
     public void setPassword(String _password) {
         this._password = _password;
     }

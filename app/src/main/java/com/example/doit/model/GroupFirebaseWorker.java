@@ -32,7 +32,7 @@ public class GroupFirebaseWorker implements IDataWorker{
 
     private static final String USERS_COLLECTION_NAME = "users";
     private static final String GROUPS_COLLECTION_NAME = "groups";
-    private static final String TAG = "User Firebase Worker";
+    private static final String TAG = "Group Firebase Worker";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
     private final CollectionReference groupsRef;
@@ -123,6 +123,55 @@ public class GroupFirebaseWorker implements IDataWorker{
                         Log.w(TAG, "Error on uploading user profile image", e);
                     }
                 });
+            }
+        });
+    }
+
+
+    public void addUserToGroup(Group group, User user) {
+        groupsRef.document(group.get_groupId()).update("Users", group.getMembersId())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG,"Users group updated");
+                        }
+                    }
+                });
+    }
+
+
+    public void getAllUserGroups(){
+    }
+
+    private void addGroupToUser(User user, Group group){
+        usersRef.whereEqualTo("id", user.get_userId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot queryDocumentSnapshot = task.getResult();
+                    if(queryDocumentSnapshot == null){
+                        Log.w(TAG,"User Id did not found");
+                        return;
+                    }
+                    for(DocumentSnapshot doc : queryDocumentSnapshot.getDocuments()){
+                        DocumentReference documentReference = doc.getReference();
+                        if(!user.get_groupsId().contains(group.get_groupId())){
+                            user.addGroup(group);
+                        }
+                        documentReference.update("groups", user.get_groupsId())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Log.d(TAG, "Group added to user");
+                                } else {
+                                    Log.w(TAG, "Had a problen with adding group to user");
+                                }
+                            }
+                        });
+                    }
+                }
             }
         });
     }
