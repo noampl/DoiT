@@ -67,14 +67,14 @@ public class InitFragment extends Fragment {
                     }
             }
         });
-         if(isUserExist()) {
+        /* if(isUserExist()) {
             _loginViewModel.Login(_email, _password);
             saveUserForLater();
          }
-         else {
-            Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
-                    .navigate(R.id.action_initFragment_to_logInFragment2);
-         }
+         else {*/
+        Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
+                .navigate(R.id.action_initFragment_to_logInFragment2);
+        // }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_init, container, false);
     }

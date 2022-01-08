@@ -82,7 +82,7 @@ public class LoginViewModel extends ViewModel {
     public boolean Login(String email, String password){
         Log.d(TAG, "Login: " + email);
         Log.d(TAG, "Password: " + password);
-        Map<String, Object> user = new HashMap<>();
+        Map<String, String> user = new HashMap<>();
         user.put("email", email);
         user.put("password", password);
         if(email != null && !email.equals("") &&  password != null && !password.equals("")){

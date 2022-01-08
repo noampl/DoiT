@@ -23,9 +23,9 @@ public class firebaseUtils {
        newGroup.set_groupId(groupDocument.getId());
        newGroup.set_name((String) groupDocument.get("name"));
        newGroup.set_description((String) groupDocument.get("description"));
-       newGroup.setMembersId((List<String>) groupDocument.get("Users"));
+       newGroup.setMembersId((List<String>) groupDocument.get("membersId"));
        newGroup.set_image((String) groupDocument.get("image"));
-       newGroup.set_tasksId((List<String>) groupDocument.get("tasks"));
+       newGroup.set_tasksId((List<String>) groupDocument.get("taskId"));
        return newGroup;
     }
 
