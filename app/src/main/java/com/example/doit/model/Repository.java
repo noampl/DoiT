@@ -6,12 +6,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -129,7 +132,27 @@ public class Repository {
 
     // region Public Methods
 
-    public void login(Map<String, Object> user) {
+    public void syncFirebase(Map<String, String> credentials) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Task<AuthResult> login = userFirebaseWorker.login(credentials, get_loggedIn());
+            }
+        }).start();
+    }
+
+    public void getAllAuthUserGroups(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+                userFirebaseWorker.getAllAuthUserGroups();
+
+            }
+        }).start();
+    }
+
+    public void login(Map<String, String> user) {
         userFirebaseWorker.login(user, _loggedIn);
     }
 
@@ -179,6 +202,16 @@ public class Repository {
                  _groups.postValue(LocalDB.db.groupDao().getAll());
              }
          });
+    }
+
+    public void deleteNotExistGroupsOnFirebase(String userID){
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                LocalDB.db.groupDao().deleteWhereNotExist(userID);
+                Objects.requireNonNull(getGroups().getValue()).removeIf(g -> !g.getMembersId().contains(userID));
+            }
+        });
     }
 
     // endregion
