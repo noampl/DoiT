@@ -25,6 +25,10 @@ public interface GroupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);
 
+    @Query("DELETE FROM `group` WHERE :userId NOT IN (membersId) ")
+    void deleteWhereNotExist(String userId);
+
+
     @Update
     void update(Group group);
 

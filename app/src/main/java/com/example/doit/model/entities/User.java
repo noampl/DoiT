@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 import com.example.doit.common.Converters;
 import com.example.doit.common.Roles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +117,15 @@ public class User {
         _countryPhoneCode = phoneCountryCode;
     }
 
+    public void addGroupOrUpdate(Group group){
+        for(String groupId : _groupsId){
+            if(Objects.equals(groupId, group.get_groupId())){
+                return;
+            }
+        }
+        _groupsId.add(group.get_groupId());
+    }
+
     public void setPassword(String _password) {
         this._password = _password;
     }
@@ -153,6 +163,7 @@ public class User {
     }
 
     public List<String> get_groupsId() {
+        if(_groupsId == null) { _groupsId = new ArrayList<>(); }
         return _groupsId;
     }
 

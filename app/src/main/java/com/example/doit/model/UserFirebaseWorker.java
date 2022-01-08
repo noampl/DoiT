@@ -1,5 +1,8 @@
 package com.example.doit.model;
 
+import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToGroup;
+import static com.example.doit.model.firebaseUtils.getGroupListener;
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -28,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -74,6 +78,7 @@ public class UserFirebaseWorker implements IDataWorker{
                 for(DocumentSnapshot doc : queryDocumentSnapshots){
                     authDocRef = usersRef.document(doc.getId());
                 }
+                if(authDocRef == null) {return;}
                 authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -82,6 +87,9 @@ public class UserFirebaseWorker implements IDataWorker{
                         }
                         if(value != null && value.exists()){
                             User newUser = insertDocumentToUser(value);
+                            if(newUser.get_groupsId().size() != authUser.getValue().get_groupsId().size()){
+                                Repository.getInstance().getAllAuthUserGroups();
+                            }
                             newUser.setEmail(mAuth.getCurrentUser().getEmail());
                             authUser.postValue(newUser);
                         }
@@ -109,6 +117,7 @@ public class UserFirebaseWorker implements IDataWorker{
         newUser.setFirstName((String) doc.get("firstName"));
         newUser.setLastName((String) doc.get("lastName"));
         newUser.setPhone((String) doc.get("phone"));
+        newUser.set_groupsId((List<String>) doc.get("groups"));
         newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
         if (doc.get("role") != null) {
             newUser.setRole(Roles.valueOf((String) doc.get("role")));
@@ -309,13 +318,16 @@ public class UserFirebaseWorker implements IDataWorker{
         });
     }
 
-    public void login(Map<String, Object> user, MutableLiveData<Boolean> loggedIn) {
+    public Task<AuthResult> login(Map<String, String> user, MutableLiveData<Boolean> loggedIn) {
         Log.d(TAG, "looking for user");
-        authUser.setValue((new User()));
+        authUser.postValue((new User()));
         String email = (String) user.get("email");
         String password = (String) user.get("password");
-        assert email != null && password != null;
-        mAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        if(email == null || email.equals("") || password == null || password.equals("")){
+            Log.d(TAG, "email or password are invalid so connection canceled");
+            return null;
+        }
+        return mAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                             // Sign in success, update UI with the signed-in user's information
@@ -362,9 +374,69 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
             }
 
+    public void getAllAuthUserGroups(){
+        Log.d(TAG, "Getting all Authenticated user groups");
+        if(authUser.getValue() == null){
+            Log.w(TAG, "There is no connected user");
+            return;
+        }
+        User user = authUser.getValue();
+        for (String groupID : user.get_groupsId()){
+            groupsRef.document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot groupDoc = task.getResult();
+                    if(groupDoc == null){
+                        Log.w(TAG, "Couldn't find group");
+                        return;
+                    }
+                    groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
+                    Group group = convertFirebaseDocumentToGroup(groupDoc);
+                    authUser.getValue().addGroupOrUpdate(group);
+                    Repository.getInstance().insertGroupLocal(group);
+                }
+            });
+        }
+        Repository.getInstance().deleteNotExistGroupsOnFirebase(authUser.getValue().get_userId());
+
+    }
+
+    public void lookForAllUsersByEmailOrName(String lookingFor, MutableLiveData<List<User>> users){
+        String look = lookingFor.toLowerCase();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("email", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+    }
+
     // endregion
 
     // region Private Methods
-
+    private OnSuccessListener<QuerySnapshot> insertUserDocToUsersList(MutableLiveData<List<User>> users){
+        return new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot doc : queryDocumentSnapshots){
+                    User newUser = insertDocumentToUser(doc);
+                    Objects.requireNonNull(users.getValue()).add(newUser);
+                    Repository.getInstance().saveOrUpdateUser(newUser);
+                }
+            }
+        };
+    }
     // endregion
 }

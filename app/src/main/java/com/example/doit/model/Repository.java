@@ -5,11 +5,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -100,6 +103,7 @@ public class Repository {
     }
 
     public MutableLiveData<List<Group>> getGroups() {
+        if(_groups == null){ _groups = new MutableLiveData<>(); }
         return _groups;
     }
 
@@ -125,6 +129,7 @@ public class Repository {
     }
 
     public MutableLiveData<List<User>> get_newGroupUsers() {
+        if(_newGroupUsers == null) { _newGroupUsers = new MutableLiveData<>(); }
         return _newGroupUsers;
     }
 
@@ -132,11 +137,36 @@ public class Repository {
         return _newGroupAdmins;
     }
 
+    public MutableLiveData<List<User>> get_users() {
+        if (_users == null) {_users = new MutableLiveData<>(); }
+        return _users;
+    }
+
     // endregion
 
     // region Public Methods
 
-    public void login(Map<String, Object> user) {
+    public void syncFirebase(Map<String, String> credentials) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Task<AuthResult> login = userFirebaseWorker.login(credentials, get_loggedIn());
+            }
+        }).start();
+    }
+
+    public void getAllAuthUserGroups(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+                userFirebaseWorker.getAllAuthUserGroups();
+
+            }
+        }).start();
+    }
+
+    public void login(Map<String, String> user) {
         userFirebaseWorker.login(user, _loggedIn);
     }
 
@@ -188,9 +218,28 @@ public class Repository {
          });
     }
 
+
     public void searchUsersByNameOrMail(String query) {
 //        TODO imlpelment this
         // put the result in the users
+    }
+
+    public void deleteNotExistGroupsOnFirebase(String userID){
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                LocalDB.db.groupDao().deleteWhereNotExist(userID);
+                Objects.requireNonNull(getGroups().getValue()).removeIf(g -> !g.getMembersId().contains(userID));
+            }
+        });
+    }
+
+    public User getUserFromSql(String userId){
+        return LocalDB.db.userDao().getUserById(userId);
+    }
+
+    public void lookForUserByEmailOrFirstName(String lookFor){
+        userFirebaseWorker.lookForAllUsersByEmailOrName(lookFor, get_users());
 
     }
 
