@@ -1,4 +1,4 @@
-package com.example.doit.view;
+package com.example.doit.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,7 +27,6 @@ import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentRegisterBinding;
 import com.example.doit.viewmodel.RegisterViewModel;
-import com.google.rpc.context.AttributeContext;
 import com.squareup.picasso.Picasso;
 
 /**

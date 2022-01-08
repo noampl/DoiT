@@ -1,4 +1,4 @@
-package com.example.doit.view;
+package com.example.doit.view.fragments;
 
 import android.os.Bundle;
 
@@ -18,6 +18,7 @@ import com.example.doit.databinding.FragmentGroupsBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IGroupDialogHelper;
 import com.example.doit.model.entities.Group;
+import com.example.doit.view.adapters.GroupsAdapter;
 import com.example.doit.viewmodel.GroupsViewModel;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
  * Use the {@link GroupsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupsFragment extends Fragment implements IGroupDialogHelper {
+public class GroupsFragment extends Fragment implements IDialogNavigationHelper {
 
     // region Members
 
@@ -55,7 +56,7 @@ public class GroupsFragment extends Fragment implements IGroupDialogHelper {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups, container, false);
         _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _groupsViewModel.set_isBottomNavigationUp(true);
-        _groupsViewModel.set_iGroupDialogHelper(this);
+        _groupsViewModel.set_iDialogNavigationHelper(this);
         _binding.setGroupsViewModel(_groupsViewModel);
         _binding.setLifecycleOwner(this);
         initAdapter();
