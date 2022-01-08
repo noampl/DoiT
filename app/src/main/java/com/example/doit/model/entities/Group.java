@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +71,9 @@ public class Group {
     }
 
     public List<String> getMembersId() {
+        if(membersId == null) {
+            membersId = new ArrayList<>();
+        }
         return membersId;
     }
 

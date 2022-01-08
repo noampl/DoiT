@@ -96,6 +96,7 @@ public class Repository {
     }
 
     public MutableLiveData<List<Group>> getGroups() {
+        if(_groups == null){ _groups = new MutableLiveData<>(); }
         return _groups;
     }
 
@@ -121,11 +122,17 @@ public class Repository {
     }
 
     public MutableLiveData<List<User>> get_newGroupUsers() {
+        if(_newGroupUsers == null) { _newGroupUsers = new MutableLiveData<>(); }
         return _newGroupUsers;
     }
 
     public MutableLiveData<List<User>> get_newGroupAdmins() {
         return _newGroupAdmins;
+    }
+
+    public MutableLiveData<List<User>> get_users() {
+        if (_users == null) {_users = new MutableLiveData<>(); }
+        return _users;
     }
 
     // endregion
@@ -212,6 +219,14 @@ public class Repository {
                 Objects.requireNonNull(getGroups().getValue()).removeIf(g -> !g.getMembersId().contains(userID));
             }
         });
+    }
+
+    public User getUserFromSql(String userId){
+        return LocalDB.db.userDao().getUserById(userId);
+    }
+
+    public void lookForUserByEmailOrFirstName(String lookFor){
+        userFirebaseWorker.lookForAllUsersByEmailOrName(lookFor, get_users());
     }
 
     // endregion

@@ -79,6 +79,7 @@ public class UserFirebaseWorker implements IDataWorker{
                 for(DocumentSnapshot doc : queryDocumentSnapshots){
                     authDocRef = usersRef.document(doc.getId());
                 }
+                if(authDocRef == null) {return;}
                 authDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -87,6 +88,9 @@ public class UserFirebaseWorker implements IDataWorker{
                         }
                         if(value != null && value.exists()){
                             User newUser = insertDocumentToUser(value);
+                            if(newUser.get_groupsId().size() != authUser.getValue().get_groupsId().size()){
+                                Repository.getInstance().getAllAuthUserGroups();
+                            }
                             newUser.setEmail(mAuth.getCurrentUser().getEmail());
                             authUser.postValue(newUser);
                         }
@@ -398,9 +402,42 @@ public class UserFirebaseWorker implements IDataWorker{
 
     }
 
+    public void lookForAllUsersByEmailOrName(String lookingFor, MutableLiveData<List<User>> users){
+        String look = lookingFor.toLowerCase();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("email", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
+            }
+        }).start();
+    }
+
     // endregion
 
     // region Private Methods
-
+    private OnSuccessListener<QuerySnapshot> insertUserDocToUsersList(MutableLiveData<List<User>> users){
+        return new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot doc : queryDocumentSnapshots){
+                    User newUser = insertDocumentToUser(doc);
+                    Objects.requireNonNull(users.getValue()).add(newUser);
+                    Repository.getInstance().saveOrUpdateUser(newUser);
+                }
+            }
+        };
+    }
     // endregion
 }
