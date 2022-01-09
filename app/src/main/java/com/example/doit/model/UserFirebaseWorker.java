@@ -456,7 +456,7 @@ public class UserFirebaseWorker implements IDataWorker{
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    groupsRef.document(groupID).collection("tasks").get()
+                    groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
