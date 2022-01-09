@@ -143,7 +143,7 @@ public class GroupFirebaseWorker implements IDataWorker{
                                 new Thread(new Runnable() { // TODO why you use new thread each time and not the executer service?
                                     @Override
                                     public void run() {
-                                        addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
+                                            addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
                                     }
                                 }).start();
                             }

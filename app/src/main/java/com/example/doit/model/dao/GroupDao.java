@@ -22,12 +22,14 @@ public interface GroupDao {
     @Query("SELECT * FROM `group`")
     List<Group> getAll();
 
+    @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
+    Group getGroup(String groupId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);
 
     @Query("DELETE FROM `group` WHERE :userId NOT IN (membersId) ")
     void deleteWhereNotExist(String userId);
-
 
     @Update
     void update(Group group);

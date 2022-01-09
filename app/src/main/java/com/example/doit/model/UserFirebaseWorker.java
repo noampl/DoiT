@@ -125,7 +125,7 @@ public class UserFirebaseWorker implements IDataWorker{
         if (doc.get("role") != null) {
             newUser.setRole(Roles.valueOf((String) doc.get("role")));
         }
-        newUser.setImgae((String) doc.get("image"));
+        newUser.set_image((String) doc.get("image"));
         return newUser;
     }
 
@@ -165,7 +165,7 @@ public class UserFirebaseWorker implements IDataWorker{
                         String url = uri.toString();
                         Log.d(TAG, "url " + url);
                         user.setPassword(null);
-                        user.setImgae(url);
+                        user.set_image(url);
                         usersRef.whereEqualTo("id", user.get_userId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {

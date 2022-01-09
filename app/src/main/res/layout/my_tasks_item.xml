@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="task"
+            type="com.example.doit.model.entities.Task" />
+
+        <variable
+            name="group"
+            type="com.example.doit.model.entities.Group" />
+
+        <variable
+            name="user"
+            type="com.example.doit.model.entities.User" />
+
+        <variable
+            name="isMyTasks"
+            type="boolean" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/task_img"
+            android:layout_width="@dimen/large_avatar"
+            android:layout_height="@dimen/large_avatar"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:src="@{task._image ,default =@color/blue}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:text="@{task._name, default = This_is_headline}"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/task_img"
+            app:layout_constraintTop_toTopOf="@id/task_img" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:text="@{task._description, default = Description_of_task}"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin"
+            app:layout_constraintBottom_toBottomOf="@id/task_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/task_img" />
+
+        <TextView
+            android:id="@+id/group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:text="@{group._name, default = group_name}"
+            android:visibility="@{isMyTasks ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/checkbox"
+            app:layout_constraintTop_toTopOf="@id/checkbox" />
+
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/small_avatar"
+            android:layout_height="@dimen/small_avatar"
+            android:src="@{user.get_image() ,default = @drawable/ic_baseline_account_circle_24}"
+            app:layout_constraintEnd_toEndOf="@id/value_title"
+            app:layout_constraintStart_toStartOf="@id/value_title"
+            app:layout_constraintTop_toTopOf="@id/checkbox"
+            android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
+            />
+
+        <TextView
+            android:id="@+id/value_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/value_title"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintEnd_toStartOf="@id/value_number"
+            app:layout_constraintTop_toTopOf="@id/value_number" />
+
+        <TextView
+            android:id="@+id/value_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/large_margin"
+            android:text="@{task._value, default = 6}"
+            app:layout_constraintEnd_toStartOf="@id/checkbox"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox"
+            android:layout_marginBottom="@dimen/small_margin"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintTop_toBottomOf="@id/task_img" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -2,28 +2,32 @@ package com.example.doit.model;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Repository {
     private static final String TAG = "Repository";
@@ -91,7 +95,6 @@ public class Repository {
 
     // region Properties
 
-
     public IDataWorker createWorker(String worker) {
         return workers.get(worker);
     }
@@ -103,6 +106,10 @@ public class Repository {
     public MutableLiveData<List<Group>> getGroups() {
         if(_groups == null){ _groups = new MutableLiveData<>(); }
         return _groups;
+    }
+
+    public MutableLiveData<List<User>> get_users() {
+        return _users;
     }
 
     public MutableLiveData<Boolean> get_isBottomNavigationUp() {
@@ -133,6 +140,10 @@ public class Repository {
 
     public MutableLiveData<List<User>> get_newGroupAdmins() {
         return _newGroupAdmins;
+    }
+
+    public MutableLiveData<List<com.example.doit.model.entities.Task>> get_tasks() {
+        return _tasks;
     }
 
     // endregion
@@ -174,7 +185,7 @@ public class Repository {
     }
 
     public void register(String image_uri, User user) {
-        user.setImgae(image_uri);
+        user.set_image(image_uri);
         Task<AuthResult> createUser = userFirebaseWorker.create(user, get_loggedIn());
         createUser.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -228,10 +239,18 @@ public class Repository {
         });
     }
 
-    public User getUserFromSql(String userId){
+    public User getUserFromSql(String userId) {
         return LocalDB.db.userDao().getUserById(userId);
     }
 
+    public Group getGroupById(String groupId)  {
+        return LocalDB.db.groupDao().getGroup(groupId);
+    }
+
+    public void fetchTasks(){
+        _executorService.execute(()->_tasks.postValue(LocalDB.db.taskDao()
+                                    .getTasksByAssignee(_authUser.getValue().get_userId())));
+    }
 
     // endregion
 
@@ -240,6 +259,9 @@ public class Repository {
     private void initFake() {
         _users.getValue().add(new User("123456","someMail@com","test","pp","password","","0526727960","+972", Roles.CLIENT,
                 null));
+        _executorService.execute(()->LocalDB.db.taskDao().insertAll(new com.example.doit.model.entities.Task("2","3","Test", "this is peleg test", new Date().getTime(),new Date().getTime(),
+                "QqsLagcb5RPK0EGI5OdnFsLbz1v1","QqsLagcb5RPK0EGI5OdnFsLbz1v1",5,"")));
+
     }
 
 
