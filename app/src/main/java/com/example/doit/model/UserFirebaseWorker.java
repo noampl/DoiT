@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -432,8 +433,20 @@ public class UserFirebaseWorker implements IDataWorker{
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(DocumentSnapshot doc : queryDocumentSnapshots){
                     User newUser = insertDocumentToUser(doc);
-                    Objects.requireNonNull(users.getValue()).add(newUser);
                     Repository.getInstance().saveOrUpdateUser(newUser);
+                    List<User> user;
+                    if (users != null){
+                        user = users.getValue();
+                        if(users.getValue() != null){
+                            for(User u : user){
+                                if (Objects.equals(u.get_userId(), newUser.get_userId())){
+                                    return;
+                                }
+                            }
+                        }
+                        user.add(newUser);
+                        users.postValue(user);
+                    }
                 }
             }
         };
