@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
@@ -76,7 +77,7 @@ public class Repository {
         userFirebaseWorker.setAuthUser(_authUser);
         _newGroupAdmins = new MutableLiveData<>(new ArrayList<>());
         _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
-
+        initFake();
     }
 
     public static Repository getInstance() {
@@ -213,7 +214,8 @@ public class Repository {
 
 
     public void searchUsersByNameOrMail(String query) {
-        userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users());
+        _executorService.execute(()->
+                userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users()));
     }
 
     public void deleteNotExistGroupsOnFirebase(String userID){
@@ -234,6 +236,11 @@ public class Repository {
     // endregion
 
     // region event listeners
+
+    private void initFake() {
+        _users.getValue().add(new User("123456","someMail@com","test","pp","password","","0526727960","+972", Roles.CLIENT,
+                null));
+    }
 
 
     // endregion

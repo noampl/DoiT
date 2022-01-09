@@ -1,10 +1,12 @@
 package com.example.doit.view.dialogs;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,9 +83,15 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         AdditionAdapter adapter = new AdditionAdapter();
         _binding.listItem.setAdapter(adapter);
         usersViewModel.get_users().observe(requireActivity(), new Observer<List<User>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<User> users) {
                 adapter.submitList(users);
+                if (users.size() > 3) {
+//                    _binding.listItem.setH
+                }
+                adapter.notifyDataSetChanged();
+                Log.d("PELEG", "submit users to addotion dialog");
             }
         });
 

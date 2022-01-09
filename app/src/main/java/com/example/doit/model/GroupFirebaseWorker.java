@@ -140,7 +140,7 @@ public class GroupFirebaseWorker implements IDataWorker{
                         if(task.isSuccessful()){
                             Log.d(TAG,"Users group updated");
                             for(String id : group.getMembersId()){
-                                new Thread(new Runnable() {
+                                new Thread(new Runnable() { // TODO why you use new thread each time and not the executer service?
                                     @Override
                                     public void run() {
                                         addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
