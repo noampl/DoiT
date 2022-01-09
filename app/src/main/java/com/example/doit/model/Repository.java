@@ -135,11 +135,6 @@ public class Repository {
         return _newGroupAdmins;
     }
 
-    public MutableLiveData<List<User>> get_users() {
-        if (_users == null) {_users = new MutableLiveData<>(); }
-        return _users;
-    }
-
     // endregion
 
     // region Public Methods
@@ -158,7 +153,8 @@ public class Repository {
             @Override
             public void run() {
                 saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
-                userFirebaseWorker.getAllAuthUserGroups();
+                //userFirebaseWorker.getAllAuthUserGroups();
+                userFirebaseWorker.getAllAuthUserGroupAndTasks();
 
             }
         }).start();

@@ -34,6 +34,7 @@ public class GroupFirebaseWorker implements IDataWorker{
 
     private static final String USERS_COLLECTION_NAME = "users";
     private static final String GROUPS_COLLECTION_NAME = "groups";
+    private static final String TASKS_COLLECTION_NAME = "tasks";
     private static final String TAG = "Group Firebase Worker";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
