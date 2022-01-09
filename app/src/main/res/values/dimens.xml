@@ -3,10 +3,11 @@
     <dimen name="large_avatar">60dp</dimen>
     <dimen name="small_avatar">30dp</dimen>
     <dimen name="margin">10dp</dimen>
+    <dimen name="small_margin">5dp</dimen>
     <dimen name="large_margin">15dp</dimen>
     <dimen name="group_title">20sp</dimen>
     <dimen name="xl_avatar">100dp</dimen>
     <dimen name="dialog_btn">100dp</dimen>
-    <dimen name="addition_dialog_max_height">300dp</dimen>
+    <dimen name="addition_dialog_max_height">200dp</dimen>
 
 </resources>
