@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
 import com.google.android.gms.tasks.OnCompleteListener;

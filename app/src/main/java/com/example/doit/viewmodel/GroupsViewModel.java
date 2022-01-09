@@ -6,10 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.interfaces.IGroupDialogHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.Repository;
-import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 

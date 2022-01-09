@@ -25,7 +25,8 @@
     <string name="group_dec">Description</string>
     <string name="admins">ADMINS</string>
     <string name="members">Members</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
     <string name="create">Create</string>
     <string name="add_group">add group</string>
     <string name="login_to_your_account">Login to your Account</string>
