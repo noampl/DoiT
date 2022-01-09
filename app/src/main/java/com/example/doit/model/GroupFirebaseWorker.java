@@ -18,12 +18,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+
 import java.util.List;
 
 public class GroupFirebaseWorker implements IDataWorker{
@@ -136,6 +138,14 @@ public class GroupFirebaseWorker implements IDataWorker{
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Log.d(TAG,"Users group updated");
+                            for(String id : group.getMembersId()){
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
+                                    }
+                                }).start();
+                            }
                         }
                     }
                 });

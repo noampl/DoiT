@@ -81,6 +81,9 @@ public class User {
         this._email = _email;
 
     }
+    public String get_fullName(){
+        return _firstName + " " + _lastName;
+    }
 
     public String get_lastName() {
         return _lastName;
@@ -131,7 +134,7 @@ public class User {
         return _image;
     }
 
-    public void setImage(String _image) {
+    public void set_image(String _image) {
         this._image = _image;
     }
 
@@ -203,5 +206,18 @@ public class User {
                 ", _role=" + _role +
                 ", _groups=" + _groupsId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return _userId.equals(user._userId) && _email.equals(user._email) && Objects.equals(_lastName, user._lastName) && _firstName.equals(user._firstName) && Objects.equals(_password, user._password) && Objects.equals(_image, user._image) && Objects.equals(_phone, user._phone) && Objects.equals(_countryPhoneCode, user._countryPhoneCode) && _role == user._role && Objects.equals(_groupsId, user._groupsId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_userId, _email, _lastName, _firstName, _password, _image, _phone, _countryPhoneCode, _role, _groupsId);
     }
 }
