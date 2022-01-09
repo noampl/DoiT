@@ -40,7 +40,6 @@ public class User {
     @TypeConverters(Converters.class)
     private Roles _role;
     private List<String> _groupsId;
-
     // endregion
 
     // region C'tor

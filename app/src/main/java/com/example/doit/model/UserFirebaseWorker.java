@@ -1,6 +1,7 @@
 package com.example.doit.model;
 
 import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToGroup;
+import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToTask;
 import static com.example.doit.model.firebaseUtils.getGroupListener;
 
 import android.net.Uri;
@@ -42,6 +43,7 @@ public class UserFirebaseWorker implements IDataWorker{
 
     private static final String USERS_COLLECTION_NAME = "users";
     private static final String GROUPS_COLLECTION_NAME = "groups";
+    private static final String TASKS_COLLECTION_NAME = "tasks";
     private static final String TAG = "User Firebase Worker";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
@@ -422,6 +424,57 @@ public class UserFirebaseWorker implements IDataWorker{
                 usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users));
             }
         }).start();
+    }
+
+    public void getAllAuthUserGroupAndTasks(){
+        Log.d(TAG, "Getting all authenticated user tasks");
+        if(authUser.getValue() == null){
+            Log.w(TAG, "There is no connected user");
+            return;
+        }
+        User user = authUser.getValue();
+        for (String groupID : user.get_groupsId()){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    groupsRef.document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot groupDoc = task.getResult();
+                            if(groupDoc == null){
+                                Log.w(TAG, "Couldn't find group");
+                                return;
+                            }
+                            groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
+                            Group group = convertFirebaseDocumentToGroup(groupDoc);
+                            authUser.getValue().addGroupOrUpdate(group);
+                            Repository.getInstance().insertGroupLocal(group);
+                        }
+                    });
+                }
+            }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
+                                    for (DocumentSnapshot taskDoc : tasks){
+                                        com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
+                                        //todo: decide what we should do here apart insertIt to db (and how)
+                                        //todo: add snapshotlistener
+                                        //taskDoc.getReference().addSnapshotListener()
+                                    }
+                                }
+                            });
+                }
+            }).start();
+
+        }
+        Repository.getInstance().deleteNotExistGroupsOnFirebase(authUser.getValue().get_userId());
+
     }
 
     // endregion
