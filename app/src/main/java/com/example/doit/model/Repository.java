@@ -90,9 +90,6 @@ public class Repository {
 
     // region Properties
 
-    public MutableLiveData<List<User>> get_users() {
-        return _users;
-    }
 
     public IDataWorker createWorker(String worker) {
         return workers.get(worker);
@@ -220,8 +217,7 @@ public class Repository {
 
 
     public void searchUsersByNameOrMail(String query) {
-//        TODO imlpelment this
-        // put the result in the users
+        userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users());
     }
 
     public void deleteNotExistGroupsOnFirebase(String userID){
@@ -238,10 +234,6 @@ public class Repository {
         return LocalDB.db.userDao().getUserById(userId);
     }
 
-    public void lookForUserByEmailOrFirstName(String lookFor){
-        userFirebaseWorker.lookForAllUsersByEmailOrName(lookFor, get_users());
-
-    }
 
     // endregion
 
