@@ -64,6 +64,7 @@ public class UserFirebaseWorker implements IDataWorker{
     // region C'tor
 
     public UserFirebaseWorker() {
+
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
         groupsRef = db.collection(GROUPS_COLLECTION_NAME);
