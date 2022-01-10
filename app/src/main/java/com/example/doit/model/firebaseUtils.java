@@ -120,7 +120,7 @@ public class firebaseUtils {
         return new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null){
+                if (error != null){
                     Log.w(TAG,"Error on listening", error);
                     return;
                 }
