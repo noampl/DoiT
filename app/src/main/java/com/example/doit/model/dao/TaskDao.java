@@ -36,4 +36,7 @@ public interface TaskDao {
     @Delete
     void delete(Task task);
 
+    @Query("DELETE FROM Task where _groupId NOT IN (:groups)")
+    void deleteTaskWhichItsGroupNotExist(List<String> groups);
+
 }

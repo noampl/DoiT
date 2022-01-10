@@ -12,9 +12,12 @@ import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class Repository {
     private static final String TAG = "Repository";
@@ -248,6 +252,16 @@ public class Repository {
                 userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users()));
     }
 
+    public void deleteNotExistTask(){
+        _executorService.execute(()->{
+            List<String> groupsId = new ArrayList<>();
+            for(Group g : Objects.requireNonNull(getGroups().getValue())){
+                groupsId.add(g.get_groupId());
+            }
+            LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
+        });
+    }
+
     public void deleteNotExistGroupsOnFirebase(String userID){
         _executorService.execute(new Runnable() {
             @Override
@@ -260,6 +274,7 @@ public class Repository {
                         }
                     }
                 }
+                deleteNotExistTask();
             }
         });
     }

@@ -46,7 +46,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public User getUserByTask(Task task) {
-        return Repository.getInstance().getUserFromSql(task.get_groupId());
+        return Repository.getInstance().getUserFromSql(task.get_assigneeId());
     }
 
     public void fetchTasks(){

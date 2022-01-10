@@ -4,6 +4,7 @@ import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToGrou
 import static com.example.doit.model.firebaseUtils.convertFirebaseDocumentToTask;
 import static com.example.doit.model.firebaseUtils.getGroupListener;
 import static com.example.doit.model.firebaseUtils.getTaskListener;
+import static com.example.doit.model.firebaseUtils.getUserListener;
 
 import android.net.Uri;
 import android.util.Log;
@@ -456,6 +457,10 @@ public class UserFirebaseWorker implements IDataWorker{
                                         List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
                                         for (DocumentSnapshot taskDoc : tasks){
                                             com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
+                                            getUser(task.get_assigneeId());
+                                            if(!Objects.equals(task.get_assigneeId(), task.get_createdById())){
+                                                getUser(task.get_createdById());
+                                            }
                                             Repository.getInstance().insertTaskLocal(task);
                                             taskDoc.getReference().addSnapshotListener(getTaskListener());
                                         }
@@ -494,6 +499,19 @@ public class UserFirebaseWorker implements IDataWorker{
                 }
             }
         };
+    }
+
+    public void getUser(String userId) {
+            usersRef.whereEqualTo("id", userId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            for(DocumentSnapshot doc : queryDocumentSnapshots){
+                User newUser = insertDocumentToUser(doc);
+                Repository.getInstance().saveOrUpdateUser(newUser);
+                doc.getReference().addSnapshotListener(getUserListener());
+                }
+            }
+        });
     }
     // endregion
 }
