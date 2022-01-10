@@ -25,7 +25,7 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<Boolean> EditDetails;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _authSuccess;
-    private MutableLiveData<String> _firebaseError;
+    private MutableLiveData<String> _loginError;
     private boolean emailChanged = false;
     private boolean imageChanged = false;
     private String ImageUrl;
@@ -48,8 +48,8 @@ public class AccountViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> get_operationError(){
-        if (_firebaseError == null) { _firebaseError = repo.get_fireBaseError(); }
-        return _firebaseError;
+        if (_loginError == null) { _loginError = repo.get_Error(); }
+        return _loginError;
     }
 
     public MutableLiveData<User> get_authUser() {

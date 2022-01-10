@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +92,7 @@ public class firebaseUtils {
                     Group newGroup = convertFirebaseDocumentToGroup(value);
                     Objects.requireNonNull(user.getValue()).addGroupOrUpdate(newGroup);
                     Repository.getInstance().insertGroupLocal(newGroup);
-                    Repository.getInstance().deleteNotExistGroupsOnFirebase(user.getValue().get_userId());
+                    Repository.getInstance().deleteNotExistGroupsOnRemoteDb(user.getValue().get_userId());
                 }
             }
         };

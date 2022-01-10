@@ -403,7 +403,7 @@ public class UserFirebaseWorker implements IDataWorker{
                 }
             });
         }
-        Repository.getInstance().deleteNotExistGroupsOnFirebase(authUser.getValue().get_userId());
+        Repository.getInstance().deleteNotExistGroupsOnRemoteDb(authUser.getValue().get_userId());
 
     }
 
@@ -469,7 +469,7 @@ public class UserFirebaseWorker implements IDataWorker{
                     }
             );
         }
-        Repository.getInstance().deleteNotExistGroupsOnFirebase(authUser.getValue().get_userId());
+        Repository.getInstance().deleteNotExistGroupsOnRemoteDb(authUser.getValue().get_userId());
 
     }
 

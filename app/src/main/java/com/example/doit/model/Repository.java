@@ -120,7 +120,7 @@ public class Repository {
         return _isBottomNavigationUp;
     }
 
-    public MutableLiveData<String> get_fireBaseError() { return userFirebaseWorker.get_firebaseError(); }
+    public MutableLiveData<String> get_Error() { return userFirebaseWorker.get_firebaseError(); }
 
     public MutableLiveData<User> get_authUser() {
         if (_authUser == null) { _authUser = new MutableLiveData<User>(); }
@@ -154,25 +154,17 @@ public class Repository {
 
     // region Public Methods
 
-    public void syncFirebase(Map<String, String> credentials) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Task<AuthResult> login = userFirebaseWorker.login(credentials, get_loggedIn());
-            }
-        }).start();
+    public void syncRemoteDb(Map<String, String> credentials) {
+        _executorService.execute(() -> {
+            Task<AuthResult> login = userFirebaseWorker.login(credentials, get_loggedIn());
+        });
     }
 
     public void getAllAuthUserGroups(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
-                //userFirebaseWorker.getAllAuthUserGroups();
-                userFirebaseWorker.getAllAuthUserGroupAndTasks();
-
-            }
-        }).start();
+        _executorService.execute(() -> {
+            saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+            userFirebaseWorker.getAllAuthUserGroupAndTasks();
+        });
     }
 
     public void login(Map<String, String> user) {
@@ -262,7 +254,7 @@ public class Repository {
         });
     }
 
-    public void deleteNotExistGroupsOnFirebase(String userID){
+    public void deleteNotExistGroupsOnRemoteDb(String userID){
         _executorService.execute(new Runnable() {
             @Override
             public void run() {

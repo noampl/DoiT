@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
-        Repository.getInstance().syncFirebase(getUserCredentials());
+        Repository.getInstance().syncRemoteDb(getUserCredentials());
         Repository.getInstance().get_authUser().observe(this,new Observer<User>() {
             @Override
             public void onChanged(User user) {
