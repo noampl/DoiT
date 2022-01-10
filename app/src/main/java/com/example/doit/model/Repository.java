@@ -213,6 +213,15 @@ public class Repository {
     }
 
 
+    public int getValueSumOfTasksInGroup(Group group){
+        /*
+          receive: group
+          return: sum of all tasks value that users have done
+         */
+        return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
+    }
+
+
     public void insertGroupLocal(Group group){
         _executorService.execute(new Runnable() {
              @Override

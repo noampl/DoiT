@@ -44,4 +44,7 @@ public interface GroupDao {
     @Transaction
     @Query("SELECT * FROM `user` WHERE _userId = :userId")
     List<UserWithGroups> getUserWithGroups(String userId);
+
+    @Query("SELECT SUM(_value) FROM `task` WHERE _taskId IN (:membersId) AND _finishDate > 0")
+    Integer getSumTasksUsersValuesFromGroup(List<String> membersId);
 }
