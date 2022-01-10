@@ -222,6 +222,16 @@ public class Repository {
     }
 
 
+    public void insertTaskLocal(com.example.doit.model.entities.Task task){
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                LocalDB.db.taskDao().insertAll(task);
+            }
+        });
+    }
+
+
     public void insertGroupLocal(Group group){
         _executorService.execute(new Runnable() {
              @Override
@@ -242,11 +252,18 @@ public class Repository {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                LocalDB.db.groupDao().deleteWhereNotExist(userID);
-                Objects.requireNonNull(getGroups().getValue()).removeIf(g -> !g.getMembersId().contains(userID));
+                for (Group group: Objects.requireNonNull(getGroups().getValue())) {
+                    if(!group.getMembersId().contains(userID)){
+                        getGroups().getValue().remove(group);
+                        for(String taskId: group.get_tasksId()){
+                            LocalDB.db.taskDao().deleteTaskById(taskId);
+                        }
+                    }
+                }
             }
         });
     }
+
 
     public User getUserFromSql(String userId) {
         return LocalDB.db.userDao().getUserById(userId);

@@ -59,6 +59,24 @@ public class firebaseUtils {
                     Group newGroup = convertFirebaseDocumentToGroup(value);
                     Objects.requireNonNull(user.getValue()).addGroupOrUpdate(newGroup);
                     Repository.getInstance().insertGroupLocal(newGroup);
+                    Repository.getInstance().deleteNotExistGroupsOnFirebase(user.getValue().get_userId());
+                }
+            }
+        };
+    }
+
+    public static EventListener<DocumentSnapshot> getTaskListener(){
+        return new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null){
+                    Log.w(TAG, "Error with taskDocument listener");
+                    return;
+                }
+                if(value != null && value.exists()){
+                    Task newTask = convertFirebaseDocumentToTask(value);
+                    Objects.requireNonNull(Repository.getInstance().get_tasks().getValue()).add(newTask);
+                    Repository.getInstance().insertTaskLocal(newTask);
                 }
             }
         };

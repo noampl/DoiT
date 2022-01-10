@@ -154,6 +154,7 @@ public class Task {
         taskMap.put("image",_image);
         taskMap.put("createdDate",_createdDate);
         taskMap.put("targetDate",_targetDate);
+        taskMap.put("groupId", _groupId);
         taskMap.put("createdByUserId",_createdById);
         taskMap.put("assigneeId",_assigneeId);
         taskMap.put("finishDate",_finishDate);
