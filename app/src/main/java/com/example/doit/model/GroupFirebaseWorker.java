@@ -185,6 +185,30 @@ public class GroupFirebaseWorker implements IDataWorker{
         });
     }
 
+    private void createNewTask(com.example.doit.model.entities.Task task){
+        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).add(task).addOnSuccessListener(
+                new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "added new task: "+ task.toString());
+                        task.set_taskId(documentReference.getId());
+                        Repository.getInstance().insertTaskLocal(task);
+                    }
+                }
+        );
+    }
+
+    private void updateTask(com.example.doit.model.entities.Task task){
+        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
+                .update(task.create()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "updated task: " + task.toString());
+                        Repository.getInstance().insertTaskLocal(task);
+                    }
+                });
+    }
+
     // endregion
 
 }
