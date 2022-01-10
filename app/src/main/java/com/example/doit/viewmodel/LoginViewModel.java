@@ -75,7 +75,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> get_firebaseError() {
-        return Repository.getInstance().get_Error();
+        return Repository.getInstance().get_fireBaseError();
     }
 
 
