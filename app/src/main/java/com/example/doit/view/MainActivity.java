@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
-        Repository.getInstance().syncRemoteDb(getUserCredentials());
+/*        Repository.getInstance().syncRemoteDb(getUserCredentials());
         Repository.getInstance().get_authUser().observe(this,new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        });*/
         initNavigation();
     }
 
@@ -68,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private Map<String, String> getUserCredentials(){
+/*    private Map<String, String> getUserCredentials(){
         credentials = new HashMap<>();
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         credentials.put("email",sharedPref.getString(getString(R.string.email), "NONE"));
         credentials.put("password",sharedPref.getString(getString(R.string.password), "NONE"));
         return credentials;
-    }
+    }*/
 }
 
 
