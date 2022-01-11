@@ -48,7 +48,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> get_operationError(){
-        if (_firebaseError == null) { _firebaseError = repo.get_fireBaseError(); }
+        if (_firebaseError == null) { _firebaseError = repo.get_remoteError(); }
         return _firebaseError;
     }
 

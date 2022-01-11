@@ -56,7 +56,7 @@ public class LogInFragment extends Fragment {
         viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
-        viewModel.get_firebaseError().observe(getViewLifecycleOwner(), new Observer<String>() {
+        viewModel.get_Error().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if(s.length() > 0){
