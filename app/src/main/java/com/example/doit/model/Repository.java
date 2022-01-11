@@ -60,6 +60,7 @@ public class Repository {
     private UserFirebaseWorker userFirebaseWorker;
     private GroupFirebaseWorker groupFirebaseWorker;
     private MutableLiveData<String> _fireBaseError;
+    private MutableLiveData<Boolean> _isSynced;
 
     /**
      * Uses for addGroup dialog
@@ -93,6 +94,7 @@ public class Repository {
         userFirebaseWorker.setAuthUser(_authUser);
         _newGroupAdmins = new MutableLiveData<>(new ArrayList<>());
         _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
+
         initFake();
     }
 
@@ -106,6 +108,17 @@ public class Repository {
     // endregion
 
     // region Properties
+
+
+    public MutableLiveData<Boolean> get_isSynced() {
+        if(_isSynced == null) { _isSynced = new MutableLiveData<>(false); }
+        return _isSynced;
+    }
+
+    public void set_isSynced(Boolean isSynced) {
+        if(_isSynced == null) { _isSynced = new MutableLiveData<>(); }
+        this._isSynced.postValue(isSynced);
+    }
 
     public IDataWorker createWorker(String worker) {
         return workers.get(worker);
@@ -162,29 +175,15 @@ public class Repository {
 
     // region Public Methods
 
-    public void syncFirebase(Map<String, String> credentials) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Task<AuthResult> login = userFirebaseWorker.login(credentials, get_loggedIn());
-            }
-        }).start();
-    }
-
     public void getAllAuthUserGroups(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
-                //userFirebaseWorker.getAllAuthUserGroups();
-                userFirebaseWorker.getAllAuthUserGroupAndTasks();
-
-            }
-        }).start();
+        _executorService.execute(() -> {
+            saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
+            userFirebaseWorker.getAllAuthUserGroupAndTasks();
+        });
     }
 
     public void login(Map<String, String> user) {
-        userFirebaseWorker.login(user, _loggedIn);
+        userFirebaseWorker.login(user, get_loggedIn());
     }
 
     public void saveOrUpdateUser(User user) {
