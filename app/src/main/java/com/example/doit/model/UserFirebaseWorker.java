@@ -145,6 +145,7 @@ public class UserFirebaseWorker implements IDataWorker{
     }
 
     public MutableLiveData<String> get_firebaseError() {
+        if(_firebaseError == null) {_firebaseError = new MutableLiveData<>();}
         return _firebaseError;
     }
 

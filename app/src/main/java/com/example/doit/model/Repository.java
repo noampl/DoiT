@@ -141,7 +141,8 @@ public class Repository {
         return _isBottomNavigationUp;
     }
 
-    public MutableLiveData<String> get_remoteError() { return userFirebaseWorker.get_firebaseError(); }
+    public MutableLiveData<String> get_remoteError() {
+        return userFirebaseWorker.get_firebaseError(); }
 
     public MutableLiveData<User> get_authUser() {
         if (_authUser == null) { _authUser = new MutableLiveData<User>(); }

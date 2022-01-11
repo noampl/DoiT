@@ -73,7 +73,6 @@
         android:id="@+id/initFragment"
         android:name="com.example.doit.view.fragments.InitFragment"
         android:label="fragment_init"
-
         tools:layout="@layout/fragment_init" >
         <action
             android:id="@+id/action_initFragment_to_groupsFragment2"
@@ -103,4 +102,7 @@
         android:id="@+id/additionDialog"
         android:name="com.example.doit.view.dialogs.AdditionDialog"
         android:label="AdditionDialog" />
+    <action
+        android:id="@+id/action_global_initFragment"
+        app:destination="@id/initFragment" />
 </navigation>
