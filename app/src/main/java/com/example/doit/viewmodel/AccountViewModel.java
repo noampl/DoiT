@@ -48,7 +48,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> get_operationError(){
-        if (_firebaseError == null) { _firebaseError = repo.get_fireBaseError(); }
+        if (_firebaseError == null) { _firebaseError = repo.get_remoteError(); }
         return _firebaseError;
     }
 
@@ -159,7 +159,7 @@ public class AccountViewModel extends ViewModel {
         user.setEmail(Objects.requireNonNull(this.getUserEmailAddress().getValue()).toLowerCase());
         user.setFirstName(this.getFirstName().getValue());
         user.setLastName(this.getLastName().getValue());
-        user.setImgae(this.getImageUrl());
+        user.set_image(this.getImageUrl());
         repo.updateAuthUserDetails(user,Uri.parse(this.ImageUrl), imageChanged, emailChanged);
         emailChanged = false;
         imageChanged = false;

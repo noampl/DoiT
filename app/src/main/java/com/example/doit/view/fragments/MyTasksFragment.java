@@ -1,66 +1,77 @@
 package com.example.doit.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.databinding.FragmentMyTasksBinding;
+import com.example.doit.model.entities.Task;
+import com.example.doit.view.adapters.TasksAdapter;
+import com.example.doit.viewmodel.TasksViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyTasksFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.List;
+
+
 public class MyTasksFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // region Members
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TasksViewModel _tasksViewModel;
+    private FragmentMyTasksBinding _binding;
+
+    // endregion
 
     public MyTasksFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyTasksFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MyTasksFragment newInstance(String param1, String param2) {
-        MyTasksFragment fragment = new MyTasksFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
+        _tasksViewModel.fetchTasks();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_tasks, container, false);
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_tasks,container,false);
+        initListeners();
+        _binding.setLifecycleOwner(this);
+        return _binding.getRoot();
     }
+
+    // region Private Methods
+
+    private void initListeners(){
+        TasksAdapter adapter = new TasksAdapter(true);
+        adapter.set_tasksViewModel(_tasksViewModel);
+        _tasksViewModel.fetchTasks();
+        adapter.submitList(_tasksViewModel.get_tasks().getValue());
+        _binding.taskLst.setAdapter(adapter);
+        _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChanged(List<Task> tasks) {
+                Log.d("PELEG", "submit tasks size " + tasks.size());
+                adapter.submitList(tasks);
+                //adapter.notifyDataSetChanged();
+                Log.d("PELEG", "submit tasks to myTasks");
+            }
+        });
+    }
+
+    // endregion
 }

@@ -38,16 +38,20 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
-        Repository.getInstance().syncFirebase(getUserCredentials());
+        Repository.getInstance().login(getUserCredentials());
         Repository.getInstance().get_authUser().observe(this,new Observer<User>() {
             @Override
             public void onChanged(User user) {
+                if(Boolean.TRUE.equals(Repository.getInstance().get_isSynced().getValue())){
+                    return;
+                }
                 Log.w(TAG, "user logged in");
                 Log.w(TAG, "Requesting all user groups");
                 Log.w(TAG, user.toString());
                 if (user.get_userId() != null){
                     if (!user.get_userId().equals("")){
                         Repository.getInstance().getAllAuthUserGroups();
+                        Repository.getInstance().set_isSynced(true);
                     }
                 }
             }

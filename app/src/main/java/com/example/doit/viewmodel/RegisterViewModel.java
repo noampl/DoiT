@@ -6,10 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.model.Consts;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
-import com.example.doit.model.UserFirebaseWorker;
 import com.example.doit.common.Roles;
 
 import java.util.HashMap;
@@ -38,7 +36,6 @@ public class RegisterViewModel extends ViewModel {
     private Roles _role = Roles.CLIENT;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> passwordsIdentical;
-    private final UserFirebaseWorker worker;
     private Uri ImageUri;
     private MutableLiveData<Boolean> _registering_job_run;
 
@@ -46,7 +43,6 @@ public class RegisterViewModel extends ViewModel {
 
     public RegisterViewModel() {
         repo = Repository.getInstance();
-        worker = (UserFirebaseWorker) repo.createWorker(Consts.FIRE_BASE_USERS);
         _user = new User();
         _authUser = repo.get_authUser();
         passwordsIdentical = new MutableLiveData<>();
@@ -261,7 +257,7 @@ public class RegisterViewModel extends ViewModel {
 
     public String getErrorReason(){
         String error;
-        if ((error = worker.get_registerErrorReason()) != null) { return error; }
+        if ((error = repo.get_remoteError().getValue()) != null) { return error; }
         return "ERROR: Unrecognized problem with register";
     }
 

@@ -104,10 +104,6 @@ public class User {
         return _password;
     }
 
-    public void setImgae(String image_path){
-        _image = image_path;
-    }
-
     public void set_userId(@NonNull String _userId) {
         this._userId = _userId;
     }

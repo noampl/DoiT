@@ -9,4 +9,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#FF3D5A80</color>
     <color name="light_blue">#FF98C1D9</color>
+
+    <!--our pallet-->
+
+    <color name="doit_indigo">#FF293241</color>
+    <color name="doit_red">#FFEE6C4D</color>
+    <color name="doit_very_light_blue">#FFE0FBFC</color>
+    <color name="doit_light_blue">#FF98C1D9</color>
+    <color name="doit_dark_blue">#FF3D5A80</color>
+
+
 </resources>

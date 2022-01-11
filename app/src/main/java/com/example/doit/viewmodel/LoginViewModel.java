@@ -20,7 +20,6 @@ public class LoginViewModel extends ViewModel {
     private static final String TAG = "LoginViewModel";
     private String _email;
     private String _password;
-    private UserFirebaseWorker worker;
     private long mLastClickTime = 0;
     private MutableLiveData<Boolean> _isBottomNavUp;
     private MutableLiveData<User> _authUser;
@@ -31,17 +30,12 @@ public class LoginViewModel extends ViewModel {
     public LoginViewModel() {
         _email = "";
         _password = "";
-        worker = (UserFirebaseWorker) Repository.getInstance().createWorker(Consts.FIRE_BASE_USERS);
         _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
 
     }
 
     public String getUserName(){
         return this._email;
-    }
-
-    public User getAuthUser() {
-        return worker.getAuthenticatedUserDetails();
     }
 
     public String getPassword() {
@@ -74,8 +68,8 @@ public class LoginViewModel extends ViewModel {
         return _logedIn;
     }
 
-    public MutableLiveData<String> get_firebaseError() {
-        return Repository.getInstance().get_fireBaseError();
+    public MutableLiveData<String> get_Error() {
+        return Repository.getInstance().get_remoteError();
     }
 
 
