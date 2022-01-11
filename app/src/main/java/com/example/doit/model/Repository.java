@@ -233,12 +233,12 @@ public class Repository {
         return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
     }
 
-
     public void insertTaskLocal(com.example.doit.model.entities.Task task){
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
                 LocalDB.db.taskDao().insertAll(task);
+                _tasks.postValue(LocalDB.db.taskDao().getAll());
             }
         });
     }

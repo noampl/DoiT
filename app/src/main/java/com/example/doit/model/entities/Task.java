@@ -163,6 +163,20 @@ public class Task {
         return taskMap;
     }
 
+    public void copy(Task newTask){
+        set_description(newTask.get_description());
+        set_name(newTask.get_name());
+        set_image(newTask.get_image());
+        set_targetDate(newTask.get_targetDate());
+        set_finishDate(newTask.get_finishDate());
+        set_value(newTask.get_value());
+        set_createdDate(newTask.get_createdDate());
+        set_assigneeId(newTask.get_assigneeId());
+        set_createdById(newTask.get_createdById());
+        set_groupId(newTask.get_groupId());
+        set_taskId(newTask.get_taskId());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
