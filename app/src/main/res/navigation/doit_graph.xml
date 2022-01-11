@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_chosenGroupFragment_to_tasksDetails"
             app:destination="@id/tasksDetails" />
+        <action
+            android:id="@+id/action_chosenGroupFragment_to_addTaskDialog"
+            app:destination="@id/addTaskDialog" />
     </fragment>
     <fragment
         android:id="@+id/myTasksFragment"
@@ -105,4 +108,13 @@
     <action
         android:id="@+id/action_global_initFragment"
         app:destination="@id/initFragment" />
+    <dialog
+        android:id="@+id/addTaskDialog"
+        android:name="com.example.doit.view.dialogs.AddTaskDialog"
+        android:label="dialog_fragment_add_task"
+        tools:layout="@layout/dialog_fragment_add_task" >
+        <action
+            android:id="@+id/action_addTaskDialog_to_additionDialog"
+            app:destination="@id/additionDialog" />
+    </dialog>
 </navigation>

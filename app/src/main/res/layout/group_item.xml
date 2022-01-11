@@ -16,7 +16,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{()->groupViewModel.}"
+        >
 
         <ImageView
             android:id="@+id/group_image"
@@ -24,9 +26,11 @@
             android:layout_height="@dimen/large_avatar"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
             android:src="@{group._image ,default = @drawable/ic_baseline_group_24}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="@string/group" />
 
         <TextView
@@ -56,11 +60,22 @@
             android:layout_width="@dimen/small_avatar"
             android:layout_height="@dimen/small_avatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/group_description"
             android:layout_marginEnd="@dimen/margin"
             android:src="@{@drawable/ic_baseline_account_circle_24}"
             />
-        <!--TODO make the picture above change-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
