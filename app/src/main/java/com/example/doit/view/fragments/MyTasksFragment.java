@@ -67,6 +67,7 @@ public class MyTasksFragment extends Fragment {
             public void onChanged(List<Task> tasks) {
                 Log.d("PELEG", "submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
+                adapter.notifyDataSetChanged();;
                 Log.d("PELEG", "submit tasks to myTasks");
             }
         });

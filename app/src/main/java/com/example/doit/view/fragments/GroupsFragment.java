@@ -1,5 +1,6 @@
 package com.example.doit.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -68,9 +69,11 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
         GroupsAdapter adapter = new GroupsAdapter(_groupsViewModel);
         adapter.submitList(_groupsViewModel.get_groups().getValue());
         _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Group> groups) {
                 adapter.submitList(groups);
+                adapter.notifyDataSetChanged();
                 Log.d("PELEG", "submit group list ");
             }
         });

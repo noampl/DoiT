@@ -72,7 +72,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
         public GroupsViewHolder(@NonNull GroupItemBinding binding, GroupsViewModel groupsViewModel) {
             super(binding.getRoot());
             _binding = binding;
-            _groupViewModel =groupsViewModel;
+            _groupViewModel = groupsViewModel;
         }
 
         public void bind(Group group){
