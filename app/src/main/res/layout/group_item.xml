@@ -16,9 +16,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="@{()->groupViewModel.}"
-        >
+        android:layout_height="wrap_content">
+        <!--android:onClick="@{()->groupViewModel}"-->
+        <!-->-->
 
         <ImageView
             android:id="@+id/group_image"

@@ -232,6 +232,41 @@ public class UserFirebaseWorker implements IDataWorker{
                 });
     }
 
+    public void deleteTask(com.example.doit.model.entities.Task task){
+        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME)
+                .document(task.get_taskId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "deleted task "+ task.toString());
+                            //TODO check that its invoke an group document event (that its updated auto)
+                        } else {
+                            Log.w(TAG, "delete task failed " + task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void createTask(com.example.doit.model.entities.Task newTask){
+        groupsRef.document(newTask.get_groupId()).collection(TASKS_COLLECTION_NAME).add(newTask.create())
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "added task "+ task.toString());
+                            DocumentReference docTask = task.getResult();
+                            if (docTask != null) {
+                                docTask.addSnapshotListener(getTaskListener());
+                                newTask.set_taskId(docTask.getId());
+                                Repository.getInstance().insertTaskLocal(newTask);
+                            }
+                        } else {
+                            Log.w(TAG, "delete task failed " + task.getException());
+                        }
+                    }
+                })
+    }
+
     public Task<AuthResult> create(User user, MutableLiveData<Boolean> logedIn) {
         return mAuth.createUserWithEmailAndPassword(user.get_email(), user.get_password()).addOnCompleteListener(
                         new OnCompleteListener<AuthResult>() {

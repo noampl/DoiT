@@ -227,6 +227,18 @@ public class Repository {
         });
     }
 
+    public List<com.example.doit.model.entities.Task> getTasksByGroupId(String groupId){
+            return LocalDB.db.taskDao().getTasksByGroup(groupId);
+            //TODO: check if should do it async.
+    }
+
+    public void deleteTask(com.example.doit.model.entities.Task task){
+        _executorService.execute(() -> userFirebaseWorker.deleteTask(task));
+    }
+
+    public void createTask(com.example.doit.model.entities.Task task){
+        _executorService.execute(() -> userFirebaseWorker.createTask(task));
+    }
 
     public int getValueSumOfTasksInGroup(Group group){
         /*
