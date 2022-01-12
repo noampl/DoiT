@@ -5,6 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragments.MyTasksFragment">
 
+    <data>
+        <variable
+            name="taskViewModel"
+            type="com.example.doit.viewmodel.TasksViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,22 +19,9 @@
             android:id="@+id/task_lst"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/add_task"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
-
-        <Button
-            android:id="@+id/add_task"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="@dimen/large_margin"
-            android:layout_marginBottom="@dimen/large_margin"
-            android:text="@string/add_task"
-            />
-
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

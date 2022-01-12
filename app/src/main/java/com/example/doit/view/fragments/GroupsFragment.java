@@ -1,5 +1,6 @@
 package com.example.doit.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentGroupsBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.interfaces.IGroupDialogHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.view.adapters.GroupsAdapter;
@@ -28,7 +30,7 @@ import java.util.List;
  * Use the {@link GroupsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupsFragment extends Fragment implements IDialogNavigationHelper {
+public class GroupsFragment extends Fragment implements IDialogNavigationHelper, IFragmentNavigitionHelper {
 
     // region Members
 
@@ -57,6 +59,7 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
         _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _groupsViewModel.set_isBottomNavigationUp(true);
         _groupsViewModel.set_iDialogNavigationHelper(this);
+        _groupsViewModel.set_iFragmentNavigitionHelper(this);
         _binding.setGroupsViewModel(_groupsViewModel);
         _binding.setLifecycleOwner(this);
         initAdapter();
@@ -68,9 +71,11 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
         GroupsAdapter adapter = new GroupsAdapter(_groupsViewModel);
         adapter.submitList(_groupsViewModel.get_groups().getValue());
         _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Group> groups) {
                 adapter.submitList(groups);
+                adapter.notifyDataSetChanged();
                 Log.d("PELEG", "submit group list ");
             }
         });
@@ -81,5 +86,11 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
     public void openDialog() {
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                 R.id.action_groupsFragment2_to_addGroupDialog);
+    }
+
+    @Override
+    public void openFragment() {
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                R.id.action_groupsFragment2_to_chosenGroupFragment);
     }
 }

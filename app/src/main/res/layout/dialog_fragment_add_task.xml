@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.dialogs.AddTaskDialog">
+
+    <data>
+        <variable
+            name="taskViewModel"
+            type="com.example.doit.viewmodel.TasksViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/task_img"
+            android:layout_width="@dimen/xl_avatar"
+            android:layout_height="@dimen/xl_avatar"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <EditText
+            android:id="@+id/task_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:hint="@string/task_name"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="@id/task_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/task_img"
+            app:layout_constraintTop_toTopOf="@id/task_img" />
+
+        <EditText
+            android:id="@+id/task_dec"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:hint="@string/group_dec"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/task_img"
+            app:layout_constraintTop_toBottomOf="@id/task_img" />
+
+        <Spinner
+            android:id="@+id/value_spinner"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/value_title"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="@dimen/small_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/task_dec"
+            app:layout_constraintTop_toBottomOf="@id/task_dec" />
+
+        <ImageView
+            android:id="@+id/assignee_avatar"
+            android:layout_width="@dimen/large_avatar"
+            android:layout_height="@dimen/large_avatar"
+            android:background="@drawable/ic_baseline_account_circle_24"
+            android:layout_marginTop="@dimen/small_margin"
+            android:onClick="@{()->taskViewModel.openDialog()}"
+            app:layout_constraintStart_toStartOf="@id/cancel_button"
+            app:layout_constraintEnd_toEndOf="@id/cancel_button"
+            app:layout_constraintTop_toBottomOf="@id/value_spinner" />
+
+        <ImageView
+            android:id="@+id/date_picker"
+            android:layout_width="@dimen/large_avatar"
+            android:layout_height="@dimen/large_avatar"
+            android:src="@drawable/ic_baseline_date_range_24"
+            app:layout_constraintBottom_toTopOf="@+id/assignee_text"
+            app:layout_constraintEnd_toEndOf="@+id/create"
+            app:layout_constraintStart_toStartOf="@+id/create"
+            app:layout_constraintTop_toTopOf="@+id/assignee_avatar" />
+
+
+        <TextView
+            android:id="@+id/assignee_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assignee"
+            app:layout_constraintEnd_toEndOf="@id/assignee_avatar"
+            app:layout_constraintStart_toStartOf="@id/assignee_avatar"
+            app:layout_constraintTop_toBottomOf="@id/assignee_avatar" />
+
+        <TextView
+            android:id="@+id/date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/target_date"
+            app:layout_constraintEnd_toEndOf="@id/date_picker"
+            app:layout_constraintStart_toStartOf="@id/date_picker"
+            app:layout_constraintTop_toBottomOf="@id/date_picker" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="@dimen/dialog_btn"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            app:layout_constraintEnd_toStartOf="@+id/create"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/assignee_text" />
+
+        <Button
+            android:id="@+id/create"
+            android:layout_width="@dimen/dialog_btn"
+            android:layout_height="wrap_content"
+            android:text="@string/create"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cancel_button"
+            app:layout_constraintTop_toBottomOf="@id/assignee_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

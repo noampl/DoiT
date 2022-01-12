@@ -129,7 +129,7 @@ public class Repository {
     }
 
     public MutableLiveData<List<Group>> getGroups() {
-        if(_groups == null){ _groups = new MutableLiveData<>(); }
+        if(_groups == null){ _groups = new MutableLiveData<>(new ArrayList<>()); }
         return _groups;
     }
 
@@ -194,6 +194,9 @@ public class Repository {
     public void logout() {
         set_loggedIn(false);
         userFirebaseWorker.logoutAuthUser(get_loggedIn());
+        set_isSynced(false);
+        getGroups().setValue(new ArrayList<>());
+        get_users().setValue(new ArrayList<>());
     }
 
     public void register(String image_uri, User user) {
@@ -233,12 +236,12 @@ public class Repository {
         return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
     }
 
-
     public void insertTaskLocal(com.example.doit.model.entities.Task task){
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
                 LocalDB.db.taskDao().insertAll(task);
+                _tasks.postValue(LocalDB.db.taskDao().getAll());
             }
         });
     }
@@ -274,14 +277,17 @@ public class Repository {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                for (Group group: Objects.requireNonNull(getGroups().getValue())) {
+                LocalDB.db.groupDao().deleteWhereNotExist(userID);
+                ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
+                for (Group group: getGroups().getValue()) {
                     if(!group.getMembersId().contains(userID)){
-                        getGroups().getValue().remove(group);
+                        clone.remove(group);
                         for(String taskId: group.get_tasksId()){
                             LocalDB.db.taskDao().deleteTaskById(taskId);
                         }
                     }
                 }
+                getGroups().postValue(clone);
                 deleteNotExistTask();
             }
         });

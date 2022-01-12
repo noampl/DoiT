@@ -98,6 +98,7 @@ public class Group {
     }
 
     public List<String> get_tasksId() {
+        if (_tasksId == null){ _tasksId = new ArrayList<>(); }
         return _tasksId;
     }
 
@@ -127,7 +128,7 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return _groupId.equals(group._groupId) && _name.equals(group._name) && _description.equals(group._description) && Objects.equals(membersId, group.membersId) && Objects.equals(_adminsId, group._adminsId) && Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
+        return _groupId.equals(group.get_groupId()) && _name.equals(group.get_name()) && _description.equals(group.get_description()) && Objects.equals(membersId, group.membersId) && Objects.equals(_adminsId, group._adminsId) && Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
     }
 
     @Override

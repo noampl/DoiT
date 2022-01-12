@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
@@ -24,7 +25,7 @@ public class GroupsViewModel extends ViewModel {
     private MutableLiveData<List<Group>> _groups;
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private IDialogNavigationHelper _iDialogNavigationHelper;
-
+    private IFragmentNavigitionHelper _iFragmentNavigitionHelper;
     private MutableLiveData<Integer> _selectedPosition;
     private MutableLiveData<List<User>> _newGroupMembers;
     private MutableLiveData<List<User>> _newGroupAdmins;
@@ -43,6 +44,14 @@ public class GroupsViewModel extends ViewModel {
     // endregion
 
     // region Properties
+
+    public IFragmentNavigitionHelper get_iFragmentNavigitionHelper() {
+        return _iFragmentNavigitionHelper;
+    }
+
+    public void set_iFragmentNavigitionHelper(IFragmentNavigitionHelper _iFragmentNavigitionHelper) {
+        this._iFragmentNavigitionHelper = _iFragmentNavigitionHelper;
+    }
 
     public MutableLiveData<Integer> get_selectedPosition() {
         return _selectedPosition;
@@ -116,7 +125,6 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public boolean addMembersDialog(){
-
         _iDialogNavigationHelper.openDialog();
 
         return true;
