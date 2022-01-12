@@ -1,5 +1,6 @@
 package com.example.doit.viewmodel;
 
+import android.net.Uri;
 import android.widget.DatePicker;
 
 import androidx.lifecycle.MutableLiveData;
@@ -11,6 +12,7 @@ import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 
+import java.util.Date;
 import java.util.List;
 
 public class TasksViewModel extends ViewModel {
@@ -21,6 +23,9 @@ public class TasksViewModel extends ViewModel {
     private IDialogNavigationHelper _iDialogNavigationHelper;
     private int taskValue;
     private long _targetDate;
+    private String _groupId;
+    private String _assigneeId;
+    private String _createdById;
 
     // endregion
 
@@ -28,6 +33,7 @@ public class TasksViewModel extends ViewModel {
 
     public TasksViewModel(){
         _tasks = Repository.getInstance().get_tasks();
+        _createdById = Repository.getInstance().get_authUser().getValue().get_userId();
     }
 
     // endregion
@@ -70,12 +76,26 @@ public class TasksViewModel extends ViewModel {
         _iDialogNavigationHelper.openDialog();
     }
 
-    public void createTask() {
+    public boolean createTask(Uri uri, String taskName, String taskDesc) {
 
+        if (taskName == null || taskName.equals("")){
+            return false;
+        }
+        String ImageUri = uri != null ? uri.toString() : "";
+        _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
+        Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
+                _targetDate, _createdById, _assigneeId, taskValue, ImageUri);
+        Repository.getInstance().createTask(task);
+        return true;
+    }
+
+    public void getTasksByGroupId(String groupId) {
+        _groupId = groupId;
+       set_tasks(Repository.getInstance().getTasksByGroupId(groupId));
     }
 
     public void setTargetDate(DatePicker datePicker){
-        // TODO
+        _targetDate = datePicker.getAutofillValue().getDateValue();
     }
 
     // endregion

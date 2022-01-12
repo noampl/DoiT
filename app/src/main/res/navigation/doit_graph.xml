@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_chosenGroupFragment_to_addTaskDialog"
             app:destination="@id/addTaskDialog" />
+        <argument
+            android:name="groupId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myTasksFragment"

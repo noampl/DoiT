@@ -12,8 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.doit.R;
 import com.example.doit.databinding.BaseModelItemBinding;
 import com.example.doit.model.entities.User;
+import com.example.doit.viewmodel.UsersViewModel;
 
 public class AdditionAdapter extends ListAdapter<User, AdditionAdapter.AdditionViewHolder> {
+
+    // Members
+
+    private UsersViewModel _usersViewModel;
+
+    // endregion
 
     public AdditionAdapter() {
         super(new DiffUtil.ItemCallback<User>() {
@@ -29,6 +36,10 @@ public class AdditionAdapter extends ListAdapter<User, AdditionAdapter.AdditionV
         });
     }
 
+    public void set_usersViewModel(UsersViewModel _usersViewModel) {
+        this._usersViewModel = _usersViewModel;
+    }
+
     @NonNull
     @Override
     public AdditionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,7 +50,7 @@ public class AdditionAdapter extends ListAdapter<User, AdditionAdapter.AdditionV
 
     @Override
     public void onBindViewHolder(@NonNull AdditionViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(getItem(position), _usersViewModel);
     }
 
     public static class AdditionViewHolder extends RecyclerView.ViewHolder {
@@ -51,8 +62,10 @@ public class AdditionAdapter extends ListAdapter<User, AdditionAdapter.AdditionV
             _binding = binding;
         }
 
-        public void bind(User user) {
+        public void bind(User user, UsersViewModel viewModel) {
             _binding.setUser(user);
+            _binding.setPosition(getAdapterPosition());
+            _binding.setUsersViewModel(viewModel);
             _binding.executePendingBindings();
         }
     }

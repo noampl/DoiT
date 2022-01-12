@@ -25,11 +25,7 @@ import com.example.doit.viewmodel.GroupsViewModel;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link GroupsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class GroupsFragment extends Fragment implements IDialogNavigationHelper, IFragmentNavigitionHelper {
 
     // region Members
@@ -41,10 +37,6 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper,
 
     public GroupsFragment() {
         // Required empty public constructor
-    }
-
-    public static GroupsFragment newInstance() {
-        return new GroupsFragment();
     }
 
     @Override
@@ -90,7 +82,8 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper,
 
     @Override
     public void openFragment() {
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                R.id.action_groupsFragment2_to_chosenGroupFragment);
+        GroupsFragmentDirections.ActionGroupsFragment2ToChosenGroupFragment action =
+        GroupsFragmentDirections.actionGroupsFragment2ToChosenGroupFragment(_groupsViewModel.getSelectedGroupId());
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }
