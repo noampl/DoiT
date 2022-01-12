@@ -94,7 +94,7 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public LiveData<List<Group>> get_groups() {
-        return _groups;
+        return Repository.getInstance().getGroups();
     }
 
     public void set_groups(List<Group> _groups) {

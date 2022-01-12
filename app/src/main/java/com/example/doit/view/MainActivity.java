@@ -62,8 +62,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, user.toString());
                 if (user.get_userId() != null){
                     if (!user.get_userId().equals("")){
-                        Repository.getInstance().getAllAuthUserGroups();
-                        Repository.getInstance().set_isSynced(true);
+                        if(Boolean.FALSE.equals(Repository.getInstance().get_isSynced().getValue())){
+                            Repository.getInstance().getAllAuthUserGroups();
+                            Repository.getInstance().set_isSynced(true);
+                        }
+
                     }
                 }
             }

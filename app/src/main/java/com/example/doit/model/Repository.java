@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.doit.common.Roles;
@@ -131,6 +132,10 @@ public class Repository {
     public MutableLiveData<List<Group>> getGroups() {
         if(_groups == null){ _groups = new MutableLiveData<>(new ArrayList<>()); }
         return _groups;
+    }
+
+    public LiveData<List<Group>> getGroupsByUserId(String userId){
+        return LocalDB.db.groupDao().getAllUserGroups(userId);
     }
 
     public MutableLiveData<List<User>> get_users() {
@@ -277,11 +282,13 @@ public class Repository {
 
     public void deleteNotExistTask(){
         _executorService.execute(()->{
-            List<String> groupsId = new ArrayList<>();
-            for(Group g : Objects.requireNonNull(getGroups().getValue())){
-                groupsId.add(g.get_groupId());
+            synchronized (this){
+                List<String> groupsId = new ArrayList<>();
+                for(Group g : Objects.requireNonNull(getGroups().getValue())){
+                    groupsId.add(g.get_groupId());
+                }
+                LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
             }
-            LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
         });
     }
 
@@ -289,18 +296,20 @@ public class Repository {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                LocalDB.db.groupDao().deleteWhereNotExist(userID);
-                ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
-                for (Group group: getGroups().getValue()) {
-                    if(!group.getMembersId().contains(userID)){
-                        clone.remove(group);
-                        for(String taskId: group.get_tasksId()){
-                            LocalDB.db.taskDao().deleteTaskById(taskId);
+                synchronized (this){
+                    LocalDB.db.groupDao().deleteWhereNotExist(userID);
+                    ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
+                    for (Group group: getGroups().getValue()) {
+                        if(!group.getMembersId().contains(userID)){
+                            clone.remove(group);
+                            for(String taskId: group.get_tasksId()){
+                                LocalDB.db.taskDao().deleteTaskById(taskId);
+                            }
                         }
                     }
+                    getGroups().postValue(clone);
+                    deleteNotExistTask();
                 }
-                getGroups().postValue(clone);
-                deleteNotExistTask();
             }
         });
     }

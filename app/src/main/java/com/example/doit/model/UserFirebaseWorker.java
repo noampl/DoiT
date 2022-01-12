@@ -483,7 +483,9 @@ public class UserFirebaseWorker implements IDataWorker{
                                 }
                                 groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
                                 Group group = convertFirebaseDocumentToGroup(groupDoc);
-                                authUser.getValue().addGroupOrUpdate(group);
+                                User updatedAuth = authUser.getValue();
+                                updatedAuth.addGroupOrUpdate(group);
+                                authUser.postValue(updatedAuth);
                                 Repository.getInstance().insertGroupLocal(group);
                             }
                         });
