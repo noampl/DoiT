@@ -80,6 +80,12 @@ public class GroupFirebaseWorker implements IDataWorker{
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()){
                                     Repository.getInstance().insertGroupLocal(group);
+                                    User newAuth = authUser.getValue();
+                                    if (newAuth != null) {
+                                        newAuth.addGroupOrUpdate(group);
+                                        Repository.getInstance()
+                                                .updateAuthUserDetails(newAuth,null,false,false);
+                                    }
                                 }
                             }
                         });
