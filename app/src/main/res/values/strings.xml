@@ -22,8 +22,10 @@
     <string name="logout">Logout</string>
     <string name="group">group</string>
     <string name="group_name">Group Name</string>
+    <string name="task_name">Task Name</string>
     <string name="group_dec">Description</string>
     <string name="admins">ADMINS</string>
+    <string name="assignee">Assignee</string>
     <string name="members">Members</string>
     <string name="cancel">Cancel</string>
     <string name="submit">Submit</string>
@@ -35,6 +37,7 @@
     <string name="sign_in">Sign in</string>
     <string name="value_title">Value:</string>
     <string name="add_task">Add Task</string>
+    <string name="target_date">Target date</string>
 
 
 </resources>

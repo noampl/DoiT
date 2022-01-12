@@ -39,7 +39,7 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:src="@{task._image ,default =@color/blue}"
+            android:src="@{task._image ,default = @color/blue}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

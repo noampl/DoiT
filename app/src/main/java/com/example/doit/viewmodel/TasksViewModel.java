@@ -1,21 +1,26 @@
 package com.example.doit.viewmodel;
 
+import android.widget.DatePicker;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class TasksViewModel extends ViewModel {
 
     // region Members
 
     private MutableLiveData<List<Task>> _tasks;
+    private IDialogNavigationHelper _iDialogNavigationHelper;
+    private int taskValue;
+    private long _targetDate;
 
     // endregion
 
@@ -41,6 +46,10 @@ public class TasksViewModel extends ViewModel {
 
     // region Public
 
+    public void set_iDialogNavigationHelper(IDialogNavigationHelper _iDialogNavigationHelper) {
+        this._iDialogNavigationHelper = _iDialogNavigationHelper;
+    }
+
     public Group getGroupByTask(Task task) {
             return Repository.getInstance().getGroupById(task.get_groupId());
     }
@@ -51,6 +60,22 @@ public class TasksViewModel extends ViewModel {
 
     public void fetchTasks(){
         Repository.getInstance().fetchTasks();
+    }
+
+    public void valueSelected(int i, long l){
+        taskValue = i;
+    }
+
+    public void openDialog(){
+        _iDialogNavigationHelper.openDialog();
+    }
+
+    public void createTask() {
+
+    }
+
+    public void setTargetDate(DatePicker datePicker){
+        // TODO
     }
 
     // endregion
