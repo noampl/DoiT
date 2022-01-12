@@ -50,6 +50,7 @@ public class MyTasksFragment extends Fragment {
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_tasks,container,false);
         initListeners();
+        _binding.setLifecycleOwner(this);
         return _binding.getRoot();
     }
 
@@ -61,13 +62,14 @@ public class MyTasksFragment extends Fragment {
         _tasksViewModel.fetchTasks();
         adapter.submitList(_tasksViewModel.get_tasks().getValue());
         _binding.taskLst.setAdapter(adapter);
-        _tasksViewModel.get_tasks().observe(getActivity(), new Observer<List<Task>>() {
+        _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
                 Log.d("PELEG", "submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
                 adapter.notifyDataSetChanged();;
+
                 Log.d("PELEG", "submit tasks to myTasks");
             }
         });
