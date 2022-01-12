@@ -1,5 +1,7 @@
 package com.example.doit.model;
 
+import static com.example.doit.model.firebaseUtils.getGroupListener;
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -85,6 +87,10 @@ public class GroupFirebaseWorker implements IDataWorker{
                                         newAuth.addGroupOrUpdate(group);
                                         Repository.getInstance()
                                                 .updateAuthUserDetails(newAuth,null,false,false);
+                                    }
+                                    DocumentSnapshot docTask = task.getResult();
+                                    if (docTask != null) {
+                                        docTask.getReference().addSnapshotListener(getGroupListener(authUser));
                                     }
                                 }
                             }
