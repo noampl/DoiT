@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentMyTasksBinding;
+import com.example.doit.model.Repository;
 import com.example.doit.model.entities.Task;
 import com.example.doit.view.adapters.TasksAdapter;
 import com.example.doit.viewmodel.TasksViewModel;
@@ -67,7 +68,8 @@ public class MyTasksFragment extends Fragment {
             public void onChanged(List<Task> tasks) {
                 Log.d("PELEG", "submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
-                //adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();;
+
                 Log.d("PELEG", "submit tasks to myTasks");
             }
         });
