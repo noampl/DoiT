@@ -41,6 +41,7 @@
     <string name="about_us">About us</string>
     <string name="logout_menu">Logout</string>
     <string name="exit">Exit</string>
+    <string name="about_paragraph"><![CDATA[DoiT app\nCreated by two students\nin the college of management\nItay Frishman & Noam Peleg]]></string>
 
 
 </resources>

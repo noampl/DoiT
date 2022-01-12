@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.MyApplication;
 import com.example.doit.R;
@@ -25,6 +26,7 @@ import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.AccountViewModel;
 import com.example.doit.viewmodel.LoginViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.common.base.Supplier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch(id){
             case R.id.about:
-                return false;
+                navHostFragment.getNavController().navigate(R.id.about);
+                return true;
             case R.id.exitButton:
                 accountViewModel.onClickLogoutButton();
                 finishAndRemoveTask();

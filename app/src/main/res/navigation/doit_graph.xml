@@ -5,6 +5,11 @@
     android:id="@+id/doit_graph"
     app:startDestination="@id/initFragment">
     <fragment
+        android:id="@+id/about"
+        android:name="com.example.doit.view.fragments.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
         android:id="@+id/logInFragment2"
         android:name="com.example.doit.view.fragments.LogInFragment"
         android:label="fragment_log_in"
@@ -15,6 +20,9 @@
         <action
             android:id="@+id/action_logInFragment2_to_groupsFragment2"
             app:destination="@id/groupsFragment2" />
+        <action
+            android:id="@+id/action_logInFragment2_to_about"
+            app:destination="@id/about" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment2"
@@ -24,6 +32,9 @@
         <action
             android:id="@+id/action_registerFragment2_to_groupsFragment2"
             app:destination="@id/groupsFragment2" />
+        <action
+            android:id="@+id/action_registerFragment2_to_about"
+            app:destination="@id/about" />
     </fragment>
     <fragment
         android:id="@+id/accountFragment2"
@@ -33,6 +44,9 @@
         <action
             android:id="@+id/action_accountFragment2_to_logInFragment2"
             app:destination="@id/logInFragment2" />
+        <action
+            android:id="@+id/action_accountFragment2_to_about"
+            app:destination="@id/about" />
     </fragment>
     <fragment
         android:id="@+id/groupsFragment2"
@@ -69,6 +83,9 @@
         <action
             android:id="@+id/action_myTasksFragment_to_tasksDetails"
             app:destination="@id/tasksDetails" />
+        <action
+            android:id="@+id/action_myTasksFragment_to_about"
+            app:destination="@id/about" />
     </fragment>
     <fragment
         android:id="@+id/tasksDetails"
