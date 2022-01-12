@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_groupsFragment2_to_addGroupDialog"
             app:destination="@id/addGroupDialog" />
+        <action
+            android:id="@+id/action_groupsFragment2_to_logInFragment2"
+            app:destination="@id/logInFragment2" />
     </fragment>
     <fragment
         android:id="@+id/chosenGroupFragment"

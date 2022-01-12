@@ -68,16 +68,7 @@ public class LogInFragment extends Fragment {
                 }
             }
         });
-        setHasOptionsMenu(true);
         return _binding.getRoot();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu){
-        MenuItem item=menu.findItem(R.id.logoutMenu);
-        if(item != null){
-            item.setVisible(false);
-        }
     }
 
     private Observer<Boolean> onUserAuthentication() {

@@ -40,6 +40,7 @@
     <string name="target_date">Target date</string>
     <string name="about_us">About us</string>
     <string name="logout_menu">Logout</string>
+    <string name="exit">Exit</string>
 
 
 </resources>
