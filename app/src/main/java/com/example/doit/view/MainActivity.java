@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 
 import com.example.doit.R;
 import com.example.doit.databinding.ActivityMainBinding;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         initNavigation();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.app_menu,menu);
+        return true;
+    }
+
     public Context getContext() {
         return getApplicationContext();
     }
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.getNavController());
 
     }
+
 
     private Map<String, String> getUserCredentials(){
         credentials = new HashMap<>();
