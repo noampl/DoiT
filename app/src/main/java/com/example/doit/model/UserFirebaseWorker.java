@@ -264,7 +264,7 @@ public class UserFirebaseWorker implements IDataWorker{
                             Log.w(TAG, "delete task failed " + task.getException());
                         }
                     }
-                })
+                });
     }
 
     public Task<AuthResult> create(User user, MutableLiveData<Boolean> logedIn) {
