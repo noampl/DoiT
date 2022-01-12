@@ -40,7 +40,6 @@ public class User {
     @TypeConverters(Converters.class)
     private Roles _role;
     private List<String> _groupsId;
-
     // endregion
 
     // region C'tor
@@ -103,10 +102,6 @@ public class User {
 
     public String get_password() {
         return _password;
-    }
-
-    public void setImgae(String image_path){
-        _image = image_path;
     }
 
     public void set_userId(@NonNull String _userId) {

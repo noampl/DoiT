@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 import com.example.doit.common.Converters;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 @Entity
@@ -145,6 +146,23 @@ public class Task {
 
     // endregion
 
+    public HashMap<String, Object> create(){
+        HashMap<String, Object> taskMap = new HashMap<>();
+        taskMap.put("id",_taskId);
+        taskMap.put("name",_name);
+        taskMap.put("description",_description);
+        taskMap.put("image",_image);
+        taskMap.put("createdDate",_createdDate);
+        taskMap.put("targetDate",_targetDate);
+        taskMap.put("groupId", _groupId);
+        taskMap.put("createdByUserId",_createdById);
+        taskMap.put("assigneeId",_assigneeId);
+        taskMap.put("finishDate",_finishDate);
+        taskMap.put("value",_value);
+
+        return taskMap;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -156,5 +174,11 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(_taskId, _groupId, _name, _description, _createdDate, _targetDate, _finishDate, _createdById, _assigneeId, _value, _image);
+    }
+
+    @NonNull
+    @Override
+    public String toString(){
+        return this.create().toString();
     }
 }

@@ -34,6 +34,7 @@ public class GroupFirebaseWorker implements IDataWorker{
 
     private static final String USERS_COLLECTION_NAME = "users";
     private static final String GROUPS_COLLECTION_NAME = "groups";
+    private static final String TASKS_COLLECTION_NAME = "tasks";
     private static final String TAG = "Group Firebase Worker";
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
@@ -139,10 +140,10 @@ public class GroupFirebaseWorker implements IDataWorker{
                         if(task.isSuccessful()){
                             Log.d(TAG,"Users group updated");
                             for(String id : group.getMembersId()){
-                                new Thread(new Runnable() {
+                                new Thread(new Runnable() { // TODO why you use new thread each time and not the executer service?
                                     @Override
                                     public void run() {
-                                        addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
+                                            addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
                                     }
                                 }).start();
                             }
@@ -182,6 +183,30 @@ public class GroupFirebaseWorker implements IDataWorker{
                 }
             }
         });
+    }
+
+    private void createNewTask(com.example.doit.model.entities.Task task){
+        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).add(task).addOnSuccessListener(
+                new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "added new task: "+ task.toString());
+                        task.set_taskId(documentReference.getId());
+                        Repository.getInstance().insertTaskLocal(task);
+                    }
+                }
+        );
+    }
+
+    private void updateTask(com.example.doit.model.entities.Task task){
+        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
+                .update(task.create()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "updated task: " + task.toString());
+                        Repository.getInstance().insertTaskLocal(task);
+                    }
+                });
     }
 
     // endregion

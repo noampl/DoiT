@@ -18,6 +18,9 @@ public interface TaskDao {
     @Query("select * from Task")
     List<Task> getAll();
 
+    @Query("DELETE FROM Task WHERE _taskId = :taskId")
+    void deleteTaskById(String taskId);
+
     @Query("select * from Task WHERE _assigneeId =:assigneeId")
     List<Task> getTasksByAssignee(String assigneeId);
 
@@ -32,5 +35,8 @@ public interface TaskDao {
 
     @Delete
     void delete(Task task);
+
+    @Query("DELETE FROM Task where _groupId NOT IN (:groups)")
+    void deleteTaskWhichItsGroupNotExist(List<String> groups);
 
 }
