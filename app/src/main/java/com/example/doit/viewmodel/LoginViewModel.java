@@ -77,8 +77,8 @@ public class LoginViewModel extends ViewModel {
         Log.d(TAG, "Login: " + email);
         Log.d(TAG, "Password: " + password);
         Map<String, String> user = new HashMap<>();
-        user.put("email", email);
-        user.put("password", password);
+        user.put("Email", email);
+        user.put("Password", password);
         if(email != null && !email.equals("") &&  password != null && !password.equals("")){
             Repository.getInstance().login(user);
         }
