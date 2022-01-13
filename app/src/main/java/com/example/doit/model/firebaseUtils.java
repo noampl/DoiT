@@ -91,6 +91,7 @@ public class firebaseUtils {
                 }
                 if(value != null && value.exists()){
                     Group newGroup = convertFirebaseDocumentToGroup(value);
+                    newGroup.set_groupId(value.getId());
                     Repository.getInstance().insertGroupLocal(newGroup);
                     String userId = Repository.getInstance().get_authUser().getValue().get_userId();
                     Repository.getInstance().deleteNotExistGroupsOnFirebase(userId);

@@ -14,16 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <androidx.cardview.widget.CardView
             android:id="@+id/task_img"
-            android:layout_width="@dimen/xl_avatar"
-            android:layout_height="@dimen/xl_avatar"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent"
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="250dp">
+        <ImageButton
+            android:id="@+id/avatar_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@null"
             />
+        </androidx.cardview.widget.CardView>
 
         <EditText
             android:id="@+id/task_name"

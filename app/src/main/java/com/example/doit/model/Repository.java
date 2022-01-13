@@ -2,27 +2,23 @@ package com.example.doit.model;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.GridView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.doit.common.Roles;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -92,7 +88,7 @@ public class Repository {
     }
 
     public static Repository getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new Repository();
         }
         return instance;
@@ -107,12 +103,16 @@ public class Repository {
     }
 
     public MutableLiveData<Boolean> get_isSynced() {
-        if(_isSynced == null) { _isSynced = new MutableLiveData<>(false); }
+        if (_isSynced == null) {
+            _isSynced = new MutableLiveData<>(false);
+        }
         return _isSynced;
     }
 
     public void set_isSynced(Boolean isSynced) {
-        if(_isSynced == null) { _isSynced = new MutableLiveData<>(); }
+        if (_isSynced == null) {
+            _isSynced = new MutableLiveData<>();
+        }
         this._isSynced.postValue(isSynced);
     }
 
@@ -125,8 +125,14 @@ public class Repository {
     }
 
     public MutableLiveData<List<Group>> getGroups() {
-        if(_groups == null){ _groups = new MutableLiveData<>(new ArrayList<>()); }
+        if (_groups == null) {
+            _groups = new MutableLiveData<>(new ArrayList<>());
+        }
         return _groups;
+    }
+
+    public LiveData<List<Group>> getGroupsByUserId(String userId) {
+        return LocalDB.db.groupDao().getAllUserGroups(userId);
     }
 
     public MutableLiveData<List<User>> get_users() {
@@ -138,25 +144,34 @@ public class Repository {
     }
 
     public MutableLiveData<String> get_remoteError() {
-        return userFirebaseWorker.get_firebaseError(); }
+        return userFirebaseWorker.get_firebaseError();
+    }
 
     public MutableLiveData<User> get_authUser() {
-        if (_authUser == null) { _authUser = new MutableLiveData<User>(); }
+        if (_authUser == null) {
+            _authUser = new MutableLiveData<User>();
+        }
         return _authUser;
     }
 
     private void set_loggedIn(Boolean aBoolean) {
-        if (_loggedIn == null) { _loggedIn = new MutableLiveData<>(); }
+        if (_loggedIn == null) {
+            _loggedIn = new MutableLiveData<>();
+        }
         _loggedIn.setValue(aBoolean);
     }
 
     public MutableLiveData<Boolean> get_loggedIn() {
-        if (_loggedIn == null) { _loggedIn = new MutableLiveData<>(false); }
+        if (_loggedIn == null) {
+            _loggedIn = new MutableLiveData<>(false);
+        }
         return _loggedIn;
     }
 
     public MutableLiveData<List<User>> get_newGroupUsers() {
-        if(_newGroupUsers == null) { _newGroupUsers = new MutableLiveData<>(); }
+        if (_newGroupUsers == null) {
+            _newGroupUsers = new MutableLiveData<>();
+        }
         return _newGroupUsers;
     }
 
@@ -168,15 +183,16 @@ public class Repository {
 
     // region Public Methods
 
-    public void getAllAuthUserGroups(){
-        _executorService.execute(() -> {
-            saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
-            userFirebaseWorker.getAllAuthUserGroupAndTasks();
-        });
+    public void getAllAuthUserGroups() {
+        synchronized (this) {
+            Task<QuerySnapshot> a = userFirebaseWorker.getAuthenticatedUser();
+        }
     }
 
     public void login(Map<String, String> user) {
-        userFirebaseWorker.login(user, get_loggedIn());
+        if(!Objects.equals(user.get("Email"), null) && !Objects.equals(user.get("Password"), null)){
+            userFirebaseWorker.login(user, get_loggedIn());
+        }
     }
 
     public void saveOrUpdateUser(User user) {
@@ -204,8 +220,12 @@ public class Repository {
 
     public void updateAuthUserDetails(User user, Uri uri, Boolean ImageChanged, Boolean emailChanged) {
         userFirebaseWorker.updateUser(user);
-        if(ImageChanged) { userFirebaseWorker.upload_image(uri.toString(), user); }
-        if(emailChanged) { userFirebaseWorker.updateUserEmail(user); }
+        if (ImageChanged) {
+            userFirebaseWorker.upload_image(uri.toString(), user);
+        }
+        if (emailChanged) {
+            userFirebaseWorker.updateUserEmail(user);
+        }
         saveOrUpdateUser(user);
     }
 
@@ -225,19 +245,19 @@ public class Repository {
         });
     }
 
-    public List<com.example.doit.model.entities.Task> getTasksByGroupId(String groupId){
-            return LocalDB.db.taskDao().getTasksByGroup(groupId);
+    public List<com.example.doit.model.entities.Task> getTasksByGroupId(String groupId) {
+        return LocalDB.db.taskDao().getTasksByGroup(groupId);
     }
 
-    public void deleteTask(com.example.doit.model.entities.Task task){
+    public void deleteTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> userFirebaseWorker.deleteTask(task));
     }
 
-    public void createTask(com.example.doit.model.entities.Task task){
+    public void createTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> userFirebaseWorker.createTask(task));
     }
 
-    public int getValueSumOfTasksInGroup(Group group){
+    public int getValueSumOfTasksInGroup(Group group) {
         /*
           receive: group
           return: sum of all tasks value that users have done
@@ -245,30 +265,34 @@ public class Repository {
         return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
     }
 
-    public void insertTaskLocal(com.example.doit.model.entities.Task task){
+    public void insertTaskLocal(com.example.doit.model.entities.Task task) {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                LocalDB.db.taskDao().insertAll(task);
+                synchronized (this) {
+                    LocalDB.db.taskDao().insertAll(task);
+                }
                 _tasks.postValue(LocalDB.db.taskDao().getAll());
             }
         });
     }
 
 
-    public void insertGroupLocal(Group group){
+    public void insertGroupLocal(Group group) {
         _executorService.execute(new Runnable() {
-             @Override
-             public void run() {
-                 LocalDB.db.groupDao().insertAll(group);
-                 _groups.postValue(LocalDB.db.groupDao().getAll());
-             }
-         });
+            @Override
+            public void run() {
+                synchronized (this) {
+                    LocalDB.db.groupDao().insertAll(group);
+                }
+                _groups.postValue(LocalDB.db.groupDao().getAll());
+            }
+        });
     }
 
 
     public void searchUsersByNameOrMail(String query) {
-        _executorService.execute(()->
+        _executorService.execute(() ->
                 userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users()));
     }
 
@@ -295,24 +319,28 @@ public class Repository {
         });
     }
 
-    public void deleteNotExistGroupsOnFirebase(String userID){
+    public void deleteNotExistGroupsOnFirebase(String userID) {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
-                LocalDB.db.groupDao().deleteWhereNotExist(userID);
-                ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
-                for (Group group: getGroups().getValue()) {
-                    if(!group.getMembersId().contains(userID)){
-                        clone.remove(group);
-                        for(String taskId: group.get_tasksId()){
-                            LocalDB.db.taskDao().deleteTaskById(taskId);
+                synchronized (this) {
+                    for(Group g : LocalDB.db.groupDao().getAll()){
+                        if(!g.getMembersId().contains(userID)){
+                            LocalDB.db.groupDao().delete(g);
+                        }
+                    }
+                    ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
+                    for (Group group : getGroups().getValue()) {
+                        if (!group.getMembersId().contains(userID)) {
+                            clone.remove(group);
+                            for (String taskId : group.get_tasksId()) {
+                                LocalDB.db.taskDao().deleteTaskById(taskId);
+                            }
                         }
                     }
                     getGroups().postValue(clone);
-                    //deleteNotExistTask();
+                    deleteNotExistTask();
                 }
-                getGroups().postValue(clone);
-                deleteNotExistTask();
             }
         });
     }
@@ -322,13 +350,13 @@ public class Repository {
         return LocalDB.db.userDao().getUserById(userId);
     }
 
-    public Group getGroupById(String groupId)  {
+    public Group getGroupById(String groupId) {
         return LocalDB.db.groupDao().getGroup(groupId);
     }
 
-    public void fetchTasks(){
-        _executorService.execute(()->_tasks.postValue(LocalDB.db.taskDao()
-                                    .getTasksByAssignee(_authUser.getValue().get_userId())));
+    public void fetchTasks() {
+        _executorService.execute(() -> _tasks.postValue(LocalDB.db.taskDao()
+                .getTasksByAssignee(_authUser.getValue().get_userId())));
     }
 
     // endregion

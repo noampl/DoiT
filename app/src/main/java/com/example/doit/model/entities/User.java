@@ -113,7 +113,7 @@ public class User {
     }
 
     public void addGroupOrUpdate(Group group){
-        for(String groupId : _groupsId){
+        for(String groupId : get_groupsId()){
             if(Objects.equals(groupId, group.get_groupId())){
                 return;
             }
