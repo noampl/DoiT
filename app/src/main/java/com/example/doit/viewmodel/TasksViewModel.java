@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
@@ -21,11 +22,13 @@ public class TasksViewModel extends ViewModel {
 
     private MutableLiveData<List<Task>> _tasks;
     private IDialogNavigationHelper _iDialogNavigationHelper;
+    private IFragmentNavigitionHelper _iFragmentNavigationHelper;
     private int taskValue;
     private long _targetDate;
     private String _groupId;
     private String _assigneeId;
     private String _createdById;
+    private String _tasksDetailsId;
 
     // endregion
 
@@ -34,11 +37,21 @@ public class TasksViewModel extends ViewModel {
     public TasksViewModel(){
         _tasks = Repository.getInstance().get_tasks();
         _createdById = Repository.getInstance().get_authUser().getValue().get_userId();
+        _tasksDetailsId = Repository.getInstance().get_taskDetailsId();
     }
 
     // endregion
 
     // region Properties
+
+
+    public String get_tasksDetailsId() {
+        return _tasksDetailsId;
+    }
+
+    public void set_tasksDetailsId(String _tasksDetailsId) {
+        this._tasksDetailsId = _tasksDetailsId;
+    }
 
     public MutableLiveData<List<Task>> get_tasks() {
         return _tasks;
@@ -48,12 +61,24 @@ public class TasksViewModel extends ViewModel {
         this._tasks.setValue(_tasks);
     }
 
+    public void set_iDialogNavigationHelper(IDialogNavigationHelper _iDialogNavigationHelper) {
+        this._iDialogNavigationHelper = _iDialogNavigationHelper;
+    }
+
+    public IFragmentNavigitionHelper get_iFragmentNavigationHelper() {
+        return _iFragmentNavigationHelper;
+    }
+
+    public void set_iFragmentNavigationHelper(IFragmentNavigitionHelper _iFragmentNavigationHelper) {
+        this._iFragmentNavigationHelper = _iFragmentNavigationHelper;
+    }
+
     // endregion
 
     // region Public
 
-    public void set_iDialogNavigationHelper(IDialogNavigationHelper _iDialogNavigationHelper) {
-        this._iDialogNavigationHelper = _iDialogNavigationHelper;
+    public Task getTaskById() {
+        return Repository.getInstance().getTaskById(_tasksDetailsId);
     }
 
     public Group getGroupByTask(Task task) {
@@ -61,7 +86,11 @@ public class TasksViewModel extends ViewModel {
     }
 
     public User getUserByTask(Task task) {
-        return Repository.getInstance().getUserFromSql(task.get_assigneeId());
+        return getUserById(task.get_assigneeId());
+    }
+
+    public User getUserById(String id) {
+        return Repository.getInstance().getUserFromSql(id);
     }
 
     public void fetchTasks(){
@@ -96,6 +125,11 @@ public class TasksViewModel extends ViewModel {
 
     public void setTargetDate(DatePicker datePicker){
         _targetDate = datePicker.getAutofillValue().getDateValue();
+    }
+
+    public boolean details(){
+        _iFragmentNavigationHelper.openFragment();
+        return true;
     }
 
     // endregion
