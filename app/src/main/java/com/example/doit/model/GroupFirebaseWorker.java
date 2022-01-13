@@ -22,12 +22,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GroupFirebaseWorker implements IDataWorker{
@@ -67,6 +70,7 @@ public class GroupFirebaseWorker implements IDataWorker{
     // region Public Methods
 
     public void createNewGroup(Group group){
+        group.getMembersId().add(Repository.getInstance().get_authUser().getValue().get_userId());
         groupsRef.add(group.create()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -82,11 +86,14 @@ public class GroupFirebaseWorker implements IDataWorker{
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()){
                                     Repository.getInstance().insertGroupLocal(group);
-                                    User newAuth = authUser.getValue();
+                                    User newAuth = Repository.getInstance().get_authUser().getValue();
                                     if (newAuth != null) {
                                         newAuth.addGroupOrUpdate(group);
-                                        Repository.getInstance()
-                                                .updateAuthUserDetails(newAuth,null,false,false);
+                                        for(String userId : group.getMembersId()){
+                                        addGroupToUser(userId, group.get_groupId());
+                                        }
+//                                        Repository.getInstance()
+//                                                .updateAuthUserDetails(newAuth,null,false,false);
                                     }
                                     DocumentSnapshot docTask = task.getResult();
                                     if (docTask != null) {
@@ -103,6 +110,34 @@ public class GroupFirebaseWorker implements IDataWorker{
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Error adding document", e);
+            }
+        });
+    }
+
+    public void addGroupToUser(String userId, String groupId){
+        usersRef.whereEqualTo("id", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for(DocumentSnapshot doc : querySnapshot){
+                        List<String> groups = (List<String>) doc.get("groups");
+                        if (groups == null){
+                            groups = new ArrayList<>();
+                        }
+                        groups.add(groupId);
+                        doc.getReference().update("groups", groups).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    Log.d(TAG, "Updated " + userId);
+                                } else {
+                                    Log.d(TAG, "Update failed " + userId);
+                                }
+                            }
+                        });
+                    }
+                }
             }
         });
     }

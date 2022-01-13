@@ -118,7 +118,7 @@ public class User {
                 return;
             }
         }
-        _groupsId.add(group.get_groupId());
+        get_groupsId().add(group.get_groupId());
     }
 
     public void setPassword(String _password) {

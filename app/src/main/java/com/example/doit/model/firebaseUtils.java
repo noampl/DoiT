@@ -92,7 +92,8 @@ public class firebaseUtils {
                 if(value != null && value.exists()){
                     Group newGroup = convertFirebaseDocumentToGroup(value);
                     Repository.getInstance().insertGroupLocal(newGroup);
-                    Repository.getInstance().deleteNotExistGroupsOnFirebase(user.getValue().get_userId());
+                    String userId = Repository.getInstance().get_authUser().getValue().get_userId();
+                    Repository.getInstance().deleteNotExistGroupsOnFirebase(userId);
                 }
             }
         };
