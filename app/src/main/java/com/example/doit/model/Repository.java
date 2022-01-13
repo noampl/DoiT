@@ -211,6 +211,12 @@ public class Repository {
         saveOrUpdateUser(user);
     }
 
+    public void deleteUserFromGroup(Group group, User user){
+        _executorService.execute(() -> {
+            groupFirebaseWorker.deleteUserFromGroup(group, user);
+        });
+    }
+
     public void insertGroup(Group group){
         _executorService.execute(new Runnable() {
             @Override
