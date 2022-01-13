@@ -141,7 +141,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
                     if(result.getResultCode() == Activity.RESULT_OK){
                         Intent data = result.getData();
                         _imgUri = data != null ? data.getData() : null;
-                        Picasso.with(_binding.getRoot().getContext()).load(_imgUri).fit().into(_binding.avatarImg);
+                        Picasso.with(_binding.getRoot().getContext()).load(_imgUri).fit().into(_binding.taskImg);
                     }
                 }
             }
