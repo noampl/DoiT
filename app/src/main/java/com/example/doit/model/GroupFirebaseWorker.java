@@ -125,7 +125,9 @@ public class GroupFirebaseWorker implements IDataWorker{
                         if (groups == null){
                             groups = new ArrayList<>();
                         }
-                        groups.add(groupId);
+                        if(!groups.contains(groupId)){
+                            groups.add(groupId);
+                        }
                         doc.getReference().update("groups", groups).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
