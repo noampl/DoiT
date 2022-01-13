@@ -9,6 +9,10 @@
             name="group"
             type="com.example.doit.model.entities.Group" />
 
+        <variable
+            name="tasksViewModel"
+            type="com.example.doit.viewmodel.TasksViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,10 +47,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/group_image"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/add_task"
             />
 
-
+        <Button
+            android:id="@+id/add_task"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/large_avatar"
+            android:text="@string/add_task"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{()->tasksViewModel.openDialog()}"
+            />
 
 
 

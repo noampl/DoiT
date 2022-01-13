@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class GroupsFragment extends Fragment implements IDialogNavigationHelper {
 
+
     // region Members
 
     private GroupsViewModel _groupsViewModel;
@@ -42,10 +43,6 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
 
     public GroupsFragment() {
         // Required empty public constructor
-    }
-
-    public static GroupsFragment newInstance() {
-        return new GroupsFragment();
     }
 
     @Override
@@ -88,5 +85,13 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper 
     public void openDialog() {
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                 R.id.action_groupsFragment2_to_addGroupDialog);
+    }
+
+
+    @Override
+    public void openFragment() {
+        GroupsFragmentDirections.ActionGroupsFragment2ToChosenGroupFragment action =
+        GroupsFragmentDirections.actionGroupsFragment2ToChosenGroupFragment(_groupsViewModel.getSelectedGroupId());
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }

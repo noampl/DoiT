@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -31,6 +32,9 @@ import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.viewmodel.TasksViewModel;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.squareup.picasso.Picasso;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddTaskDialog extends DialogFragment implements IDialogNavigationHelper {
 
@@ -92,18 +96,18 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
                 pickPhotoResultLauncher.launch(pickPhoto);
             }
         });
-
         _binding.datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar calendar = new Calendar.Builder().setInstant(new Date()).build();
                 @SuppressLint("RestrictedApi") MaterialStyledDatePickerDialog dialog =
-                        new MaterialStyledDatePickerDialog(requireContext());
-                dialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        tasksViewModel.setTargetDate(datePicker);
-                    }
-                });
+                        new MaterialStyledDatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                                tasksViewModel.setTargetDate(datePicker);
+
+                            }
+                        },calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 dialog.show();
             }
         });
@@ -118,7 +122,13 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
         _binding.create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tasksViewModel.createTask();
+                if(tasksViewModel.createTask(_imgUri,_binding.taskName.getText().toString(),
+                        _binding.taskDec.getText().toString())){
+                    dismiss();
+                }
+                else{
+                    Toast.makeText(requireContext(),"Please enter task name",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -53,20 +53,17 @@ public class Repository {
     private GroupFirebaseWorker groupFirebaseWorker;
     private MutableLiveData<String> _fireBaseError;
     private MutableLiveData<Boolean> _isSynced;
+    private List<User> _selectedUsers = new ArrayList<>();
 
     /**
      * Uses for addGroup dialog
      */
     private MutableLiveData<List<User>> _newGroupUsers;
-    /**
-     * Uses for addGroup dialog
-     */
-    private MutableLiveData<List<User>> _newGroupAdmins;
+
 
     // endregion
 
     // region Singeltone
-
 
     private Repository() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -83,7 +80,6 @@ public class Repository {
         userFirebaseWorker = (UserFirebaseWorker) createWorker(Consts.FIRE_BASE_USERS);
         groupFirebaseWorker = new GroupFirebaseWorker();
         userFirebaseWorker.setAuthUser(_authUser);
-        _newGroupAdmins = new MutableLiveData<>(new ArrayList<>());
         _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
 
         initFake();
@@ -100,6 +96,9 @@ public class Repository {
 
     // region Properties
 
+    public List<User> get_selectedUsers() {
+       return this._selectedUsers ;
+    }
 
     public MutableLiveData<Boolean> get_isSynced() {
         if (_isSynced == null) {
@@ -174,10 +173,6 @@ public class Repository {
         return _newGroupUsers;
     }
 
-    public MutableLiveData<List<User>> get_newGroupAdmins() {
-        return _newGroupAdmins;
-    }
-
     public MutableLiveData<List<com.example.doit.model.entities.Task>> get_tasks() {
         return _tasks;
     }
@@ -244,7 +239,6 @@ public class Repository {
 
     public List<com.example.doit.model.entities.Task> getTasksByGroupId(String groupId) {
         return LocalDB.db.taskDao().getTasksByGroup(groupId);
-        //TODO: check if should do it async.
     }
 
     public void deleteTask(com.example.doit.model.entities.Task task) {

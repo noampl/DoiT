@@ -22,7 +22,6 @@ public class Group {
     private String _name;
     private String _description;
     private List<String> membersId;
-    private List<String> _adminsId;
     private List<String> _tasksId;
     private String _image;
 
@@ -32,12 +31,11 @@ public class Group {
 
     public Group(){}
 
-    public Group(String id, String _name, String _description, List<String> _membersID, List<String> _admins, String _image, List<String> _tasks) {
+    public Group(String id, String _name, String _description, List<String> _membersID, String _image, List<String> _tasks) {
         this._groupId = id;
         this._name = _name;
         this._description = _description;
         this.membersId = _membersID;
-        this._adminsId = _admins; //TODO: Noam -> delete?
         this._image = _image;
         this._tasksId = _tasks;
     }
@@ -81,14 +79,6 @@ public class Group {
         this.membersId = membersId;
     }
 
-    public List<String> get_adminsId() {
-        return _adminsId;
-    }
-
-    public void set_adminsId(List<String> _adminsId) {
-        this._adminsId = _adminsId;
-    }
-
     public String get_image() {
         return _image;
     }
@@ -117,7 +107,6 @@ public class Group {
         groupMap.put("description",_description);
         groupMap.put("image",_image);
         groupMap.put("membersId",membersId);
-        groupMap.put("adminsId",_adminsId);
         groupMap.put("taskId",_tasksId);
 
         return groupMap;
@@ -128,12 +117,14 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return _groupId.equals(group.get_groupId()) && _name.equals(group.get_name()) && _description.equals(group.get_description()) && Objects.equals(membersId, group.membersId) && Objects.equals(_adminsId, group._adminsId) && Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
+        return _groupId.equals(group.get_groupId()) && _name.equals(group.get_name()) &&
+                _description.equals(group.get_description()) && Objects.equals(membersId, group.membersId) &&
+                Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_groupId, _name, _description, membersId, _adminsId, _image, _tasksId);
+        return Objects.hash(_groupId, _name, _description, membersId, _image, _tasksId);
     }
 
     // endregion
