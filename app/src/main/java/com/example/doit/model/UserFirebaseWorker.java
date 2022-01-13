@@ -377,9 +377,9 @@ public class UserFirebaseWorker implements IDataWorker {
     public Task<AuthResult> login(Map<String, String> user, MutableLiveData<Boolean> loggedIn) {
         Log.d(TAG, "looking for user");
         authUser.postValue((new User()));
-        String email = (String) user.get("email");
-        String password = (String) user.get("password");
-        if (email == null || email.equals("") || password == null || password.equals("")) {
+        String email = (String) user.get("Email");
+        String password = (String) user.get("Password");
+        if (email == null || email.equals("NONE") || password == null || password.equals("NONE")) {
             Log.d(TAG, "email or password are invalid so connection canceled");
             return null;
         }

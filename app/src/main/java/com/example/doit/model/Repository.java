@@ -188,23 +188,14 @@ public class Repository {
 
     public void getAllAuthUserGroups() {
         synchronized (this) {
-            //saveOrUpdateUser(userFirebaseWorker.getAuthenticatedUserDetails());
-            Log.d("FRISHMAN", "auth getAllauthUser");
             Task<QuerySnapshot> a = userFirebaseWorker.getAuthenticatedUser();
-//                Task<QuerySnapshot> b = a.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            Log.d("FRISHMAN", "Repo oncomplete auth getAllauthUser");
-//                            userFirebaseWorker.getAllAuthUserGroupAndTasks();
-//                        }
-//                    }
-//                });
         }
     }
 
     public void login(Map<String, String> user) {
-        userFirebaseWorker.login(user, get_loggedIn());
+        if(!Objects.equals(user.get("Email"), null) && !Objects.equals(user.get("Password"), null)){
+            userFirebaseWorker.login(user, get_loggedIn());
+        }
     }
 
     public void saveOrUpdateUser(User user) {
@@ -290,12 +281,7 @@ public class Repository {
             @Override
             public void run() {
                 synchronized (this) {
-                    Log.d("FRISHMAN", "insering");
                     LocalDB.db.groupDao().insertAll(group);
-                }
-                Log.d("FRISHMAN", LocalDB.db.groupDao().getAll().toString());
-                for (Group g : LocalDB.db.groupDao().getAll()) {
-                    Log.d("FRISHMAN", g.create().toString());
                 }
                 _groups.postValue(LocalDB.db.groupDao().getAll());
             }
@@ -329,14 +315,12 @@ public class Repository {
             public void run() {
                 synchronized (this) {
                     for(Group g : LocalDB.db.groupDao().getAll()){
-                        Log.d("FRISHMAN", "members" + g.getMembersId());
                         if(!g.getMembersId().contains(userID)){
                             LocalDB.db.groupDao().delete(g);
                         }
                     }
                     ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
                     for (Group group : getGroups().getValue()) {
-                        Log.d("FRISHMAN", "members " + group.getMembersId());
                         if (!group.getMembersId().contains(userID)) {
                             clone.remove(group);
                             for (String taskId : group.get_tasksId()) {

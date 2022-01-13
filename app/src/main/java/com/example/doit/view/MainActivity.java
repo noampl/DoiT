@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String,String> credentials;
     private AccountViewModel accountViewModel;
     private NavHostFragment navHostFragment;
+    private boolean _triedToConnect;
 
 
     @Override
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
         Repository.getInstance().login(getUserCredentials());
-        saveUserForLater();
         initNavigation();
     }
 
@@ -89,18 +89,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Map<String, String> getUserCredentials(){
+        if(_triedToConnect){
+            return credentials;
+        }
+        _triedToConnect = true;
         credentials = new HashMap<>();
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        credentials.put("email",sharedPref.getString(getString(R.string.email), "NONE"));
-        credentials.put("password",sharedPref.getString(getString(R.string.password), "NONE"));
+        credentials.put("Email",sharedPref.getString(getString(R.string.email), "NONE"));
+        credentials.put("Password",sharedPref.getString(getString(R.string.password), "NONE"));
+        saveUserForLater();
         return credentials;
     }
 
     private void saveUserForLater(){
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), getUserCredentials().get("email"));
-        editor.putString(getString(R.string.password), getUserCredentials().get("password"));
+        editor.putString(getString(R.string.email), getUserCredentials().get("Email"));
+        editor.putString(getString(R.string.password), getUserCredentials().get("Password"));
         editor.apply();
     }
 }

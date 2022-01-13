@@ -99,10 +99,13 @@ public class LogInFragment extends Fragment {
     }
 
     private void saveUserForLater(){
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), viewModel.getUserName());
-        editor.putString(getString(R.string.password), viewModel.getPassword()); // TODO figure out if needed to hash?
-        editor.apply();
+        if(viewModel.getUserName() != "" && viewModel.getUserName() != null){
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.clear().apply();
+            editor.putString(getString(R.string.email), viewModel.getUserName());
+            editor.putString(getString(R.string.password), viewModel.getPassword()); // TODO figure out if needed to hash?
+            editor.apply();
+        }
     }
 }
