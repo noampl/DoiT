@@ -379,7 +379,8 @@ public class UserFirebaseWorker implements IDataWorker {
         authUser.postValue((new User()));
         String email = (String) user.get("Email");
         String password = (String) user.get("Password");
-        if (email == null || email.equals("NONE") || password == null || password.equals("NONE")) {
+        if (email == null || email.equals("NONE") || password == null || password.equals("NONE") ||
+        email.equals("") || password.equals("")) {
             Log.d(TAG, "email or password are invalid so connection canceled");
             return null;
         }
