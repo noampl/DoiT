@@ -25,11 +25,13 @@
 
         <ImageView
             android:id="@+id/doItIcon"
-            android:layout_width="335dp"
-            android:layout_height="293dp"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/doit_logos_black"
+            android:layout_marginTop="100dp"
+            android:scaleX="3"
+            android:scaleY="3"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -20,6 +20,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -227,7 +229,13 @@ public class Repository {
         saveOrUpdateUser(user);
     }
 
-    public void insertGroup(Group group) {
+    public void deleteUserFromGroup(Group group, User user){
+        _executorService.execute(() -> {
+            groupFirebaseWorker.deleteUserFromGroup(group, user);
+        });
+    }
+
+    public void insertGroup(Group group){
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -288,17 +296,25 @@ public class Repository {
                 userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users()));
     }
 
+
     public void deleteNotExistTask() {
         _executorService.execute(() -> {
             synchronized (this) {
-                List<String> groupsId = new ArrayList<>();
-                if(getGroups().getValue() == null){
+                //List<String> groupsId = new ArrayList<>();
+                if (getGroups().getValue() == null) {
                     return;
                 }
+                List taskIds = new ArrayList();
                 for (Group g : getGroups().getValue()) {
-                    groupsId.add(g.get_groupId());
+                    //groupsId.add(g.get_groupId());
+                    taskIds.addAll(g.get_tasksId());
                 }
-                LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
+                for (com.example.doit.model.entities.Task t : get_tasks().getValue()) {
+                    if (!taskIds.contains(t.get_taskId())) {
+                        LocalDB.db.taskDao().delete(t);
+                    }
+                }
+                //LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
             }
         });
     }
