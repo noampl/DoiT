@@ -51,26 +51,7 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
         Repository.getInstance().login(getUserCredentials());
-        Repository.getInstance().get_authUser().observe(this,new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                if(Boolean.TRUE.equals(Repository.getInstance().get_isSynced().getValue())){
-                    return;
-                }
-                Log.w(TAG, "user logged in");
-                Log.w(TAG, "Requesting all user groups");
-                Log.w(TAG, user.toString());
-                if (user.get_userId() != null){
-                    if (!user.get_userId().equals("")){
-                        if(Boolean.FALSE.equals(Repository.getInstance().get_isSynced().getValue())){
-                            Repository.getInstance().getAllAuthUserGroups();
-                            Repository.getInstance().set_isSynced(true);
-                        }
-
-                    }
-                }
-            }
-        });
+        saveUserForLater();
         initNavigation();
     }
 
@@ -113,6 +94,14 @@ public class MainActivity extends AppCompatActivity {
         credentials.put("email",sharedPref.getString(getString(R.string.email), "NONE"));
         credentials.put("password",sharedPref.getString(getString(R.string.password), "NONE"));
         return credentials;
+    }
+
+    private void saveUserForLater(){
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.email), getUserCredentials().get("email"));
+        editor.putString(getString(R.string.password), getUserCredentials().get("password"));
+        editor.apply();
     }
 }
 

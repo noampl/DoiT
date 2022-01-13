@@ -78,14 +78,14 @@ public class LogInFragment extends Fragment {
                 if (aBoolean != null) {
                     if(aBoolean) {
                         User user = viewModel.get_authUser().getValue();
-                        Log.d(TAG, "User has been found");
                         if (viewModel.getUserName() != null){
                             Toast.makeText(getContext(), viewModel.getUserName() + " is connected", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
+                            if (user != null) {
+                                Toast.makeText(getContext(), user.get_email() + " is connected", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         saveUserForLater();
-                        Repository.getInstance().getAllAuthUserGroups();
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                                 R.id.action_logInFragment2_to_groupsFragment2);
                     } else {
