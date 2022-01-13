@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_box"
@@ -26,7 +26,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_item"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/addition_dialog_max_height"
             android:maxHeight="@dimen/addition_dialog_max_height"
             tools:itemCount="3"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -39,7 +39,6 @@
             android:layout_width="@dimen/dialog_btn"
             android:layout_height="50dp"
             android:text="@string/cancel"
-
             app:layout_constraintBottom_toBottomOf="@+id/submit_button"
             app:layout_constraintEnd_toStartOf="@+id/submit_button"
             app:layout_constraintHorizontal_bias="0.5"
@@ -50,10 +49,9 @@
             android:id="@+id/submit_button"
             android:layout_width="@dimen/dialog_btn"
             android:layout_height="50dp"
-            android:layout_marginTop="142dp"
+            android:layout_marginTop="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
             android:text="@string/submit"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/cancel_button"

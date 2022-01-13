@@ -50,33 +50,15 @@
             app:layout_constraintStart_toStartOf="@id/avatar_img"
             app:layout_constraintTop_toBottomOf="@id/avatar_img" />
 
-        <ImageView
-            android:id="@+id/admins_avatar"
-            android:layout_width="@dimen/large_avatar"
-            android:layout_height="@dimen/large_avatar"
-            android:background="@drawable/ic_baseline_account_circle_24"
-            android:onClick="@{()->groupsViewModel.addAdminsDialog()}"
-            app:layout_constraintStart_toStartOf="@id/cancel_button"
-            app:layout_constraintEnd_toEndOf="@id/cancel_button"
-            app:layout_constraintTop_toBottomOf="@id/group_dec" />
-
-        <TextView
-            android:id="@+id/admins_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/admins"
-            app:layout_constraintEnd_toEndOf="@id/admins_avatar"
-            app:layout_constraintStart_toStartOf="@id/admins_avatar"
-            app:layout_constraintTop_toBottomOf="@id/admins_avatar" />
 
         <ImageView
             android:id="@+id/members_avatar"
             android:layout_width="@dimen/large_avatar"
             android:layout_height="@dimen/large_avatar"
             android:background="@drawable/ic_baseline_group_24"
-            app:layout_constraintEnd_toEndOf="@id/create"
             android:onClick="@{()->groupsViewModel.addMembersDialog()}"
-            app:layout_constraintStart_toStartOf="@id/create"
+            app:layout_constraintEnd_toEndOf="@id/create"
+            app:layout_constraintStart_toStartOf="@+id/cancel_button"
             app:layout_constraintTop_toBottomOf="@id/group_dec" />
 
         <TextView
@@ -97,7 +79,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/admins_text" />
+            app:layout_constraintTop_toBottomOf="@id/members_text" />
 
         <Button
             android:id="@+id/create"
@@ -107,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/cancel_button"
-            app:layout_constraintTop_toBottomOf="@id/admins_text" />
+            app:layout_constraintTop_toBottomOf="@id/members_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
