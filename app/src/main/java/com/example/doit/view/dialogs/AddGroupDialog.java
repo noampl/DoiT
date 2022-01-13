@@ -91,8 +91,7 @@ public class AddGroupDialog extends DialogFragment implements IDialogNavigationH
             @Override
             public void onClick(View view) {
                 if (_groupsViewModel.addNewGroup(_imgUri,_binding.groupName.getText().toString(),
-                        _binding.groupDec.getText().toString(),_groupsViewModel.get_newGroupAdmins().getValue(),
-                        _groupsViewModel.get_newGroupMembers().getValue())){
+                        _binding.groupDec.getText().toString())) {
 
                     dismiss();
                 }

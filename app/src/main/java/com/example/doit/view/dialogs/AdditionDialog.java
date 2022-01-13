@@ -53,13 +53,21 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.addition_dialog_fragment, container, false);
-        _binding.setLifecycleOwner(this);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        usersViewModel.get_selectedUser().clear();
         _dialog.setView(_binding.getRoot());
         _dialog.setCancelable(true);
+        _dialog.setTitle("Select User");
         _binding.searchBox.setOnQueryTextListener(this);
         initListeners();
+        _binding.setLifecycleOwner(this);
         return _binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        usersViewModel.get_users().getValue().clear();
     }
 
     @Override
@@ -81,19 +89,17 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
 
     private void initListeners() {
         AdditionAdapter adapter = new AdditionAdapter();
-        _binding.listItem.setAdapter(adapter);
+        adapter.set_usersViewModel(usersViewModel);
         usersViewModel.get_users().observe(requireActivity(), new Observer<List<User>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<User> users) {
                 adapter.submitList(users);
-                if (users.size() > 3) {
-//                    _binding.listItem.setH
-                }
                 adapter.notifyDataSetChanged();
                 Log.d("PELEG", "submit users to addotion dialog");
             }
         });
+        _binding.listItem.setAdapter(adapter);
 
         _binding.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,5 +108,14 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
                 dismiss();
             }
         });
+
+        _binding.submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usersViewModel.submitUsers();
+                dismiss();
+            }
+        });
+
     }
 }

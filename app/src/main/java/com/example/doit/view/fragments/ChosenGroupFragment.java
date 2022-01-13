@@ -2,65 +2,82 @@ package com.example.doit.view.fragments;
 
 import android.os.Bundle;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.databinding.FragmentChosenGroupBinding;
+import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.Task;
+import com.example.doit.view.adapters.TasksAdapter;
+import com.example.doit.viewmodel.GroupsViewModel;
+import com.example.doit.viewmodel.TasksViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChosenGroupFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ChosenGroupFragment extends Fragment {
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class ChosenGroupFragment extends Fragment implements IDialogNavigationHelper {
+
+    // region Members
+
+    private FragmentChosenGroupBinding _binding;
+    private TasksViewModel _tasksViewModel;
+
+    // endregion
+
+    // region C'tor
 
     public ChosenGroupFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChosenGroupFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ChosenGroupFragment newInstance(String param1, String param2) {
-        ChosenGroupFragment fragment = new ChosenGroupFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    // endregion
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chosen_group, container, false);
+        String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
+
+        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
+        _binding.setGroup(initVM(selectedId));
+        _binding.setTasksViewModel(_tasksViewModel);
+        _binding.setLifecycleOwner(this);
+
+        initListeners();
+        return _binding.getRoot();
+    }
+
+    private void initListeners(){
+        TasksAdapter adapter = new TasksAdapter(false);
+        _tasksViewModel.get_tasks().observe(requireActivity(), new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                adapter.submitList(tasks);
+            }
+        });
+
+        _binding.taskLst.setAdapter(adapter);
+    }
+
+    private Group initVM(String selectedGroupId){
+        _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
+        _tasksViewModel.getTasksByGroupId(selectedGroupId);
+        _tasksViewModel.set_iDialogNavigationHelper(this);
+        GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
+        return groupsViewModel.getGroupById(selectedGroupId);
+    }
+
+    @Override
+    public void openDialog() {
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                R.id.action_chosenGroupFragment_to_addTaskDialog);
     }
 }
