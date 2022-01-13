@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentChosenGroupBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.view.adapters.TasksAdapter;
@@ -24,7 +25,7 @@ import com.example.doit.viewmodel.TasksViewModel;
 import java.util.List;
 
 
-public class ChosenGroupFragment extends Fragment implements IDialogNavigationHelper {
+public class ChosenGroupFragment extends Fragment implements IDialogNavigationHelper, IFragmentNavigitionHelper {
 
     // region Members
 
@@ -71,6 +72,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _tasksViewModel.getTasksByGroupId(selectedGroupId);
         _tasksViewModel.set_iDialogNavigationHelper(this);
+        _tasksViewModel.set_iFragmentNavigationHelper(this);
         GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         return groupsViewModel.getGroupById(selectedGroupId);
     }
@@ -79,5 +81,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     public void openDialog() {
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                 R.id.action_chosenGroupFragment_to_addTaskDialog);
+    }
+
+    @Override
+    public void openFragment() {
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                R.id.action_chosenGroupFragment_to_tasksDetails);
     }
 }

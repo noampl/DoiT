@@ -1,14 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragments.TasksDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <data>
+        <variable
+            name="task"
+            type="com.example.doit.model.entities.Task" />
 
-</FrameLayout>
+        <variable
+            name="assignee"
+            type="com.example.doit.model.entities.User" />
+
+        <variable
+            name="openBy"
+            type="com.example.doit.model.entities.User" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/task_img"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Task image"
+            android:src="@{task._image, default = @color/blue}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/task_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:text="@{task._name, default= taskname}"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/task_img" />
+
+        <TextView
+            android:id="@+id/task_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:text="@{task._description, default=description}"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/task_name"
+            app:layout_constraintTop_toBottomOf="@id/task_name" />
+
+        <TextView
+            android:id="@+id/open_by_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="@string/open_by"
+            app:layout_constraintEnd_toStartOf="@+id/assignee_text"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/task_desc" />
+
+        <TextView
+            android:id="@+id/assignee_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assignee"
+            app:layout_constraintEnd_toStartOf="@+id/created_date_text"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/open_by_title"
+            app:layout_constraintTop_toTopOf="@id/open_by_title" />
+
+        <TextView
+            android:id="@+id/created_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/created_date"
+            app:layout_constraintEnd_toStartOf="@+id/finish_at"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/assignee_text"
+            app:layout_constraintTop_toTopOf="@id/assignee_text" />
+
+        <TextView
+            android:id="@+id/finish_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/finish_at"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/created_date_text"
+            app:layout_constraintTop_toTopOf="@id/created_date_text" />
+
+        <ImageView
+            android:id="@+id/open_by_avatar"
+            android:layout_width="@dimen/small_avatar"
+            android:layout_height="@dimen/small_avatar"
+            app:layout_constraintTop_toBottomOf="@id/open_by_title"
+            app:layout_constraintEnd_toEndOf="@id/open_by_title"
+            app:layout_constraintStart_toStartOf="@id/open_by_title"
+            android:layout_marginTop="@dimen/small_margin"
+            android:src="@{openBy._image, default = @drawable/ic_baseline_account_circle_24}"
+            />
+
+        <ImageView
+            android:id="@+id/assignee_avatar"
+            android:layout_width="@dimen/small_avatar"
+            android:layout_height="@dimen/small_avatar"
+            app:layout_constraintTop_toBottomOf="@id/assignee_text"
+            app:layout_constraintStart_toStartOf="@id/assignee_text"
+            app:layout_constraintEnd_toEndOf="@id/assignee_text"
+            android:layout_marginTop="@dimen/small_margin"
+            android:src="@{assignee._image, default = @drawable/ic_baseline_account_circle_24}"
+            />
+
+        <TextView
+            android:id="@+id/created_date_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/created_date_text"
+            app:layout_constraintEnd_toEndOf="@id/created_date_text"
+            app:layout_constraintStart_toStartOf="@id/created_date_text"
+            app:layout_constraintTop_toTopOf="@id/assignee_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/assignee_avatar"
+            app:date="@{task._createdDate}"
+            />
+
+        <TextView
+            android:id="@+id/finish_at_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/created_date_val"
+            app:layout_constraintBottom_toBottomOf="@id/created_date_val"
+            app:layout_constraintStart_toStartOf="@id/finish_at"
+            app:layout_constraintEnd_toEndOf="@id/finish_at"
+            />
+
+        <TextView
+            android:id="@+id/value_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="@string/value_title"
+            app:layout_constraintStart_toStartOf="@+id/open_by_title"
+            app:layout_constraintTop_toBottomOf="@id/open_by_avatar" />
+
+        <TextView
+            android:id="@+id/value_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/value_title"
+            app:layout_constraintStart_toEndOf="@id/value_title"
+            android:layout_marginStart="2dp"
+            android:textStyle="bold"
+            android:text="@{task._value, default = 6}"
+            />
+
+        <TextView
+            android:id="@+id/status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/value_title"
+            app:layout_constraintEnd_toStartOf="@id/checkbox"
+            android:text="@string/status"
+            android:layout_marginEnd="@dimen/large_margin"
+            />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/status_title"
+            app:layout_constraintBottom_toBottomOf="@id/status_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
