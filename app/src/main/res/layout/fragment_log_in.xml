@@ -85,10 +85,12 @@
 
         <ImageView
             android:id="@+id/doItIcon"
-            android:layout_width="150pt"
-            android:layout_height="75pt"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:layout_width="418dp"
+            android:layout_height="227dp"
             android:layout_marginTop="50dp"
-            android:src="@drawable/doit_logo"
+            android:src="@drawable/doit_logos_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
