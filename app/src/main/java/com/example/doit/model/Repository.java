@@ -308,11 +308,8 @@ public class Repository {
                             LocalDB.db.taskDao().deleteTaskById(taskId);
                         }
                     }
-<<<<<<< Updated upstream
-=======
                     getGroups().postValue(clone);
                     //deleteNotExistTask();
->>>>>>> Stashed changes
                 }
                 getGroups().postValue(clone);
                 deleteNotExistTask();
