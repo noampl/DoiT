@@ -29,16 +29,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-<<<<<<< Updated upstream
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-=======
-import java.util.Set;
->>>>>>> Stashed changes
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 public class Repository {
     private static final String TAG = "Repository";
@@ -280,18 +272,12 @@ public class Repository {
                 userFirebaseWorker.lookForAllUsersByEmailOrName(query, get_users()));
     }
 
-<<<<<<< Updated upstream
-    public void deleteNotExistTask(){
-        _executorService.execute(()->{
-            List<String> groupsId = new ArrayList<>();
-            for(Group g : Objects.requireNonNull(getGroups().getValue())){
-                groupsId.add(g.get_groupId());
-=======
+
     public void deleteNotExistTask() {
         _executorService.execute(() -> {
             synchronized (this) {
                 //List<String> groupsId = new ArrayList<>();
-                if(getGroups().getValue() == null){
+                if (getGroups().getValue() == null) {
                     return;
                 }
                 List taskIds = new ArrayList();
@@ -299,15 +285,13 @@ public class Repository {
                     //groupsId.add(g.get_groupId());
                     taskIds.addAll(g.get_tasksId());
                 }
-                for (com.example.doit.model.entities.Task t : get_tasks().getValue()){
-                    if(!taskIds.contains(t.get_taskId())){
+                for (com.example.doit.model.entities.Task t : get_tasks().getValue()) {
+                    if (!taskIds.contains(t.get_taskId())) {
                         LocalDB.db.taskDao().delete(t);
                     }
                 }
                 //LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
->>>>>>> Stashed changes
             }
-            LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
         });
     }
 
