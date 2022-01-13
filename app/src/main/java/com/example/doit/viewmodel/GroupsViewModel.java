@@ -89,8 +89,8 @@ public class GroupsViewModel extends ViewModel {
         this._isBottomNavigationUp.setValue(_isBottomNavigationUp);
     }
 
-    public LiveData<List<Group>> get_groups() {
-        return _groups;
+    public MutableLiveData<List<Group>> get_groups() {
+        return Repository.getInstance().getGroups();
     }
 
     public void set_groups(List<Group> _groups) {

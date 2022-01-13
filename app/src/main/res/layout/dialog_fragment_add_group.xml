@@ -13,17 +13,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <androidx.cardview.widget.CardView
+            android:id="@+id/group_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="250dp">
         <ImageButton
             android:id="@+id/avatar_img"
-            android:layout_width="@dimen/xl_avatar"
-            android:layout_height="@dimen/xl_avatar"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@null"
+             />
+        </androidx.cardview.widget.CardView>
 
-            />
 
         <EditText
             android:id="@+id/group_name"
@@ -33,10 +40,10 @@
             android:layout_marginEnd="@dimen/margin"
             android:hint="@string/group_name"
             android:inputType="text"
-            app:layout_constraintBottom_toBottomOf="@id/avatar_img"
+            app:layout_constraintBottom_toBottomOf="@id/group_img"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/avatar_img"
-            app:layout_constraintTop_toTopOf="@id/avatar_img" />
+            app:layout_constraintStart_toEndOf="@id/group_img"
+            app:layout_constraintTop_toTopOf="@id/group_img" />
 
         <EditText
             android:id="@+id/group_dec"
@@ -47,8 +54,8 @@
             android:hint="@string/group_dec"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/avatar_img"
-            app:layout_constraintTop_toBottomOf="@id/avatar_img" />
+            app:layout_constraintStart_toStartOf="@id/group_img"
+            app:layout_constraintTop_toBottomOf="@id/group_img" />
 
 
         <ImageView
