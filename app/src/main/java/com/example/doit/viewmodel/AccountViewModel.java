@@ -20,7 +20,7 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> UserEmailAddress;
     private MutableLiveData<String> FirstName;
     private MutableLiveData<String> LastName;
-    private MutableLiveData<String> NumberOfGroups;
+    private MutableLiveData<String> numberOfGroups;
     private MutableLiveData<String> NumberOfTasks;
     private MutableLiveData<Boolean> EditDetails;
     private MutableLiveData<User> _authUser;
@@ -112,8 +112,10 @@ public class AccountViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> getNumberOfGroups() {
-        if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(""); }
-        return NumberOfGroups;
+        String size = String.valueOf(Repository.getInstance().getGroups().getValue().size());
+        String stringOfGroups = "Number of user groups: ";
+        numberOfGroups = new MutableLiveData<>(stringOfGroups + size);
+        return numberOfGroups;
     }
 
     public void setImageChanged(Boolean aBoolean) {
@@ -121,13 +123,15 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void setNumberOfGroups(String numberOfGroups) {
-        if(NumberOfGroups == null) { NumberOfGroups = new MutableLiveData<>(""); }
-        NumberOfGroups.setValue(numberOfGroups);
+        if(this.numberOfGroups == null) { this.numberOfGroups = new MutableLiveData<>(""); }
+        this.numberOfGroups.setValue(numberOfGroups);
     }
 
     public MutableLiveData<String> getNumberOfTasks() {
-        if(NumberOfTasks == null) { NumberOfTasks = new MutableLiveData<>(""); }
-        return NumberOfTasks;
+        String size = String.valueOf(Repository.getInstance().get_tasks().getValue().size());
+        String stringOfTasks = "Number of user tasks: ";
+        NumberOfTasks = new MutableLiveData<>(stringOfTasks + size);
+        return  NumberOfTasks;
     }
 
     public void setNumberOfTasks(String numberOfTasks) {
