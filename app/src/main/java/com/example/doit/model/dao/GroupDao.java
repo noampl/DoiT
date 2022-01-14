@@ -22,6 +22,9 @@ public interface GroupDao {
     @Query("SELECT * FROM `group`")
     List<Group> getAll();
 
+    @Query("DELETE FROM `group`")
+    void deleteAll();
+
     @Query("SELECT * FROM `group` WHERE :userId in (membersId)")
     LiveData<List<Group>> getAllUserGroups(String userId);
 
