@@ -372,6 +372,10 @@ public class Repository {
 
 
     public User getUserFromSql(String userId) {
+        User user = LocalDB.db.userDao().getUserById(userId);
+        if (user == null ){
+            userFirebaseWorker.getUser(userId);
+        }
         return LocalDB.db.userDao().getUserById(userId);
     }
 

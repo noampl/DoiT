@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.Repository;
+import com.example.doit.model.UserFirebaseWorker;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;

@@ -92,23 +92,33 @@
             app:layout_constraintEnd_toStartOf="@id/checkbox"
             app:layout_constraintTop_toTopOf="@id/checkbox" />
 
-        <ImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="@dimen/small_avatar"
-            android:layout_height="@dimen/small_avatar"
-            android:src="@{@drawable/ic_baseline_account_circle_24}"
-            app:setImage="@{taskViewModel.getUserById(task._assigneeId)._image}"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profile_image_layout"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="@id/value_title"
             app:layout_constraintStart_toStartOf="@id/value_title"
             app:layout_constraintTop_toTopOf="@id/checkbox"
-            android:tooltipText="@{taskViewModel.getUserById(task._assigneeId)._firstName}"
-            android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
-            />
+            >
+            <ImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{@drawable/ic_baseline_account_circle_24}"
+                app:setImage="@{user._image}"
+
+                android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
+                />
+            </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/value_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:text="@string/value_title"
             android:layout_marginEnd="2dp"
             app:layout_constraintEnd_toStartOf="@id/value_number"
