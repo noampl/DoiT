@@ -25,6 +25,7 @@
             app:cardCornerRadius="250dp">
         <ImageButton
             android:id="@+id/avatar_img"
+            android:src="@drawable/no_profile_picture"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="@null"

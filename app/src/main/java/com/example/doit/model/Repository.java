@@ -15,13 +15,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -235,7 +232,7 @@ public class Repository {
     public void updateAuthUserDetails(User user, Uri uri, Boolean ImageChanged, Boolean emailChanged) {
         userFirebaseWorker.updateUser(user);
         if (ImageChanged) {
-            userFirebaseWorker.upload_image(uri.toString(), user);
+            userFirebaseWorker.upload_profile_image(uri.toString(), user);
         }
         if (emailChanged) {
             userFirebaseWorker.updateUserEmail(user);
@@ -361,7 +358,7 @@ public class Repository {
                         }
                     }
                     getGroups().postValue(clone);
-                    deleteNotExistTask();
+                    //deleteNotExistTask();
                 }
             }
         });

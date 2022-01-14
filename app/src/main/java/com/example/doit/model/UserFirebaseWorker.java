@@ -159,7 +159,7 @@ public class UserFirebaseWorker implements IDataWorker {
 
     // region Public Methods
 
-    public void upload_image(String uri, User user) {
+    public void upload_profile_image(String uri, User user) {
         if (uri == null) {
             return;
         }
@@ -192,6 +192,43 @@ public class UserFirebaseWorker implements IDataWorker {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error on uploading user profile image", e);
+                    }
+                });
+            }
+        });
+    }
+
+
+    public void upload_task_image(String uri, com.example.doit.model.entities.Task imgTask) {
+        if (uri == null) {
+            return;
+        }
+        File file = new File(uri);
+        String imageName = file.getName();
+        StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("tasks_images")
+                .child(System.currentTimeMillis() + imageName);
+        fileRef.putFile(Uri.parse(uri)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String url = uri.toString();
+                        Log.d(TAG, "url " + url);
+                        groupsRef.document(imgTask.get_groupId()).collection(TASKS_COLLECTION_NAME).document(imgTask.get_taskId())
+                                .update("image", url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "upload_task_image::upload image succeed");
+                                        }
+                                    }
+                                });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error on uploading task image", e);
                     }
                 });
             }
@@ -267,6 +304,7 @@ public class UserFirebaseWorker implements IDataWorker {
                                 docTask.addSnapshotListener(getTaskListener());
                                 newTask.set_taskId(docTask.getId());
                                 Repository.getInstance().insertTaskLocal(newTask);
+                                upload_task_image(newTask.get_image(),newTask);
                             }
                         } else {
                             Log.w(TAG, "delete task failed " + task.getException());
@@ -304,7 +342,7 @@ public class UserFirebaseWorker implements IDataWorker {
                     public void onSuccess(DocumentReference documentReference) {
                         Task<DocumentSnapshot> docTask = documentReference.get();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        upload_image(user.get_image(), user);
+                        upload_profile_image(user.get_image(), user);
                         docTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -380,7 +418,7 @@ public class UserFirebaseWorker implements IDataWorker {
         String email = (String) user.get("Email");
         String password = (String) user.get("Password");
         if (email == null || email.equals("NONE") || password == null || password.equals("NONE") ||
-        email.equals("") || password.equals("")) {
+                email.equals("") || password.equals("")) {
             Log.d(TAG, "email or password are invalid so connection canceled");
             return null;
         }
@@ -414,7 +452,7 @@ public class UserFirebaseWorker implements IDataWorker {
 
     public void updateAuthUserDetails(User user, Uri image_uri, Boolean ImageHasChanged) {
         if (ImageHasChanged) {
-            upload_image(image_uri.toString(), user);
+            upload_profile_image(image_uri.toString(), user);
         }
         user.create().remove("image");
         mAuth.getCurrentUser().updateEmail(user.get_email().toLowerCase()).addOnCompleteListener(new OnCompleteListener<Void>() {

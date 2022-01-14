@@ -90,7 +90,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
             }
         });
 
-        _binding.taskImg.setOnClickListener(new View.OnClickListener() {
+        _binding.avatarImg.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("IntentReset")
             @Override
             public void onClick(View v) {
