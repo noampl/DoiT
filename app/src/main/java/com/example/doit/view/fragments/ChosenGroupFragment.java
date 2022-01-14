@@ -46,12 +46,10 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
-
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
         _binding.setGroup(initVM(selectedId));
         _binding.setTasksViewModel(_tasksViewModel);
         _binding.setLifecycleOwner(this);
-
         initListeners();
         return _binding.getRoot();
     }
@@ -64,7 +62,6 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                 adapter.submitList(tasks);
             }
         });
-
         _binding.taskLst.setAdapter(adapter);
     }
 
