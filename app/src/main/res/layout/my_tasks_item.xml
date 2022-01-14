@@ -96,10 +96,12 @@
             android:id="@+id/user_avatar"
             android:layout_width="@dimen/small_avatar"
             android:layout_height="@dimen/small_avatar"
-            android:src="@{user.get_image() ,default = @drawable/ic_baseline_account_circle_24}"
+            android:src="@{@drawable/ic_baseline_account_circle_24}"
+            app:setImage="@{taskViewModel.getUserById(task._assigneeId)._image}"
             app:layout_constraintEnd_toEndOf="@id/value_title"
             app:layout_constraintStart_toStartOf="@id/value_title"
             app:layout_constraintTop_toTopOf="@id/checkbox"
+            android:tooltipText="@{taskViewModel.getUserById(task._assigneeId)._firstName}"
             android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
             />
 
