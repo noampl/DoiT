@@ -189,7 +189,8 @@ public class Repository {
         if (_tasks == null) {
             _tasks = new MutableLiveData<>(new ArrayList<>());
         }
-        return _tasks;
+        _tasks.postValue(LocalDB.db.taskDao().getAll());
+        return  _tasks;
     }
 
     // endregion

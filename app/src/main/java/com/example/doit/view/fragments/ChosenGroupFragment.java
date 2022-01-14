@@ -1,5 +1,6 @@
 package com.example.doit.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -59,9 +60,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     private void initListeners(){
         TasksAdapter adapter = new TasksAdapter(false);
         _tasksViewModel.get_tasks().observe(requireActivity(), new Observer<List<Task>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
                 adapter.submitList(tasks);
+                adapter.notifyDataSetChanged();
             }
         });
         _binding.taskLst.setAdapter(adapter);
