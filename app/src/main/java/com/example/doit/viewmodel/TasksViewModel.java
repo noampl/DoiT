@@ -54,7 +54,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Task>> get_tasks() {
-        return _tasks;
+        return Repository.getInstance().get_tasks();
     }
 
     public void set_tasks(List<Task> _tasks) {

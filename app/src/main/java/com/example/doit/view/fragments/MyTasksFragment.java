@@ -71,11 +71,10 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                Log.d("PELEG", "submit tasks size " + tasks.size());
+                Log.d("FRISHMAN", "initListeners::submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
                 adapter.notifyDataSetChanged();;
-
-                Log.d("PELEG", "submit tasks to myTasks");
+                Log.d("FRISHMAN", "initListeners::submit tasks to myTasks");
             }
         });
     }

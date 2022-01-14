@@ -104,7 +104,7 @@ public class Repository {
     }
 
     public List<User> get_selectedUsers() {
-       return this._selectedUsers ;
+        return this._selectedUsers;
     }
 
     public MutableLiveData<Boolean> get_isSynced() {
@@ -181,6 +181,9 @@ public class Repository {
     }
 
     public MutableLiveData<List<com.example.doit.model.entities.Task>> get_tasks() {
+        if (_tasks == null) {
+            _tasks = new MutableLiveData<>(new ArrayList<>());
+        }
         return _tasks;
     }
 
@@ -195,7 +198,7 @@ public class Repository {
     }
 
     public void login(Map<String, String> user) {
-        if(!Objects.equals(user.get("Email"), null) && !Objects.equals(user.get("Password"), null)){
+        if (!Objects.equals(user.get("Email"), null) && !Objects.equals(user.get("Password"), null)) {
             userFirebaseWorker.login(user, get_loggedIn());
         }
     }
@@ -234,13 +237,13 @@ public class Repository {
         saveOrUpdateUser(user);
     }
 
-    public void deleteUserFromGroup(Group group, User user){
+    public void deleteUserFromGroup(Group group, User user) {
         _executorService.execute(() -> {
             groupFirebaseWorker.deleteUserFromGroup(group, user);
         });
     }
 
-    public void insertGroup(Group group){
+    public void insertGroup(Group group) {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -305,21 +308,21 @@ public class Repository {
     public void deleteNotExistTask() {
         _executorService.execute(() -> {
             synchronized (this) {
-                //List<String> groupsId = new ArrayList<>();
-                if (getGroups().getValue() == null) {
-                    return;
+                Log.d(TAG, "deleteNotExistTask:: starting list" + get_tasks().getValue());
+                List<String> taskIds = new ArrayList<>();
+                List<String> groupIds = new ArrayList<>();
+                for (Group g : LocalDB.db.groupDao().getAll()) {
+                    groupIds.add(g.get_groupId());
                 }
-                List taskIds = new ArrayList();
-                for (Group g : getGroups().getValue()) {
-                    //groupsId.add(g.get_groupId());
-                    taskIds.addAll(g.get_tasksId());
-                }
-                for (com.example.doit.model.entities.Task t : get_tasks().getValue()) {
-                    if (!taskIds.contains(t.get_taskId())) {
-                        LocalDB.db.taskDao().delete(t);
+                List<com.example.doit.model.entities.Task> clone = new ArrayList<>(get_tasks().getValue());
+                for (com.example.doit.model.entities.Task task : get_tasks().getValue()) {
+                    if (!groupIds.contains(task.get_groupId())) {
+                        clone.remove(task);
+                        LocalDB.db.taskDao().delete(task);
                     }
                 }
-                //LocalDB.db.taskDao().deleteTaskWhichItsGroupNotExist(groupsId);
+                get_tasks().postValue(clone);
+                Log.d(TAG, "deleteNotExistTask:: finish list" + get_tasks().getValue());
             }
         });
     }
@@ -329,8 +332,8 @@ public class Repository {
             @Override
             public void run() {
                 synchronized (this) {
-                    for(Group g : LocalDB.db.groupDao().getAll()){
-                        if(!g.getMembersId().contains(userID)){
+                    for (Group g : LocalDB.db.groupDao().getAll()) {
+                        if (!g.getMembersId().contains(userID)) {
                             LocalDB.db.groupDao().delete(g);
                         }
                     }
