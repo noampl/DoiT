@@ -101,6 +101,7 @@
             app:layout_constraintEnd_toEndOf="@id/value_title"
             app:layout_constraintStart_toStartOf="@id/value_title"
             app:layout_constraintTop_toTopOf="@id/checkbox"
+            android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
             >
             <ImageView
                 android:id="@+id/user_avatar"
@@ -108,7 +109,6 @@
                 android:layout_height="match_parent"
                 android:src="@{@drawable/ic_baseline_account_circle_24}"
                 app:setImage="@{user._image}"
-
                 android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
                 />
             </androidx.cardview.widget.CardView>
@@ -128,6 +128,7 @@
             android:id="@+id/value_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="@dimen/large_margin"
             android:text="@{String.valueOf(task._value), default = 0}"
             app:layout_constraintEnd_toStartOf="@id/checkbox"
