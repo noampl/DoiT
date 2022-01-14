@@ -59,6 +59,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     private void initListeners(){
         TasksAdapter adapter = new TasksAdapter(false);
+        adapter.set_tasksViewModel(_tasksViewModel);
         _tasksViewModel.get_tasks().observe(requireActivity(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
