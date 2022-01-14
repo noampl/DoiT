@@ -65,7 +65,7 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper,
     }
 
     private void initAdapter() {
-        adapter = new GroupsAdapter(_groupsViewModel);
+        adapter = new GroupsAdapter(_groupsViewModel, getViewLifecycleOwner());
         adapter.submitList(_groupsViewModel.get_groups().getValue());
         _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
             @SuppressLint("NotifyDataSetChanged")
