@@ -66,7 +66,6 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
         _binding.setLifecycleOwner(this);
         _dialog.setView(_binding.getRoot());
         _dialog.setCancelable(false);
-
         return _binding.getRoot();
     }
 
