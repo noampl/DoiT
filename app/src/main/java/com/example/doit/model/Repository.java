@@ -216,6 +216,7 @@ public class Repository {
         set_isSynced(false);
         getGroups().setValue(new ArrayList<>());
         get_users().setValue(new ArrayList<>());
+        cleanCache();
     }
 
     public void register(String image_uri, User user) {
