@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
         Repository.getInstance().login(getUserCredentials());
+        Repository.getInstance().cleanCache();
         initNavigation();
     }
 

@@ -106,6 +106,12 @@ public class Repository {
         return this._selectedUsers;
     }
 
+    public void cleanCache() {
+        LocalDB.db.taskDao().deleteAll();
+        LocalDB.db.groupDao().deleteAll();
+        LocalDB.db.userDao().deleteAll();
+    }
+
     public MutableLiveData<Boolean> get_isSynced() {
         if (_isSynced == null) {
             _isSynced = new MutableLiveData<>(false);
@@ -308,7 +314,6 @@ public class Repository {
         _executorService.execute(() -> {
             synchronized (this) {
                 Log.d(TAG, "deleteNotExistTask:: starting list" + get_tasks().getValue());
-                List<String> taskIds = new ArrayList<>();
                 List<String> groupIds = new ArrayList<>();
                 for (Group g : LocalDB.db.groupDao().getAll()) {
                     groupIds.add(g.get_groupId());

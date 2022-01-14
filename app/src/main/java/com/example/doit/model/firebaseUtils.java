@@ -44,16 +44,16 @@ public class firebaseUtils {
         newTask.set_assigneeId((String) taskDocument.get("assigneeId"));
         newTask.set_image((String) taskDocument.get("image"));
         if (taskDocument.get("createdDate") != null){
-            Timestamp createdDate = taskDocument.getTimestamp("createdDate");
-            newTask.set_createdDate(createdDate.toDate().getTime());
+            Long createdDate = taskDocument.getLong("createdDate");
+            newTask.set_createdDate(createdDate);
         }
         if (taskDocument.get("finishDate") != null){
-            Timestamp finishDate = taskDocument.getTimestamp("finishDate");
-            newTask.set_finishDate(finishDate.toDate().getTime());
+            Long finishDate = taskDocument.getLong("finishDate");
+            newTask.set_finishDate(finishDate);
         }
         if (taskDocument.get("targetDate") != null){
-            Timestamp targetDate = taskDocument.getTimestamp("targetDate");
-            newTask.set_targetDate(targetDate.toDate().getTime());
+            Long targetDate = taskDocument.getLong("targetDate");
+            newTask.set_targetDate(targetDate);
         }
         if(taskDocument.get("value") != null){
             Long value = Long.parseLong(String.valueOf(taskDocument.get("value")));
