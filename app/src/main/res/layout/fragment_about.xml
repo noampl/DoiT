@@ -31,7 +31,6 @@
             android:layout_marginTop="100dp"
             android:scaleX="3"
             android:scaleY="3"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

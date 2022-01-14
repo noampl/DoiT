@@ -56,6 +56,7 @@ public class Repository {
     private MutableLiveData<String> _fireBaseError;
     private MutableLiveData<Boolean> _isSynced;
     private List<User> _selectedUsers = new ArrayList<>();
+    private String _taskDetailsId = "";
 
     /**
      * Uses for addGroup dialog
@@ -97,6 +98,10 @@ public class Repository {
     // endregion
 
     // region Properties
+
+    public String get_taskDetailsId() {
+        return _taskDetailsId;
+    }
 
     public List<User> get_selectedUsers() {
        return this._selectedUsers ;
@@ -369,6 +374,10 @@ public class Repository {
 //        _executorService.execute(()->LocalDB.db.taskDao().insertAll(new com.example.doit.model.entities.Task("2","3","Test", "this is peleg test", new Date().getTime(),new Date().getTime(),
 //                "QqsLagcb5RPK0EGI5OdnFsLbz1v1","QqsLagcb5RPK0EGI5OdnFsLbz1v1",5,"")));
 
+    }
+
+    public com.example.doit.model.entities.Task getTaskById(String tasksDetailsId) {
+        return LocalDB.db.taskDao().getTaskById(tasksDetailsId);
     }
 
 

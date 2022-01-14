@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentMyTasksBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.Task;
 import com.example.doit.view.adapters.TasksAdapter;
@@ -26,7 +27,7 @@ import com.example.doit.viewmodel.TasksViewModel;
 import java.util.List;
 
 
-public class MyTasksFragment extends Fragment {
+public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelper {
 
     // region Members
 
@@ -63,6 +64,7 @@ public class MyTasksFragment extends Fragment {
         TasksAdapter adapter = new TasksAdapter(true);
         adapter.set_tasksViewModel(_tasksViewModel);
         _tasksViewModel.fetchTasks();
+        _tasksViewModel.set_iFragmentNavigationHelper(this);
         adapter.submitList(_tasksViewModel.get_tasks().getValue());
         _binding.taskLst.setAdapter(adapter);
         _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
@@ -76,6 +78,12 @@ public class MyTasksFragment extends Fragment {
                 Log.d("PELEG", "submit tasks to myTasks");
             }
         });
+    }
+
+    @Override
+    public void openFragment() {
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                .navigate(R.id.action_myTasksFragment_to_tasksDetails);
     }
 
     // endregion

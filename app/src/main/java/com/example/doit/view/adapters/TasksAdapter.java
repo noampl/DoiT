@@ -70,7 +70,7 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
     public void onBindViewHolder(@NonNull TasksAdapter.TaskViewHolder holder, int position) {
         User user =_tasksViewModel.getUserByTask(getItem(position));
         Group group = _tasksViewModel.getGroupByTask(getItem(position));
-        holder.bind(getItem(position), group, user, _isMyTasksScreen);
+        holder.bind(getItem(position), group, user, _isMyTasksScreen, _tasksViewModel);
     }
 
     // endregion
@@ -86,11 +86,12 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             _binding = binding;
         }
 
-        public void bind(Task task, Group group, User user, boolean _isMyTasksScreen){
+        public void bind(Task task, Group group, User user, boolean _isMyTasksScreen, TasksViewModel tasksViewModel){
             _binding.setTask(task);
             _binding.setGroup(group);
             _binding.setUser(user);
             _binding.setIsMyTasks(_isMyTasksScreen);
+            _binding.setPosition(getAdapterPosition());
             _binding.executePendingBindings();
         }
     }
