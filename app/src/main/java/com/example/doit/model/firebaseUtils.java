@@ -15,6 +15,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,21 +44,23 @@ public class firebaseUtils {
         newTask.set_assigneeId((String) taskDocument.get("assigneeId"));
         newTask.set_image((String) taskDocument.get("image"));
         if (taskDocument.get("createdDate") != null){
-            Timestamp createdDate = (Timestamp) taskDocument.get("createdDate");
-            assert createdDate != null;
+            Timestamp createdDate = taskDocument.getTimestamp("createdDate");
             newTask.set_createdDate(createdDate.toDate().getTime());
         }
         if (taskDocument.get("finishDate") != null){
-            Timestamp finishDate = (Timestamp) taskDocument.get("finishDate");
-            assert finishDate != null;
+            Timestamp finishDate = taskDocument.getTimestamp("finishDate");
             newTask.set_finishDate(finishDate.toDate().getTime());
         }
         if (taskDocument.get("targetDate") != null){
-            Timestamp targetDate = (Timestamp) taskDocument.get("targetDate");
-            assert  targetDate != null;
+            Timestamp targetDate = taskDocument.getTimestamp("targetDate");
             newTask.set_targetDate(targetDate.toDate().getTime());
         }
-        newTask.set_value(taskDocument.get("value") == null ? 0 : Integer.parseInt((String) taskDocument.get("value")));
+        if(taskDocument.get("value") != null){
+            Long value = Long.parseLong(String.valueOf(taskDocument.get("value")));
+            newTask.set_value(value.intValue());
+        } else {
+            newTask.set_value(0);
+        }
         newTask.set_image((String) taskDocument.get("image"));
 
         return newTask;

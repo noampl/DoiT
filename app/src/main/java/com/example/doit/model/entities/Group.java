@@ -53,6 +53,7 @@ public class Group {
     }
 
     public String get_name() {
+        if(_description == null) { _description = ""; }
         return _name;
     }
 
@@ -61,6 +62,7 @@ public class Group {
     }
 
     public String get_description() {
+        if(_description == null) {_description = ""; }
         return _description;
     }
 
@@ -80,6 +82,7 @@ public class Group {
     }
 
     public String get_image() {
+        if (_image == null) { _image = ""; }
         return _image;
     }
 
@@ -117,9 +120,9 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return _groupId.equals(group.get_groupId()) && _name.equals(group.get_name()) &&
-                _description.equals(group.get_description()) && Objects.equals(membersId, group.membersId) &&
-                Objects.equals(_image, group._image) && Objects.equals(_tasksId, group._tasksId);
+        return get_groupId().equals(group.get_groupId()) && get_name().equals(group.get_name()) &&
+                get_description().equals(group.get_description()) && Objects.equals(getMembersId(), group.getMembersId()) &&
+                Objects.equals(get_image(), group.get_image()) && Objects.equals(get_tasksId(), group.get_tasksId());
     }
 
     @Override
