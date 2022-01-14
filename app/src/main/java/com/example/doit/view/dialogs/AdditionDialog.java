@@ -52,6 +52,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        boolean isCurrentGroup = AdditionDialogArf
         _binding = DataBindingUtil.inflate(inflater, R.layout.addition_dialog_fragment, container, false);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.get_selectedUser().clear();
@@ -75,7 +76,6 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         if (query != null) {
             usersViewModel.searchUsers(query);
         }
-
         return true;
     }
 
@@ -84,7 +84,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         if (newText != null){
             usersViewModel.searchUsers(newText);
         }
-        return false;
+        return true;
     }
 
     private void initListeners() {

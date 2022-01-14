@@ -308,6 +308,11 @@ public class Repository {
     }
 
 
+    public List<User> getUsersByGroup(String groupId){
+       return LocalDB.db.userDao().getUsersByGroup(groupId);
+    }
+
+
     public void deleteNotExistTask() {
         _executorService.execute(() -> {
             synchronized (this) {
