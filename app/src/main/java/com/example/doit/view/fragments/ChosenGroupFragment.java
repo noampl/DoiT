@@ -49,6 +49,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
+        Log.d("FRISHMAN", "SELECTED ID: " + selectedId);
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
         _binding.setGroup(initVM(selectedId));
         _binding.setTasksViewModel(_tasksViewModel);

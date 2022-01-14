@@ -78,6 +78,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
         public void bind(Group group){
             _binding.setGroup(group);
             _binding.setGroupViewModel(_groupViewModel);
+            _binding.setSelectedGroup(getAdapterPosition());
             _binding.executePendingBindings();
         }
     }

@@ -29,7 +29,6 @@ public class TasksViewModel extends ViewModel {
     private String _assigneeId;
     private String _createdById;
     private String _tasksDetailsId;
-
     // endregion
 
     // region C'tor
@@ -61,7 +60,11 @@ public class TasksViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Task>> get_tasks() {
-        return Repository.getInstance().get_tasks();
+        if(_groupId == null){
+            return Repository.getInstance().get_tasks();
+        }
+        return new MutableLiveData<>(Repository.getInstance().getTasksByGroupId(_groupId));
+
     }
 
     public void set_tasks(List<Task> _tasks) {

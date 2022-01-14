@@ -35,6 +35,7 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper,
 
     private GroupsViewModel _groupsViewModel;
     private FragmentGroupsBinding _binding;
+    private GroupsAdapter adapter;
 
     // endregion
 
@@ -64,7 +65,7 @@ public class GroupsFragment extends Fragment implements IDialogNavigationHelper,
     }
 
     private void initAdapter() {
-        GroupsAdapter adapter = new GroupsAdapter(_groupsViewModel);
+        adapter = new GroupsAdapter(_groupsViewModel);
         adapter.submitList(_groupsViewModel.get_groups().getValue());
         _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
             @SuppressLint("NotifyDataSetChanged")

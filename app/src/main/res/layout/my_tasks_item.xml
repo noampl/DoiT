@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/large_margin"
-            android:text="@{String.valueOf(task._value), default = 6}"
+            android:text="@{String.valueOf(task._value), default = 0}"
             app:layout_constraintEnd_toStartOf="@id/checkbox"
             app:layout_constraintBottom_toBottomOf="@id/checkbox"
             android:layout_marginBottom="@dimen/small_margin"

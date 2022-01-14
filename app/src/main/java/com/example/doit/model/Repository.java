@@ -358,7 +358,7 @@ public class Repository {
                         }
                     }
                     getGroups().postValue(clone);
-                    //deleteNotExistTask();
+                    //deleteNotExistTask(); TODO: check if needed
                 }
             }
         });
