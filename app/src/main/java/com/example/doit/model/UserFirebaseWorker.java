@@ -506,23 +506,26 @@ public class UserFirebaseWorker implements IDataWorker {
                 });
             }
         }
-        for (String groupID : user.get_groupsId()) {
-            groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot taskDoc : tasks) {
-                                com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
-                                getUser(task.get_assigneeId());
-                                if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
-                                    getUser(task.get_createdById());
+        synchronized (this) {
+            for (String groupID : user.get_groupsId()) {
+                groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
+                                for (DocumentSnapshot taskDoc : tasks) {
+                                    com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
+                                    task.set_taskId(taskDoc.getId());
+                                    getUser(task.get_assigneeId());
+                                    if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
+                                        getUser(task.get_createdById());
+                                    }
+                                    Repository.getInstance().insertTaskLocal(task);
+                                    taskDoc.getReference().addSnapshotListener(getTaskListener());
                                 }
-                                Repository.getInstance().insertTaskLocal(task);
-                                taskDoc.getReference().addSnapshotListener(getTaskListener());
                             }
-                        }
-                    });
+                        });
+            }
         }
 
     }

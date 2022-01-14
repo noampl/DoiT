@@ -31,6 +31,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
 
     // region Members
 
+    private static final String TAG = "MyTasksFragment";
     private TasksViewModel _tasksViewModel;
     private FragmentMyTasksBinding _binding;
 
@@ -71,11 +72,10 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                Log.d("PELEG", "submit tasks size " + tasks.size());
+                Log.d(TAG, "initListeners::submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
                 adapter.notifyDataSetChanged();;
-
-                Log.d("PELEG", "submit tasks to myTasks");
+                Log.d(TAG, "initListeners::submit tasks to myTasks");
             }
         });
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.example.doit.viewmodel.GroupsViewModel;
 import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class ChosenGroupFragment extends Fragment implements IDialogNavigationHelper, IFragmentNavigitionHelper {
@@ -46,12 +48,10 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
-
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
         _binding.setGroup(initVM(selectedId));
         _binding.setTasksViewModel(_tasksViewModel);
         _binding.setLifecycleOwner(this);
-
         initListeners();
         return _binding.getRoot();
     }
@@ -64,7 +64,6 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                 adapter.submitList(tasks);
             }
         });
-
         _binding.taskLst.setAdapter(adapter);
     }
 
@@ -79,8 +78,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @Override
     public void openDialog() {
+        Log.d("peleg", "navigate to add task dialog groupid is " + _tasksViewModel.get_groupId());
+        ChosenGroupFragmentDirections.ActionChosenGroupFragmentToAddTaskDialog action =
+                ChosenGroupFragmentDirections.actionChosenGroupFragmentToAddTaskDialog(_tasksViewModel.get_groupId());
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                R.id.action_chosenGroupFragment_to_addTaskDialog);
+                action);
     }
 
     @Override

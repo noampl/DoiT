@@ -41,11 +41,13 @@
     <string name="about_us">About us</string>
     <string name="logout_menu">Logout</string>
     <string name="exit">Exit</string>
-    <string name="about_paragraph"><![CDATA[DoiT app\nCreated by two students\nin the college of management\nItay Frishman & Noam Peleg]]></string>
+    <string name="about_paragraph"><![CDATA[DoiT app\nCreated by two students\nin the College of Management\nItay Frishman & Noam Peleg]]></string>
     <string name="open_by">Open by</string>
     <string name="created_date">Created date</string>
     <string name="finish_at">Finish at</string>
     <string name="status">Status</string>
+    <string name="summary">Summary</string>
+    <string name="name">Name</string>
 
 
 </resources>
