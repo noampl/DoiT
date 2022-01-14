@@ -71,6 +71,10 @@ public class UsersViewModel extends ViewModel {
         // FIXME needed?
     }
 
+    public int getUserScore(User item) {
+        return 0;
+    }
+
     // endregion
 
 }

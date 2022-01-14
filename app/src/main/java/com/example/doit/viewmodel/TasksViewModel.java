@@ -44,6 +44,13 @@ public class TasksViewModel extends ViewModel {
 
     // region Properties
 
+    public String get_groupId() {
+        return _groupId;
+    }
+
+    public void set_groupId(String _groupId) {
+        this._groupId = _groupId;
+    }
 
     public String get_tasksDetailsId() {
         return _tasksDetailsId;
@@ -111,7 +118,12 @@ public class TasksViewModel extends ViewModel {
             return false;
         }
         String ImageUri = uri != null ? uri.toString() : "";
-        _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
+
+        if (Repository.getInstance().get_selectedUsers().size() == 0) {
+            _assigneeId = "";
+        } else {
+            _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
+        }
         Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
                 _targetDate, _createdById, _assigneeId, taskValue, ImageUri);
         Repository.getInstance().createTask(task);
@@ -119,8 +131,8 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void getTasksByGroupId(String groupId) {
-        _groupId = groupId;
-       set_tasks(Repository.getInstance().getTasksByGroupId(groupId));
+        set_groupId(groupId);
+        set_tasks(Repository.getInstance().getTasksByGroupId(groupId));
     }
 
     public void setTargetDate(DatePicker datePicker){
