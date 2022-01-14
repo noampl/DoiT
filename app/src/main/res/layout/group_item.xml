@@ -14,13 +14,19 @@
         <variable
             name="selectedGroup"
             type="int" />
+        <variable
+            name="itemPosition"
+            type="int" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/groupLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->groupViewModel.showGroupTasks(selectedGroup)}">
+        android:background="@{selectedGroup == itemPosition ? @color/doit_dark_blue : @android:color/transparent }"
+        android:onClick="@{()->groupViewModel.showGroupTasks(itemPosition)}"
+        >
 
         <ImageView
             android:id="@+id/group_image"

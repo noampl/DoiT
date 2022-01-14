@@ -1,10 +1,14 @@
 package com.example.doit.view.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,17 +18,20 @@ import com.example.doit.databinding.GroupItemBinding;
 import com.example.doit.model.entities.Group;
 import com.example.doit.viewmodel.GroupsViewModel;
 
+import java.util.Objects;
+
 public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHolder>{
 
     // region Members
 
     private GroupsViewModel _groupsViewModel;
+    private LifecycleOwner _lifecycleOwner;
 
     // endregion
 
     // region C'tor
 
-    public GroupsAdapter(GroupsViewModel groupsViewModel) {
+    public GroupsAdapter(GroupsViewModel groupsViewModel, LifecycleOwner lifecycleOwner) {
         super(new DiffUtil.ItemCallback<Group>() {
             @Override
             public boolean areItemsTheSame(@NonNull Group oldItem, @NonNull Group newItem) {
@@ -37,6 +44,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
             }
         });
         _groupsViewModel = groupsViewModel;
+        _lifecycleOwner = lifecycleOwner;
     }
 
     // endregion
@@ -52,7 +60,8 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
     public GroupsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         GroupItemBinding _binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()), R.layout.group_item, parent, false);
-        return new GroupsViewHolder(_binding , _groupsViewModel);
+        _binding.setLifecycleOwner(_lifecycleOwner);
+        return new GroupsViewHolder(_binding , _groupsViewModel, _lifecycleOwner);
     }
 
     @Override
@@ -68,16 +77,34 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
 
         private final GroupItemBinding _binding;
         private final GroupsViewModel _groupViewModel;
+        private LifecycleOwner _lifeCycleOwner;
 
-        public GroupsViewHolder(@NonNull GroupItemBinding binding, GroupsViewModel groupsViewModel) {
+        public GroupsViewHolder(@NonNull GroupItemBinding binding, GroupsViewModel groupsViewModel, LifecycleOwner lifecycleOwner) {
             super(binding.getRoot());
             _binding = binding;
+            _lifeCycleOwner = lifecycleOwner;
             _groupViewModel = groupsViewModel;
+            _binding.groupLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @SuppressLint("ResourceAsColor")
+                @Override
+                public boolean onLongClick(View v) {
+                    _groupViewModel.set_selectedPosition(getAdapterPosition());
+                    return true;
+                }
+            });
         }
 
         public void bind(Group group){
             _binding.setGroup(group);
             _binding.setGroupViewModel(_groupViewModel);
+            _groupViewModel.get_selectedPosition().observe(_lifeCycleOwner, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer integer) {
+                    _binding.setSelectedGroup(integer);
+                }
+            });
+            _binding.setSelectedGroup(_groupViewModel.get_selectedPosition().getValue());
+            _binding.setItemPosition(getAdapterPosition());
             _binding.executePendingBindings();
         }
     }

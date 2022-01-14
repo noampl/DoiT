@@ -58,11 +58,12 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public MutableLiveData<Integer> get_selectedPosition() {
+        if(_selectedPosition == null) { _selectedPosition = new MutableLiveData<>(-1); }
         return _selectedPosition;
     }
 
-    public void set_selectedPosition(MutableLiveData<Integer> _selectedPosition) {
-        this._selectedPosition = _selectedPosition;
+    public void set_selectedPosition(Integer _selectedPosition) {
+        this._selectedPosition.setValue(_selectedPosition);
     }
 
     public MutableLiveData<List<User>> get_newGroupMembers() {

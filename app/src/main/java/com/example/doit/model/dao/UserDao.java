@@ -24,6 +24,9 @@ public interface UserDao {
     @Query("DELETE FROM user")
     void deleteAll();
 
+    @Query("SELECT * FROM user WHERE :groupId IN (_groupsId)")
+    List<User> getUsersByGroup(String groupId);
+
     @Query("select * from user where _userId = :userId")
     User getUserById(String userId);
 

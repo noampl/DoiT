@@ -9,10 +9,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.Repository;
+import com.example.doit.model.UserFirebaseWorker;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,11 +27,11 @@ public class TasksViewModel extends ViewModel {
     private IFragmentNavigitionHelper _iFragmentNavigationHelper;
     private int taskValue;
     private long _targetDate;
+    private List<User> _groupUsers;
     private String _groupId;
     private String _assigneeId;
     private String _createdById;
     private String _tasksDetailsId;
-
     // endregion
 
     // region C'tor
@@ -43,6 +45,10 @@ public class TasksViewModel extends ViewModel {
     // endregion
 
     // region Properties
+
+    public List<User> get_groupUsers() {
+        return new ArrayList<>(Repository.getInstance().getUsersByGroup(_groupId));
+    }
 
     public String get_groupId() {
         return _groupId;
@@ -61,7 +67,11 @@ public class TasksViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Task>> get_tasks() {
-        return Repository.getInstance().get_tasks();
+        if(_groupId == null){
+            return Repository.getInstance().get_tasks();
+        }
+        return new MutableLiveData<>(Repository.getInstance().getTasksByGroupId(_groupId));
+
     }
 
     public void set_tasks(List<Task> _tasks) {

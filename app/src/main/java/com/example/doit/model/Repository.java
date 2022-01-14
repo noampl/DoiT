@@ -216,6 +216,7 @@ public class Repository {
         set_isSynced(false);
         getGroups().setValue(new ArrayList<>());
         get_users().setValue(new ArrayList<>());
+        cleanCache();
     }
 
     public void register(String image_uri, User user) {
@@ -308,6 +309,11 @@ public class Repository {
     }
 
 
+    public List<User> getUsersByGroup(String groupId){
+       return LocalDB.db.userDao().getUsersByGroup(groupId);
+    }
+
+
     public void deleteNotExistTask() {
         _executorService.execute(() -> {
             synchronized (this) {
@@ -358,7 +364,6 @@ public class Repository {
                         }
                     }
                     getGroups().postValue(clone);
-                    //deleteNotExistTask();
                 }
             }
         });
@@ -366,6 +371,10 @@ public class Repository {
 
 
     public User getUserFromSql(String userId) {
+        User user = LocalDB.db.userDao().getUserById(userId);
+        if (user == null ){
+            userFirebaseWorker.getUser(userId);
+        }
         return LocalDB.db.userDao().getUserById(userId);
     }
 

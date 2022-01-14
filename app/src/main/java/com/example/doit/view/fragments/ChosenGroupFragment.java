@@ -49,6 +49,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
+        Log.d("FRISHMAN", "SELECTED ID: " + selectedId);
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
         _binding.setGroup(initVM(selectedId));
         _binding.setTasksViewModel(_tasksViewModel);
@@ -82,7 +83,6 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @Override
     public void openDialog() {
-        Log.d("peleg", "navigate to add task dialog groupid is " + _tasksViewModel.get_groupId());
         ChosenGroupFragmentDirections.ActionChosenGroupFragmentToAddTaskDialog action =
                 ChosenGroupFragmentDirections.actionChosenGroupFragmentToAddTaskDialog(_tasksViewModel.get_groupId());
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
