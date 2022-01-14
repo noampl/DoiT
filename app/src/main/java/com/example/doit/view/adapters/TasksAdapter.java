@@ -68,9 +68,11 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull TasksAdapter.TaskViewHolder holder, int position) {
-        User user =_tasksViewModel.getUserByTask(getItem(position));
-        Group group = _tasksViewModel.getGroupByTask(getItem(position));
-        holder.bind(getItem(position), group, user, _isMyTasksScreen, _tasksViewModel);
+        if(getItemCount() > 0){
+            User user =_tasksViewModel.getUserByTask(getItem(position));
+            Group group = _tasksViewModel.getGroupByTask(getItem(position));
+            holder.bind(getItem(position), group, user, _isMyTasksScreen, _tasksViewModel);
+        }
     }
 
     // endregion

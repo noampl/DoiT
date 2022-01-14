@@ -189,7 +189,8 @@ public class Repository {
         if (_tasks == null) {
             _tasks = new MutableLiveData<>(new ArrayList<>());
         }
-        return _tasks;
+        _tasks.postValue(LocalDB.db.taskDao().getAll());
+        return  _tasks;
     }
 
     // endregion
@@ -318,6 +319,15 @@ public class Repository {
                 for (Group g : LocalDB.db.groupDao().getAll()) {
                     groupIds.add(g.get_groupId());
                 }
+                //TODO 2022-01-14 12:41:11.529 21197-21259/com.example.doit E/AndroidRuntime: FATAL EXCEPTION: pool-5-thread-3
+                //    Process: com.example.doit, PID: 21197
+                //    java.util.ConcurrentModificationException
+                //        at java.util.ArrayList$Itr.next(ArrayList.java:860)
+                //        at com.example.doit.model.Repository.lambda$deleteNotExistTask$5$com-example-doit-model-Repository(Repository.java:323)
+                //        at com.example.doit.model.Repository$$ExternalSyntheticLambda0.run(Unknown Source:2)
+                //        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+                //        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+                //        at java.lang.Thread.run(Thread.java:923)
                 List<com.example.doit.model.entities.Task> clone = new ArrayList<>(get_tasks().getValue());
                 for (com.example.doit.model.entities.Task task : get_tasks().getValue()) {
                     if (!groupIds.contains(task.get_groupId())) {
