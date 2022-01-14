@@ -18,6 +18,9 @@ public interface TaskDao {
     @Query("select * from Task")
     List<Task> getAll();
 
+    @Query("DELETE FROM Task")
+    void deleteAll();
+
     @Query("select * from Task WHERE _taskId = :taskId")
     Task getTaskById(String taskId);
 
