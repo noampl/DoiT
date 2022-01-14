@@ -57,7 +57,6 @@ public class Repository {
     private MutableLiveData<Boolean> _isSynced;
     private List<User> _selectedUsers = new ArrayList<>();
     private String _taskDetailsId = "";
-
     /**
      * Uses for addGroup dialog
      */

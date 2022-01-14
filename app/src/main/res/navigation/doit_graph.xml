@@ -138,6 +138,9 @@
         tools:layout="@layout/dialog_fragment_add_task" >
         <action
             android:id="@+id/action_addTaskDialog_to_additionDialog"
-            app:destination="@id/additionDialog" />
+            app:destination="@id/additionDialog"/>
+        <argument
+            android:name="groupId"
+            app:argType="string" />
     </dialog>
 </navigation>

@@ -29,6 +29,9 @@ import androidx.navigation.Navigation;
 import com.example.doit.R;
 import com.example.doit.databinding.DialogFragmentAddTaskBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
+import com.example.doit.view.fragments.ChosenGroupFragmentArgs;
+import com.example.doit.view.fragments.TasksDetailsFragment;
+import com.example.doit.view.fragments.TasksDetailsFragmentDirections;
 import com.example.doit.viewmodel.TasksViewModel;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.squareup.picasso.Picasso;
@@ -58,9 +61,11 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String groupId = AddTaskDialogArgs.fromBundle(getArguments()).getGroupId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_add_task, container, false);
         tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         tasksViewModel.set_iDialogNavigationHelper(this);
+        tasksViewModel.set_groupId(groupId);
         _binding.setTaskViewModel(tasksViewModel);
         initListeners();
         _binding.setLifecycleOwner(this);

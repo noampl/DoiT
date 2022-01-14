@@ -46,6 +46,8 @@
     <string name="created_date">Created date</string>
     <string name="finish_at">Finish at</string>
     <string name="status">Status</string>
+    <string name="summary">Summary</string>
+    <string name="name">Name</string>
 
 
 </resources>
