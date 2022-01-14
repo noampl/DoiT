@@ -113,7 +113,7 @@ public class AccountViewModel extends ViewModel {
 
     public MutableLiveData<String> getNumberOfGroups() {
         String size = String.valueOf(Repository.getInstance().getGroups().getValue().size());
-        String stringOfGroups = "Number of user groups: ";
+        String stringOfGroups = "Number of groups: ";
         numberOfGroups = new MutableLiveData<>(stringOfGroups + size);
         return numberOfGroups;
     }
@@ -129,7 +129,7 @@ public class AccountViewModel extends ViewModel {
 
     public MutableLiveData<String> getNumberOfTasks() {
         String size = String.valueOf(Repository.getInstance().get_tasks().getValue().size());
-        String stringOfTasks = "Number of user tasks: ";
+        String stringOfTasks = "Number of tasks: ";
         NumberOfTasks = new MutableLiveData<>(stringOfTasks + size);
         return  NumberOfTasks;
     }
