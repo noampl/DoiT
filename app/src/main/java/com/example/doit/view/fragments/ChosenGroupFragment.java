@@ -26,6 +26,7 @@ import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class ChosenGroupFragment extends Fragment implements IDialogNavigationHelper, IFragmentNavigitionHelper {
@@ -65,8 +66,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                adapter.submitList(tasks);
-                adapter.notifyDataSetChanged();
+                adapter.submitList(tasks.stream().filter((t)->t.get_groupId().equals(_tasksViewModel.get_groupId())).collect(Collectors.toList()));
             }
         });
         _binding.taskLst.setAdapter(adapter);
@@ -74,8 +74,8 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     private Group initVM(String selectedGroupId){
         _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
-        _tasksViewModel.getTasksByGroupId(selectedGroupId);
         _tasksViewModel.set_iDialogNavigationHelper(this);
+        _tasksViewModel.set_groupId(selectedGroupId);
         _tasksViewModel.set_iFragmentNavigationHelper(this);
         GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         return groupsViewModel.getGroupById(selectedGroupId);

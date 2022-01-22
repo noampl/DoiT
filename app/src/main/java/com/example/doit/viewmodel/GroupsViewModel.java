@@ -2,7 +2,6 @@ package com.example.doit.viewmodel;
 
 import android.net.Uri;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -91,7 +90,7 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Group>> get_groups() {
-        return Repository.getInstance().getGroups();
+        return _groups;
     }
 
     public void set_groups(List<Group> _groups) {
@@ -148,6 +147,7 @@ public class GroupsViewModel extends ViewModel {
 
     public void showGroupTasks(int selectedGroup){
         selectedGroupId = _groups.getValue().get(selectedGroup).get_groupId();
+        Repository.getInstance().setTaskByGroupId(selectedGroupId);
         _iFragmentNavigitionHelper.openFragment();
     }
 
