@@ -91,7 +91,8 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @Override
     public void openFragment() {
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                R.id.action_chosenGroupFragment_to_tasksDetails);
+        ChosenGroupFragmentDirections.ActionChosenGroupFragmentToTasksDetails action =
+        ChosenGroupFragmentDirections.actionChosenGroupFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }

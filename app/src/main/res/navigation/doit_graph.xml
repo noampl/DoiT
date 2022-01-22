@@ -94,7 +94,11 @@
         android:id="@+id/tasksDetails"
         android:name="com.example.doit.view.fragments.TasksDetailsFragment"
         android:label="fragment_tasks_details"
-        tools:layout="@layout/fragment_tasks_details" />
+        tools:layout="@layout/fragment_tasks_details" >
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/initFragment"
         android:name="com.example.doit.view.fragments.InitFragment"

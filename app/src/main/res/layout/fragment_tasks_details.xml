@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="Task image"
-            android:src="@{task._image, default = @color/blue}"
+            app:setImage="@{task._image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +90,7 @@
             android:id="@+id/finish_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/finish_at"
+            android:text="@string/target_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/created_date_text"
@@ -104,7 +104,7 @@
             app:layout_constraintEnd_toEndOf="@id/open_by_title"
             app:layout_constraintStart_toStartOf="@id/open_by_title"
             android:layout_marginTop="@dimen/small_margin"
-            android:src="@{openBy._image, default = @drawable/ic_baseline_account_circle_24}"
+            app:setImage="@{openBy._image}"
             />
 
         <ImageView
@@ -115,7 +115,7 @@
             app:layout_constraintStart_toStartOf="@id/assignee_text"
             app:layout_constraintEnd_toEndOf="@id/assignee_text"
             android:layout_marginTop="@dimen/small_margin"
-            android:src="@{assignee._image, default = @drawable/ic_baseline_account_circle_24}"
+            app:setImage="@{assignee._image}"
             />
 
         <TextView
@@ -134,10 +134,13 @@
             android:id="@+id/finish_at_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/created_date_val"
             app:layout_constraintBottom_toBottomOf="@id/created_date_val"
-            app:layout_constraintStart_toStartOf="@id/finish_at"
             app:layout_constraintEnd_toEndOf="@id/finish_at"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="@id/finish_at"
+            app:layout_constraintTop_toTopOf="@id/created_date_val"
+            app:layout_constraintVertical_bias="0.0"
+            app:date="@{task._targetDate}"
             />
 
         <TextView
@@ -157,7 +160,7 @@
             app:layout_constraintStart_toEndOf="@id/value_title"
             android:layout_marginStart="2dp"
             android:textStyle="bold"
-            android:text="@{task._value, default = 6}"
+            android:text="@{String.valueOf(task._value), default = 6}"
             />
 
         <TextView

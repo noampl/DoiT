@@ -24,7 +24,7 @@
         android:id="@+id/groupLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{selectedGroup == itemPosition ? @color/doit_dark_blue : @android:color/transparent }"
+        android:background="@{selectedGroup == itemPosition ? @color/doit_dark_blue : @android:color/transparent}"
         android:onClick="@{()->groupViewModel.showGroupTasks(itemPosition)}"
         >
 
