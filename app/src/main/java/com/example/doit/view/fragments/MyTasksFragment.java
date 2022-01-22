@@ -74,7 +74,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             public void onChanged(List<Task> tasks) {
                 Log.d(TAG, "initListeners::submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
-                adapter.notifyDataSetChanged();;
+//                adapter.notifyDataSetChanged();;
                 Log.d(TAG, "initListeners::submit tasks to myTasks");
             }
         });

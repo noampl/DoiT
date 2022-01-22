@@ -67,10 +67,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Task>> get_tasks() {
-        if(_groupId == null){
-            return Repository.getInstance().get_tasks();
-        }
-        return new MutableLiveData<>(Repository.getInstance().getTasksByGroupId(_groupId));
+        return _tasks;
 
     }
 

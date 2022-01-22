@@ -86,10 +86,10 @@
             android:id="@+id/group_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/small_margin"
             android:text="@{group._name, default = group_name}"
             android:visibility="@{isMyTasks ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/checkbox"
+            app:layout_constraintEnd_toEndOf="@+id/value_number"
+            app:layout_constraintStart_toStartOf="@+id/value_title"
             app:layout_constraintTop_toTopOf="@id/checkbox" />
 
         <androidx.cardview.widget.CardView
@@ -118,7 +118,6 @@
             android:id="@+id/value_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
             android:text="@string/value_title"
             android:layout_marginEnd="2dp"
             app:layout_constraintEnd_toStartOf="@id/value_number"
@@ -128,15 +127,15 @@
             android:id="@+id/value_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
             android:layout_marginEnd="@dimen/large_margin"
             android:text="@{String.valueOf(task._value), default = 0}"
+            app:layout_constraintBottom_toBottomOf="@+id/description"
             app:layout_constraintEnd_toStartOf="@id/checkbox"
-            app:layout_constraintBottom_toBottomOf="@id/checkbox"
-            android:layout_marginBottom="@dimen/small_margin"
-            />
+            app:layout_constraintTop_toTopOf="@+id/description"
+            app:layout_goneMarginTop="@dimen/margin" />
 
         <View
+            android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/small_margin"

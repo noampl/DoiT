@@ -17,11 +17,7 @@ import android.view.ViewGroup;
 import com.example.doit.R;
 import com.example.doit.viewmodel.LoginViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InitFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class InitFragment extends Fragment {
 
     private String _email;
@@ -33,18 +29,6 @@ public class InitFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InitFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InitFragment newInstance(String param1, String param2) {
-        return new InitFragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -57,6 +57,7 @@ public class Task {
     // region Properties
 
     public String get_taskId() {
+        if (_taskId == null){_taskId="";}
         return _taskId;
     }
 
@@ -65,6 +66,7 @@ public class Task {
     }
 
     public String get_groupId() {
+        if (_groupId ==null){_groupId= "";}
         return _groupId;
     }
 
@@ -73,6 +75,7 @@ public class Task {
     }
 
     public String get_name() {
+        if (_name== null){_name= "";}
         return _name;
     }
 
@@ -81,6 +84,7 @@ public class Task {
     }
 
     public String get_description() {
+        if (_description == null){_description="";}
         return _description;
     }
 
@@ -113,6 +117,7 @@ public class Task {
     }
 
     public String get_createdById() {
+        if (_createdById == null){_createdById ="";}
         return _createdById;
     }
 
@@ -121,6 +126,7 @@ public class Task {
     }
 
     public String get_assigneeId() {
+        if (_assigneeId == null){_assigneeId="";}
         return _assigneeId;
     }
 
@@ -137,6 +143,7 @@ public class Task {
     }
 
     public String get_image() {
+        if (_image == null){_image="";}
         return _image;
     }
 
@@ -182,7 +189,11 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return _createdDate == task._createdDate && _targetDate == task._targetDate && _finishDate == task._finishDate && _value == task._value && _taskId.equals(task._taskId) && _groupId.equals(task._groupId) && _name.equals(task._name) && Objects.equals(_description, task._description) && _createdById.equals(task._createdById) && Objects.equals(_assigneeId, task._assigneeId) && Objects.equals(_image, task._image);
+        return _createdDate == task._createdDate && _targetDate == task._targetDate && _finishDate == task._finishDate &&
+                _value == task._value && get_taskId().equals(task.get_taskId()) && get_groupId().equals(task._groupId) &&
+                get_name().equals(task.get_name()) && Objects.equals(get_description(), task.get_description()) &&
+                get_createdById().equals(task.get_createdById()) && Objects.equals(get_assigneeId(), task.get_assigneeId()) &&
+                Objects.equals(get_image(), task.get_image());
     }
 
     @Override

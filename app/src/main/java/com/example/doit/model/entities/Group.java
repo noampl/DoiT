@@ -45,6 +45,7 @@ public class Group {
     // region Properties
 
     public String get_groupId() {
+        if (_groupId == null) {_groupId= "";}
         return _groupId;
     }
 

@@ -185,8 +185,8 @@ public class Repository {
     public MutableLiveData<List<com.example.doit.model.entities.Task>> get_tasks() {
         if (_tasks == null) {
             _tasks = new MutableLiveData<>(new ArrayList<>());
+            _tasks.postValue(LocalDB.db.taskDao().getAll());
         }
-        _tasks.postValue(LocalDB.db.taskDao().getAll());
         return  _tasks;
     }
 
@@ -259,6 +259,10 @@ public class Repository {
 
     public List<com.example.doit.model.entities.Task> getTasksByGroupId(String groupId) {
         return LocalDB.db.taskDao().getTasksByGroup(groupId);
+    }
+
+    public void setTaskByGroupId(String groupId){
+        _executorService.execute(()->_tasks.postValue(LocalDB.db.taskDao().getTasksByGroup(groupId)));
     }
 
     public void deleteTask(com.example.doit.model.entities.Task task) {
