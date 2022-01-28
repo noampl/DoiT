@@ -145,8 +145,8 @@ public class GroupsViewModel extends ViewModel {
         return true;
     }
 
-    public void showGroupTasks(int selectedGroup){
-        selectedGroupId = _groups.getValue().get(selectedGroup).get_groupId();
+    public void showGroupTasks(Group group){
+        selectedGroupId = group.get_groupId();
         Repository.getInstance().setTaskByGroupId(selectedGroupId);
         _iFragmentNavigitionHelper.openFragment();
     }

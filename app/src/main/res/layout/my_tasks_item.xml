@@ -20,9 +20,6 @@
             type="boolean" />
 
         <variable
-            name="position"
-            type="int" />
-        <variable
             name="taskViewModel"
             type="com.example.doit.viewmodel.TasksViewModel" />
 
@@ -33,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@{@android:color/transparent}"
-        android:onClick="@{()->taskViewModel.details(position)}"
+        android:onClick="@{()->taskViewModel.details(task)}"
         >
 
         <View

@@ -120,7 +120,7 @@ public class TasksViewModel extends ViewModel {
         _iDialogNavigationHelper.openDialog();
     }
 
-    public boolean createTask(Uri uri, String taskName, String taskDesc) {
+    public boolean createTask(Uri uri, String taskName, String taskDesc, int taskValue) {
 
         if (taskName == null || taskName.equals("")){
             return false;
@@ -147,8 +147,8 @@ public class TasksViewModel extends ViewModel {
         _targetDate = datePicker.getAutofillValue().getDateValue();
     }
 
-    public boolean details(int position){
-        set_tasksDetailsId(_tasks.getValue().get(position).get_taskId());
+    public boolean details(Task task){
+        set_tasksDetailsId(task.get_taskId());
         _iFragmentNavigationHelper.openFragment();
         return true;
     }

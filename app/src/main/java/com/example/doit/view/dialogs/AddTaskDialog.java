@@ -76,19 +76,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
 
     private void initListeners(){
         _binding.valueSpinner.setAdapter( ArrayAdapter.createFromResource(requireContext(),
-                R.array.values, android.R.layout.simple_spinner_item));
-
-        _binding.valueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                tasksViewModel.valueSelected(i,l);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                tasksViewModel.valueSelected(1,0);
-            }
-        });
+                R.array.values, android.R.layout.simple_spinner_dropdown_item));
 
         _binding.avatarImg.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("IntentReset")
@@ -100,6 +88,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
                 pickPhotoResultLauncher.launch(pickPhoto);
             }
         });
+
         _binding.datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,7 +116,8 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
             @Override
             public void onClick(View view) {
                 if(tasksViewModel.createTask(_imgUri,_binding.taskName.getText().toString(),
-                        _binding.taskDec.getText().toString())){
+                        _binding.taskDec.getText().toString(),
+                        Integer.parseInt(_binding.valueSpinner.getSelectedItem().toString()))){
                     dismiss();
                 }
                 else{
