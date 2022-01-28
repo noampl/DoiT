@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,14 +77,14 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
 
     private void initListeners(){
         _binding.valueSpinner.setAdapter( ArrayAdapter.createFromResource(requireContext(),
-                R.array.values, android.R.layout.simple_spinner_dropdown_item));
+                R.array.values, R.layout.value_spinner));
 
         _binding.avatarImg.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("IntentReset")
             @Override
             public void onClick(View v) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickPhoto.setType("image/*");
                 pickPhotoResultLauncher.launch(pickPhoto);
             }
