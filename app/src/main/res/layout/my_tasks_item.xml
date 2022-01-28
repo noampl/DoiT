@@ -29,9 +29,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->taskViewModel.details()}"
+        android:background="@{@android:color/transparent}"
+        android:onClick="@{()->taskViewModel.details(position)}"
         >
 
         <View
@@ -149,5 +151,6 @@
             app:barrierDirection="left" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </layout>

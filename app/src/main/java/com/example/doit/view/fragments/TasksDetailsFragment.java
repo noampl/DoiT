@@ -29,7 +29,6 @@ public class TasksDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +38,10 @@ public class TasksDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String taskId = TasksDetailsFragmentArgs.fromBundle(getArguments()).getTaskId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
-        Task task = _taskViewModel.getTaskById();
+        Task task = _taskViewModel.getTaskById(taskId);
         _binding.setTask(task);
         _binding.setAssignee(_taskViewModel.getUserById(task.get_assigneeId()));
         _binding.setOpenBy(_taskViewModel.getUserById(task.get_createdById()));

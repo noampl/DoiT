@@ -1,6 +1,8 @@
 package com.example.doit.view.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -94,6 +96,7 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             _binding.setUser(user);
             _binding.setIsMyTasks(_isMyTasksScreen);
             _binding.setPosition(getAdapterPosition());
+            _binding.setTaskViewModel(tasksViewModel);
             _binding.executePendingBindings();
         }
     }

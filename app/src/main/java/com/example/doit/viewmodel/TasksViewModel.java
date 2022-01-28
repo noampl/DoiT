@@ -1,6 +1,7 @@
 package com.example.doit.viewmodel;
 
 import android.net.Uri;
+import android.util.Log;
 import android.widget.DatePicker;
 
 import androidx.lifecycle.MutableLiveData;
@@ -91,8 +92,8 @@ public class TasksViewModel extends ViewModel {
 
     // region Public
 
-    public Task getTaskById() {
-        return Repository.getInstance().getTaskById(_tasksDetailsId);
+    public Task getTaskById(String taskId) {
+        return Repository.getInstance().getTaskById(taskId);
     }
 
     public Group getGroupByTask(Task task) {
@@ -146,7 +147,8 @@ public class TasksViewModel extends ViewModel {
         _targetDate = datePicker.getAutofillValue().getDateValue();
     }
 
-    public boolean details(){
+    public boolean details(int position){
+        set_tasksDetailsId(_tasks.getValue().get(position).get_taskId());
         _iFragmentNavigationHelper.openFragment();
         return true;
     }

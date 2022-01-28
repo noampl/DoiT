@@ -74,16 +74,17 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             public void onChanged(List<Task> tasks) {
                 Log.d(TAG, "initListeners::submit tasks size " + tasks.size());
                 adapter.submitList(tasks);
-//                adapter.notifyDataSetChanged();;
                 Log.d(TAG, "initListeners::submit tasks to myTasks");
             }
         });
+
     }
 
     @Override
     public void openFragment() {
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
-                .navigate(R.id.action_myTasksFragment_to_tasksDetails);
+        MyTasksFragmentDirections.ActionMyTasksFragmentToTasksDetails action =
+                MyTasksFragmentDirections.actionMyTasksFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 
     // endregion
