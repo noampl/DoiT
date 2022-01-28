@@ -95,7 +95,6 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             _binding.setGroup(group);
             _binding.setUser(user);
             _binding.setIsMyTasks(_isMyTasksScreen);
-            _binding.setPosition(getAdapterPosition());
             _binding.setTaskViewModel(tasksViewModel);
             _binding.executePendingBindings();
         }
