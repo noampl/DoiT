@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#FF3D5A80</color>
     <color name="light_blue">#FF98C1D9</color>
+    <color name="transparent">#00000000</color>
+
 
     <!--our pallet-->
 

@@ -5,10 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.doit.model.Consts;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
-import com.example.doit.model.UserFirebaseWorker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +29,7 @@ public class LoginViewModel extends ViewModel {
         _email = "";
         _password = "";
         _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
+        _logedIn = Repository.getInstance().get_loggedIn();
 
     }
 
@@ -64,7 +63,6 @@ public class LoginViewModel extends ViewModel {
     }
 
     public MutableLiveData<Boolean> get_logedIn() {
-        _logedIn = Repository.getInstance().get_loggedIn();
         return _logedIn;
     }
 

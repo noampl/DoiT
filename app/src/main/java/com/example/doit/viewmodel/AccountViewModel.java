@@ -5,11 +5,14 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.interfaces.IResponseHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.UserFirebaseWorker;
+import com.example.doit.view.MainActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 public class AccountViewModel extends ViewModel {
     //region members
@@ -167,5 +170,13 @@ public class AccountViewModel extends ViewModel {
         repo.updateAuthUserDetails(user,Uri.parse(this.ImageUrl), imageChanged, emailChanged);
         emailChanged = false;
         imageChanged = false;
+    }
+
+    public void setActionBarHelper(IActionBarHelper helper) {
+        repo.setActionBarHelper(helper);
+    }
+
+    public WeakReference<IActionBarHelper> getActionBarHelper() {
+        return repo.getActionBarHelper();
     }
 }

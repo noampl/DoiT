@@ -48,6 +48,9 @@
     <string name="status">Status</string>
     <string name="summary">Summary</string>
     <string name="name">Name</string>
+    <string name="back">Back</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
 
 </resources>
