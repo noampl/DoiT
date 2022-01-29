@@ -28,7 +28,7 @@ public class TasksViewModel extends ViewModel {
     private IDialogNavigationHelper _iDialogNavigationHelper;
     private IFragmentNavigitionHelper _iFragmentNavigationHelper;
     private int taskValue;
-    private long _targetDate;
+    private MutableLiveData<Long> _targetDate;
     private List<User> _groupUsers;
     private String _groupId;
     private String _assigneeId;
@@ -36,6 +36,7 @@ public class TasksViewModel extends ViewModel {
     private String _tasksDetailsId;
     private WeakReference<IActionBarHelper> _actionBarHelper;
     private MutableLiveData<Integer> _selectedTaskIndex;
+    private MutableLiveData<Boolean> _isEdit;
 
     // endregion
 
@@ -47,11 +48,25 @@ public class TasksViewModel extends ViewModel {
         _tasksDetailsId = Repository.getInstance().get_taskDetailsId();
         _actionBarHelper = Repository.getInstance().getActionBarHelper();
         _selectedTaskIndex = new MutableLiveData<>(Consts.INVALID_POSITION);
+        _isEdit = new MutableLiveData<>(false);
+        _targetDate = new MutableLiveData<>();
     }
 
     // endregion
 
     // region Properties
+
+    public MutableLiveData<Long> get_targetDate() {
+        return _targetDate;
+    }
+
+    public MutableLiveData<Boolean> get_isEdit() {
+        return _isEdit;
+    }
+
+    public void set_isEdit(boolean _isEdit) {
+        this._isEdit.setValue(_isEdit);
+    }
 
     public WeakReference<IActionBarHelper> get_actionBarHelper() {
         return _actionBarHelper;
@@ -152,7 +167,7 @@ public class TasksViewModel extends ViewModel {
             _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
         }
         Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
-                _targetDate, _createdById, _assigneeId, taskValue, ImageUri);
+                _targetDate.getValue(), _createdById, _assigneeId, taskValue, ImageUri);
         Repository.getInstance().createTask(task);
         return true;
     }
@@ -163,7 +178,11 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void setTargetDate(DatePicker datePicker){
-        _targetDate = datePicker.getAutofillValue().getDateValue();
+        _targetDate.setValue(datePicker.getAutofillValue().getDateValue());
+    }
+
+    public void setTargetDate(long targetDate){
+        _targetDate.setValue(targetDate);
     }
 
     public boolean details(Task task, int itemPosition){
@@ -173,6 +192,25 @@ public class TasksViewModel extends ViewModel {
         }
         set_selectedTaskIndex(Consts.INVALID_POSITION);
         return true;
+    }
+
+    public void updateTask(Task task) {
+        Repository.getInstance().updateTask(task);
+    }
+
+    public void saveChanges(Task task, String name, String description) {
+        if (name != null && !name.equals("")){
+            task.set_name(name);
+        }
+        if(description != null && !description.equals("")){
+            task.set_description(description);
+        }
+        updateTask(task);
+        set_isEdit(false);
+    }
+
+    public void deleteTask(Task task) {
+        Repository.getInstance().deleteTask(task);
     }
 
     // endregion

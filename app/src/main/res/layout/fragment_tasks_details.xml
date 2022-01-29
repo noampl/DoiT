@@ -5,6 +5,12 @@
     tools:context=".view.fragments.TasksDetailsFragment">
 
     <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="targetDate"
+            type="androidx.lifecycle.MutableLiveData&lt;Long&gt;" />
+
         <variable
             name="task"
             type="com.example.doit.model.entities.Task" />
@@ -16,6 +22,9 @@
         <variable
             name="openBy"
             type="com.example.doit.model.entities.User" />
+        <variable
+            name="taskViewModel"
+            type="com.example.doit.viewmodel.TasksViewModel" />
 
     </data>
 
@@ -27,44 +36,85 @@
             android:id="@+id/task_img"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:contentDescription="Task image"
+            android:contentDescription="@string/task_image"
             app:setImage="@{task._image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/task_name"
+        <ViewSwitcher
+            android:id="@+id/task_name_switcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
-            android:text="@{task._name, default= taskname}"
             android:textSize="25sp"
             android:textStyle="bold"
             android:layout_marginTop="@dimen/margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/task_img" />
+            app:layout_constraintTop_toBottomOf="@id/task_img"
+            >
 
-        <TextView
-            android:id="@+id/task_desc"
+            <TextView
+                android:id="@+id/task_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{task._name, default= taskname}"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                />
+
+            <EditText
+                android:id="@+id/task_name_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@{task._name, default= taskname}"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                />
+
+        </ViewSwitcher>
+
+        <ViewSwitcher
+            android:id="@+id/task_desc_switcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
-            android:text="@{task._description, default=description}"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@id/task_name"
-            app:layout_constraintTop_toBottomOf="@id/task_name" />
+            app:layout_constraintStart_toStartOf="@id/task_name_switcher"
+            app:layout_constraintTop_toBottomOf="@id/task_name_switcher"
+            >
+
+            <TextView
+                android:id="@+id/task_desc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{task._description, default=description}"
+                android:textSize="18sp"
+
+                />
+
+            <EditText
+                android:id="@+id/task_desc_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@{task._description, default=description}"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:autofillHints="no" />
+        </ViewSwitcher>
 
         <TextView
             android:id="@+id/open_by_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:text="@string/open_by"
+            app:layout_constraintVertical_bias="0.8"
             app:layout_constraintEnd_toStartOf="@+id/assignee_text"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/task_desc" />
+            app:layout_constraintTop_toBottomOf="@id/task_desc_switcher" />
 
         <TextView
             android:id="@+id/assignee_text"
@@ -107,16 +157,32 @@
             app:setImage="@{openBy._image}"
             />
 
-        <ImageView
-            android:id="@+id/assignee_avatar"
+        <ViewSwitcher
+            android:id="@+id/assignee_avatar_switcher"
             android:layout_width="@dimen/small_avatar"
             android:layout_height="@dimen/small_avatar"
             app:layout_constraintTop_toBottomOf="@id/assignee_text"
             app:layout_constraintStart_toStartOf="@id/assignee_text"
             app:layout_constraintEnd_toEndOf="@id/assignee_text"
             android:layout_marginTop="@dimen/small_margin"
-            app:setImage="@{assignee._image}"
-            />
+            >
+            <ImageView
+                android:id="@+id/assignee_avatar"
+                android:layout_width="@dimen/small_avatar"
+                android:layout_height="@dimen/small_avatar"
+                app:layout_constraintTop_toBottomOf="@id/assignee_text"
+                app:layout_constraintStart_toStartOf="@id/assignee_text"
+                app:layout_constraintEnd_toEndOf="@id/assignee_text"
+                app:setImage="@{assignee._image}"
+                />
+
+            <Spinner
+                android:id="@+id/assignee_spinner"
+                android:layout_width="@dimen/small_avatar"
+                android:layout_height="@dimen/small_avatar"/>
+
+        </ViewSwitcher>
+
 
         <TextView
             android:id="@+id/created_date_val"
@@ -125,8 +191,8 @@
             app:layout_constraintTop_toBottomOf="@id/created_date_text"
             app:layout_constraintEnd_toEndOf="@id/created_date_text"
             app:layout_constraintStart_toStartOf="@id/created_date_text"
-            app:layout_constraintTop_toTopOf="@id/assignee_avatar"
-            app:layout_constraintBottom_toBottomOf="@id/assignee_avatar"
+            app:layout_constraintTop_toTopOf="@id/assignee_avatar_switcher"
+            app:layout_constraintBottom_toBottomOf="@id/assignee_avatar_switcher"
             app:date="@{task._createdDate}"
             />
 
@@ -140,7 +206,7 @@
             app:layout_constraintStart_toStartOf="@id/finish_at"
             app:layout_constraintTop_toTopOf="@id/created_date_val"
             app:layout_constraintVertical_bias="0.0"
-            app:date="@{task._targetDate}"
+            app:date="@{targetDate}"
             />
 
         <TextView
@@ -152,16 +218,39 @@
             app:layout_constraintStart_toStartOf="@+id/open_by_title"
             app:layout_constraintTop_toBottomOf="@id/open_by_avatar" />
 
-        <TextView
-            android:id="@+id/value_number"
+        <ViewSwitcher
+            android:id="@+id/value_number_switcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/value_title"
             app:layout_constraintStart_toEndOf="@id/value_title"
             android:layout_marginStart="2dp"
             android:textStyle="bold"
-            android:text="@{String.valueOf(task._value), default = 6}"
-            />
+            >
+
+            <TextView
+                android:id="@+id/value_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/value_title"
+                app:layout_constraintStart_toEndOf="@id/value_title"
+                android:textStyle="bold"
+                android:text="@{String.valueOf(task._value), default = 6}"
+                />
+
+            <Spinner
+                android:id="@+id/value_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/value_title"
+                app:layout_constraintBottom_toBottomOf="@+id/value_title"
+                app:layout_constraintStart_toEndOf="@id/value_title"
+                android:selectedItemPosition="@{(task._value -1)}"
+                android:layout_marginBottom="2dp"
+                />
+
+        </ViewSwitcher>
+
 
         <TextView
             android:id="@+id/status_title"
@@ -182,6 +271,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/save"
+            android:visibility="@{taskViewModel._isEdit ? View.VISIBLE : View.GONE}"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

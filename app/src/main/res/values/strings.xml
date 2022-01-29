@@ -51,6 +51,8 @@
     <string name="back">Back</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="task_image">Task image</string>
+    <string name="save">Save</string>
 
 
 </resources>
