@@ -3,6 +3,7 @@ package com.example.doit.view.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -35,6 +36,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     private FragmentChosenGroupBinding _binding;
     private TasksViewModel _tasksViewModel;
+    private Group _group;
 
     // endregion
 
@@ -46,11 +48,12 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     // endregion
 
+    // region LifeCycle
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
-        Log.d("FRISHMAN", "SELECTED ID: " + selectedId);
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
         _binding.setGroup(initVM(selectedId));
         _binding.setTasksViewModel(_tasksViewModel);
@@ -59,8 +62,12 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         return _binding.getRoot();
     }
 
+    // endregion
+
+    // region Private Method
+
     private void initListeners(){
-        TasksAdapter adapter = new TasksAdapter(false);
+        TasksAdapter adapter = new TasksAdapter(false, getViewLifecycleOwner());
         adapter.set_tasksViewModel(_tasksViewModel);
         _tasksViewModel.get_tasks().observe(requireActivity(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -70,6 +77,21 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             }
         });
         _binding.taskLst.setAdapter(adapter);
+        _tasksViewModel.get_selectedTaskIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer >= 0) {
+                    _tasksViewModel.get_actionBarHelper().get().setTitle("");
+                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
+                }
+                else {
+                    _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
+                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
+                }
+            }
+        });
     }
 
     private Group initVM(String selectedGroupId){
@@ -78,8 +100,15 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         _tasksViewModel.set_groupId(selectedGroupId);
         _tasksViewModel.set_iFragmentNavigationHelper(this);
         GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
-        return groupsViewModel.getGroupById(selectedGroupId);
+        _group = groupsViewModel.getGroupById(selectedGroupId);
+        _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
+        _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
+        return _group;
     }
+
+    // endregion
+
+    // region IDialogNavigationHelper
 
     @Override
     public void openDialog() {
@@ -89,10 +118,38 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                 action);
     }
 
+    // endregion
+
+    // region IFragmentNavigitionHelper
+
     @Override
     public void openFragment() {
         ChosenGroupFragmentDirections.ActionChosenGroupFragmentToTasksDetails action =
         ChosenGroupFragmentDirections.actionChosenGroupFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
+
+    // endregion
+
+    // region Toolbar.OnMenuItemClickListener
+
+    @SuppressLint("NonConstantResourceId")
+    private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                Log.d("Peleg", "DELETE in ChosenGroup fragment");
+
+                return true;
+            case R.id.edit:
+
+                Log.d("Peleg", "EDIT in ChosenGroup fragment");
+                return true;
+            default:
+
+                break;
+        }
+        return false;
+    };
+
+    // endregion
 }

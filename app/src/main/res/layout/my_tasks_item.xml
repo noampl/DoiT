@@ -20,6 +20,14 @@
             type="boolean" />
 
         <variable
+            name="selectedTask"
+            type="int" />
+
+        <variable
+            name="itemPosition"
+            type="int" />
+
+        <variable
             name="taskViewModel"
             type="com.example.doit.viewmodel.TasksViewModel" />
 
@@ -29,8 +37,8 @@
         android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{@android:color/transparent}"
-        android:onClick="@{()->taskViewModel.details(task)}"
+        android:background="@{selectedTask == itemPosition ? @color/doit_dark_blue : @android:color/transparent}"
+        android:onClick="@{()->taskViewModel.details(task, itemPosition)}"
         >
 
         <View

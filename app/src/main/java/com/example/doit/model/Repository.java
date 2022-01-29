@@ -1,5 +1,6 @@
 package com.example.doit.model;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
 
@@ -7,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.common.Consts;
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.model.dao.UserDao;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
@@ -17,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +62,7 @@ public class Repository {
      * Uses for addGroup dialog
      */
     private MutableLiveData<List<User>> _newGroupUsers;
-
+    private WeakReference<IActionBarHelper> actionBarHelper;
 
     // endregion
 
@@ -94,6 +98,15 @@ public class Repository {
     // endregion
 
     // region Properties
+
+    public WeakReference<IActionBarHelper> getActionBarHelper(){
+        return actionBarHelper;
+    }
+
+    public void setActionBarHelper(IActionBarHelper helper){
+        actionBarHelper = new WeakReference<IActionBarHelper>(helper);
+    }
+
 
     public String get_taskDetailsId() {
         return _taskDetailsId;

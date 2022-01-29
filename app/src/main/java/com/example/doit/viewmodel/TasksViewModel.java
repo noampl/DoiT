@@ -1,20 +1,21 @@
 package com.example.doit.viewmodel;
 
 import android.net.Uri;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.common.Consts;
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.Repository;
-import com.example.doit.model.UserFirebaseWorker;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,9 @@ public class TasksViewModel extends ViewModel {
     private String _assigneeId;
     private String _createdById;
     private String _tasksDetailsId;
+    private WeakReference<IActionBarHelper> _actionBarHelper;
+    private MutableLiveData<Integer> _selectedTaskIndex;
+
     // endregion
 
     // region C'tor
@@ -41,11 +45,17 @@ public class TasksViewModel extends ViewModel {
         _tasks = Repository.getInstance().get_tasks();
         _createdById = Repository.getInstance().get_authUser().getValue().get_userId();
         _tasksDetailsId = Repository.getInstance().get_taskDetailsId();
+        _actionBarHelper = Repository.getInstance().getActionBarHelper();
+        _selectedTaskIndex = new MutableLiveData<>(Consts.INVALID_POSITION);
     }
 
     // endregion
 
     // region Properties
+
+    public WeakReference<IActionBarHelper> get_actionBarHelper() {
+        return _actionBarHelper;
+    }
 
     public List<User> get_groupUsers() {
         return new ArrayList<>(Repository.getInstance().getUsersByGroup(_groupId));
@@ -88,6 +98,14 @@ public class TasksViewModel extends ViewModel {
         this._iFragmentNavigationHelper = _iFragmentNavigationHelper;
     }
 
+    public MutableLiveData<Integer> get_selectedTaskIndex() {
+        return _selectedTaskIndex;
+    }
+
+    public void set_selectedTaskIndex(int _selectedTaskIndex) {
+        this._selectedTaskIndex.setValue(_selectedTaskIndex);
+    }
+
     // endregion
 
     // region Public
@@ -117,6 +135,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void openDialog(){
+        set_selectedTaskIndex(Consts.INVALID_POSITION);
         _iDialogNavigationHelper.openDialog();
     }
 
@@ -147,9 +166,12 @@ public class TasksViewModel extends ViewModel {
         _targetDate = datePicker.getAutofillValue().getDateValue();
     }
 
-    public boolean details(Task task){
-        set_tasksDetailsId(task.get_taskId());
-        _iFragmentNavigationHelper.openFragment();
+    public boolean details(Task task, int itemPosition){
+        if(_selectedTaskIndex.getValue() != itemPosition) {
+            set_tasksDetailsId(task.get_taskId());
+            _iFragmentNavigationHelper.openFragment();
+        }
+        set_selectedTaskIndex(Consts.INVALID_POSITION);
         return true;
     }
 

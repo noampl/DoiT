@@ -14,7 +14,6 @@
         <variable
             name="selectedGroup"
             type="int" />
-
         <variable
             name="itemPosition"
             type="int" />
@@ -26,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@{selectedGroup == itemPosition ? @color/doit_dark_blue : @android:color/transparent}"
-        android:onClick="@{()->groupViewModel.showGroupTasks(group)}"
+        android:onClick="@{()->groupViewModel.showGroupTasks(group, itemPosition)}"
         >
 
         <ImageView

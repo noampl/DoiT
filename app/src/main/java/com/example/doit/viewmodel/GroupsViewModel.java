@@ -5,12 +5,15 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.common.Consts;
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class GroupsViewModel extends ViewModel {
     private MutableLiveData<Integer> _selectedPosition;
     private MutableLiveData<List<User>> _newGroupMembers;
     private String selectedGroupId;
+    private WeakReference<IActionBarHelper> _actionBarHelper;
 
     // endregion
 
@@ -37,12 +41,16 @@ public class GroupsViewModel extends ViewModel {
         _groups = Repository.getInstance().getGroups();
         _isBottomNavigationUp = Repository.getInstance().get_isBottomNavigationUp();
         _newGroupMembers = Repository.getInstance().get_newGroupUsers();
+        _actionBarHelper = Repository.getInstance().getActionBarHelper();
     }
 
     // endregion
 
     // region Properties
 
+    public WeakReference<IActionBarHelper> get_actionBarHelper() {
+        return _actionBarHelper;
+    }
 
     public String getSelectedGroupId() {
         return selectedGroupId;
@@ -57,7 +65,7 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public MutableLiveData<Integer> get_selectedPosition() {
-        if(_selectedPosition == null) { _selectedPosition = new MutableLiveData<>(-1); }
+        if(_selectedPosition == null) { _selectedPosition = new MutableLiveData<>(Consts.INVALID_POSITION); }
         return _selectedPosition;
     }
 
@@ -106,16 +114,11 @@ public class GroupsViewModel extends ViewModel {
      * @return true
      */
     public boolean addGroupDialog(){
+        set_selectedPosition(Consts.INVALID_POSITION);
         _newGroupMembers.getValue().add(Repository.getInstance().get_authUser().getValue());
         _iDialogNavigationHelper.openDialog();
 
         // consume the btn press
-        return true;
-    }
-
-    public boolean addAdminsDialog(){
-
-        // TODO implement later
         return true;
     }
 
@@ -145,10 +148,13 @@ public class GroupsViewModel extends ViewModel {
         return true;
     }
 
-    public void showGroupTasks(Group group){
-        selectedGroupId = group.get_groupId();
-        Repository.getInstance().setTaskByGroupId(selectedGroupId);
-        _iFragmentNavigitionHelper.openFragment();
+    public void showGroupTasks(Group group, int itemPosition){
+        if (_selectedPosition.getValue() != itemPosition) {
+            selectedGroupId = group.get_groupId();
+            Repository.getInstance().setTaskByGroupId(selectedGroupId);
+            _iFragmentNavigitionHelper.openFragment();
+        }
+        set_selectedPosition(Consts.INVALID_POSITION);
     }
 
     public Group getGroupById(String id){
