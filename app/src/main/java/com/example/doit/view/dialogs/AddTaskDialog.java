@@ -144,7 +144,6 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
 
     @Override
     public void openDialog() {
-//        ActionAddT
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                 R.id.action_addTaskDialog_to_additionDialog);
     }

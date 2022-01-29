@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.ref.WeakReference;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -279,7 +280,9 @@ public class Repository {
     }
 
     public void deleteTask(com.example.doit.model.entities.Task task) {
-        _executorService.execute(() -> userFirebaseWorker.deleteTask(task));
+        _executorService.execute(() -> {
+                LocalDB.db.taskDao().delete(task);
+                userFirebaseWorker.deleteTask(task);});
     }
 
     public void createTask(com.example.doit.model.entities.Task task) {
@@ -418,6 +421,16 @@ public class Repository {
 
     public com.example.doit.model.entities.Task getTaskById(String tasksDetailsId) {
         return LocalDB.db.taskDao().getTaskById(tasksDetailsId);
+    }
+
+    public void setUsersById(String id) {
+        _executorService.execute(()->{
+                List<User> users = LocalDB.db.userDao().getUsersByGroup(id);
+                _users.postValue(users);});
+    }
+
+    public void updateTask(com.example.doit.model.entities.Task task) {
+        _executorService.execute(()->LocalDB.db.taskDao().update(task));
     }
 
 

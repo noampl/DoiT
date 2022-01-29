@@ -1,6 +1,7 @@
 package com.example.doit.binding_adapters;
 
 import android.annotation.SuppressLint;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,23 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AppBindingAdapters {
-
-//
-//    @BindingAdapter("menuNavigationIcon")
-//    public static void setNavigationIcon(MaterialToolbar toolbar, Integer ResID){
-//        if (ResID == null){
-//            toolbar.setNavigationIcon(null);
-//        }
-//        else {
-//            toolbar.setNavigationIcon(ResID);
-//        }
-//    }
-//
-//    @BindingAdapter("setMenu")
-//    public static void setMenu(MaterialToolbar toolbar, int resId){
-//        toolbar.invalidateMenu();
-//        toolbar.inflateMenu(resId);
-//    }
 
     @BindingAdapter("image")
     public static void setImage(ImageButton v, String image) {
@@ -64,7 +48,7 @@ public class AppBindingAdapters {
                     viewModel.removeUser(position);
                 }
             }
-        });
+    });
 
     }
 

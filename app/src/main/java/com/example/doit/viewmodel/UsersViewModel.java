@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UsersViewModel extends ViewModel {
@@ -61,6 +60,10 @@ public class UsersViewModel extends ViewModel {
         else{
             _selectedUser.add(temp);
         }
+    }
+
+    public void setUsersById(String groupId){
+        Repository.getInstance().setUsersById(groupId);
     }
 
     public void removeUser(int position){
