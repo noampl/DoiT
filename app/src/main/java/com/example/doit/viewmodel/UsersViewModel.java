@@ -63,7 +63,7 @@ public class UsersViewModel extends ViewModel {
     }
 
     public void setUsersById(String groupId){
-        Repository.getInstance().setUsersById(groupId);
+        Repository.getInstance().setUsersById(groupId); // TODO this is not working
     }
 
     public void removeUser(int position){

@@ -133,8 +133,10 @@
         android:name="com.example.doit.view.dialogs.AdditionDialog"
         android:label="AdditionDialog" >
         <argument
-            android:name="isCurrentGroup"
-            app:argType="boolean" />
+            android:name="groupId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="''"/>
     </dialog>
     <action
         android:id="@+id/action_global_initFragment"

@@ -24,6 +24,7 @@ import com.example.doit.view.adapters.TasksAdapter;
 import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelper {
@@ -79,7 +80,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                adapter.submitList(tasks);
+                adapter.submitList(tasks.stream().filter((t)->(t.get_finishDate() == 0)).collect(Collectors.toList()));
             }
         });
         menuChanger();

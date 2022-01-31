@@ -3,6 +3,7 @@ package com.example.doit.view.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -103,20 +104,16 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             _binding.setTask(task);
             _binding.setGroup(group);
             _binding.setUser(user);
-            _binding.constraint.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    tasksViewModel.set_selectedTaskIndex(getAdapterPosition());
-                    return true;
-                }
+            _binding.constraint.setOnLongClickListener(view -> {
+                tasksViewModel.set_selectedTaskIndex(getAdapterPosition());
+                return true;
             });
 
-            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, new Observer<Integer>() {
-                @Override
-                public void onChanged(Integer integer) {
-                    _binding.setSelectedTask(integer);
-                }
-            });
+            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, integer ->
+                    _binding.setSelectedTask(integer));
+
+            _binding.checkbox.setOnCheckedChangeListener((compoundButton, isChecked) ->
+                    tasksViewModel.setTaskChecked(task, isChecked));
             _binding.setItemPosition(getAdapterPosition());
             _binding.setIsMyTasks(_isMyTasksScreen);
             _binding.setTaskViewModel(tasksViewModel);

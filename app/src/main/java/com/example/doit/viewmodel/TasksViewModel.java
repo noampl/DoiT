@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class TasksViewModel extends ViewModel {
 
@@ -167,7 +168,7 @@ public class TasksViewModel extends ViewModel {
             _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
         }
         Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
-                _targetDate.getValue(), _createdById, _assigneeId, taskValue, ImageUri);
+                (_targetDate.getValue() != null ? _targetDate.getValue() : 0), _createdById, _assigneeId, taskValue, ImageUri);
         Repository.getInstance().createTask(task);
         return true;
     }
@@ -211,6 +212,21 @@ public class TasksViewModel extends ViewModel {
 
     public void deleteTask(Task task) {
         Repository.getInstance().deleteTask(task);
+    }
+
+    public void setTaskChecked(Task task, boolean isChecked) {
+       List<Task> tasks = _tasks.getValue();
+       tasks.forEach((t)->{
+                if(t.get_taskId().equals(task.get_taskId())){
+                   if (isChecked) {
+                       t.set_finishDate(new Date().getTime());
+                   } else {
+                       t.set_finishDate(0);
+                   }
+                }
+       });
+            _tasks.setValue(tasks);
+            Repository.getInstance().updateTask(task);
     }
 
     // endregion
