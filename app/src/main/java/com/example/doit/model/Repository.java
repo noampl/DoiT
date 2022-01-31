@@ -86,7 +86,6 @@ public class Repository {
         userFirebaseWorker.setAuthUser(_authUser);
         _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
 
-        initFake();
     }
 
     public static Repository getInstance() {
@@ -411,26 +410,17 @@ public class Repository {
 
     // region event listeners
 
-    private void initFake() {
-//        _users.getValue().add(new User("123456","someMail@com","test","pp","password","","0526727960","+972", Roles.CLIENT,
-//                null));
-//        _executorService.execute(()->LocalDB.db.taskDao().insertAll(new com.example.doit.model.entities.Task("2","3","Test", "this is peleg test", new Date().getTime(),new Date().getTime(),
-//                "QqsLagcb5RPK0EGI5OdnFsLbz1v1","QqsLagcb5RPK0EGI5OdnFsLbz1v1",5,"")));
-
-    }
-
     public com.example.doit.model.entities.Task getTaskById(String tasksDetailsId) {
         return LocalDB.db.taskDao().getTaskById(tasksDetailsId);
     }
 
-    public void setUsersById(String id) {
+    public void setUsersById(String id) { // TODO make it work
         _executorService.execute(()->{
-                List<User> users = LocalDB.db.userDao().getUsersByGroup(id);
-                _users.postValue(users);});
+                _users.postValue(LocalDB.db.userDao().getUsersByGroup(id));});
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
-        _executorService.execute(()->LocalDB.db.taskDao().update(task));
+        _executorService.execute(()->LocalDB.db.taskDao().update(task)); // TODO update firebase
     }
 
 

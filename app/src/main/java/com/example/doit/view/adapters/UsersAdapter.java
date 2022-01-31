@@ -29,7 +29,7 @@ public class UsersAdapter extends BaseAdapter {
     }
 
     public void set_users(List<User> _users) {
-        this._users = _users;
+    this._users = _users;
     }
 
     @Override

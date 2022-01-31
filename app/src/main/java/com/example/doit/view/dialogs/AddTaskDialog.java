@@ -48,6 +48,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
     private AlertDialog _dialog;
     private TasksViewModel tasksViewModel;
     private Uri _imgUri;
+    private String _groupId;
 
     // endregion
 
@@ -62,11 +63,11 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String groupId = AddTaskDialogArgs.fromBundle(getArguments()).getGroupId();
+        _groupId = AddTaskDialogArgs.fromBundle(getArguments()).getGroupId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_add_task, container, false);
         tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         tasksViewModel.set_iDialogNavigationHelper(this);
-        tasksViewModel.set_groupId(groupId);
+        tasksViewModel.set_groupId(_groupId);
         _binding.setTaskViewModel(tasksViewModel);
         initListeners();
         _binding.setLifecycleOwner(this);
@@ -144,7 +145,9 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
 
     @Override
     public void openDialog() {
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                R.id.action_addTaskDialog_to_additionDialog);
+        AddTaskDialogDirections.ActionAddTaskDialogToAdditionDialog action =
+        AddTaskDialogDirections.actionAddTaskDialogToAdditionDialog();
+        action.setGroupId(_groupId);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }

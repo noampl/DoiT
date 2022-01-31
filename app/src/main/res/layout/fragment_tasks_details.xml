@@ -269,6 +269,7 @@
             app:layout_constraintTop_toTopOf="@id/status_title"
             app:layout_constraintBottom_toBottomOf="@id/status_title"
             app:layout_constraintEnd_toEndOf="parent"
+            android:checked="@{task._finishDate != 0}"
             />
 
         <Button

@@ -21,6 +21,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.doit.R;
 import com.example.doit.databinding.AdditionDialogFragmentBinding;
@@ -28,6 +29,7 @@ import com.example.doit.model.entities.User;
 import com.example.doit.view.adapters.AdditionAdapter;
 import com.example.doit.viewmodel.UsersViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdditionDialog extends DialogFragment implements SearchView.OnQueryTextListener {
@@ -52,14 +54,20 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        boolean isCurrentGroup = AdditionDialogArf
+        String groupId = AdditionDialogArgs.fromBundle(getArguments()).getGroupId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.addition_dialog_fragment, container, false);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.get_selectedUser().clear();
+
+        if(groupId != null && !groupId.equals("")){
+            usersViewModel.setUsersById(groupId);
+        }
+
         _dialog.setView(_binding.getRoot());
         _dialog.setCancelable(true);
         _dialog.setTitle("Select User");
         _binding.searchBox.setOnQueryTextListener(this);
+        _binding.searchBox.callOnClick();
         initListeners();
         _binding.setLifecycleOwner(this);
         return _binding.getRoot();
@@ -90,13 +98,12 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     private void initListeners() {
         AdditionAdapter adapter = new AdditionAdapter();
         adapter.set_usersViewModel(usersViewModel);
-        usersViewModel.get_users().observe(requireActivity(), new Observer<List<User>>() {
+        usersViewModel.get_users().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<User> users) {
                 adapter.submitList(users);
                 adapter.notifyDataSetChanged();
-                Log.d("PELEG", "submit users to addotion dialog");
             }
         });
         _binding.listItem.setAdapter(adapter);
@@ -104,8 +111,8 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         _binding.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usersViewModel.get_users().getValue().clear();
-                dismiss();
+                usersViewModel.set_users(new ArrayList<User>());
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
             }
         });
 
@@ -113,7 +120,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
             @Override
             public void onClick(View view) {
                 usersViewModel.submitUsers();
-                dismiss();
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
             }
         });
 

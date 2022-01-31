@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 
 import com.example.doit.R;
@@ -144,9 +145,14 @@ public class TasksDetailsFragment extends Fragment {
                 _taskViewModel.saveChanges(_task, _binding.taskNameEdit.getText().toString(),
                         _binding.taskDescEdit.getText().toString());
                 _binding.setTask(_task);
-        }
+        });
 
-        );
+        _binding.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                _taskViewModel.setTaskChecked(_task, b);
+            }
+        });
     }
 
     private void initObservers() {

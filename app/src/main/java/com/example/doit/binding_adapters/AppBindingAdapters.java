@@ -99,9 +99,14 @@ public class AppBindingAdapters {
 
     @BindingAdapter("date")
     public static void setDate(TextView v, long date) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String text = sdf.format(new Date(date));
-        v.setText(text);
+        if (date > 0){
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String text = sdf.format(new Date(date));
+            v.setText(text);
+        }
+        else{
+            v.setText("-");
+        }
 
     }
 

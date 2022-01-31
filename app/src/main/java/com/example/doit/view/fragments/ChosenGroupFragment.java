@@ -3,6 +3,7 @@ package com.example.doit.view.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -73,7 +74,8 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                adapter.submitList(tasks.stream().filter((t)->t.get_groupId().equals(_tasksViewModel.get_groupId())).collect(Collectors.toList()));
+                adapter.submitList(tasks.stream().filter((t)->t.get_groupId().equals(_tasksViewModel.get_groupId()) &&
+                        t.get_finishDate() == 0).collect(Collectors.toList()));
             }
         });
         _binding.taskLst.setAdapter(adapter);
@@ -84,10 +86,12 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                 }
                 else {
                     _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
                 }
             }
@@ -101,9 +105,13 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         _tasksViewModel.set_iFragmentNavigationHelper(this);
         GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _group = groupsViewModel.getGroupById(selectedGroupId);
+        initToolBar();
+        return _group;
+    }
+
+    private void initToolBar(){
         _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
         _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
-        return _group;
     }
 
     // endregion
