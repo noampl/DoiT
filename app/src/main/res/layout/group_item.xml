@@ -74,18 +74,6 @@
             android:src="@{@drawable/ic_baseline_account_circle_24}"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

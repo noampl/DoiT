@@ -69,10 +69,14 @@ public class User {
     // endregion Properties
 
     public String get_userId() {
+        if (_userId == null)
+            _userId = "";
         return _userId;
     }
 
     public String get_email() {
+        if (_email == null)
+            _email = "";
         return _email;
     }
 
@@ -85,6 +89,8 @@ public class User {
     }
 
     public String get_lastName() {
+        if (_lastName == null)
+            _lastName = "";
         return _lastName;
     }
 
@@ -93,6 +99,8 @@ public class User {
     }
 
     public String get_firstName() {
+        if (_firstName == null)
+            _firstName = "";
         return _firstName;
     }
 
@@ -101,6 +109,8 @@ public class User {
     }
 
     public String get_password() {
+        if (_password == null)
+            _password = "";
         return _password;
     }
 
@@ -126,6 +136,8 @@ public class User {
     }
 
     public String get_image() {
+        if (_image == null)
+            _image = "";
         return _image;
     }
 
@@ -134,6 +146,8 @@ public class User {
     }
 
     public String get_phone() {
+        if (_phone == null)
+            _phone = "";
         return _phone;
     }
 
@@ -142,6 +156,8 @@ public class User {
     }
 
     public String get_countryPhoneCode() {
+        if (_countryPhoneCode == null)
+            _countryPhoneCode = "";
         return _countryPhoneCode;
     }
 
@@ -167,8 +183,6 @@ public class User {
     }
 
     // endregion
-
-
 
     //todo: add setImage
 
@@ -208,7 +222,9 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return _userId.equals(user._userId) && _email.equals(user._email) && Objects.equals(_lastName, user._lastName) && _firstName.equals(user._firstName) && Objects.equals(_password, user._password) && Objects.equals(_image, user._image) && Objects.equals(_phone, user._phone) && Objects.equals(_countryPhoneCode, user._countryPhoneCode) && _role == user._role && Objects.equals(_groupsId, user._groupsId);
+        return _userId.equals(user.get_userId()) && _email.equals(user.get_email()) && Objects.equals(_lastName, user.get_lastName()) &&
+                _firstName.equals(user.get_firstName()) && Objects.equals(_password, user.get_password()) &&
+                Objects.equals(_image, user.get_image()) && Objects.equals(_groupsId, user.get_groupsId());
     }
 
     @Override

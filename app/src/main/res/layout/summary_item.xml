@@ -17,19 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <ImageView
             android:id="@+id/avatar_img"
-            android:layout_width="@dimen/small_avatar"
-            android:layout_height="@dimen/small_avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginBottom="@dimen/small_margin"
-            android:src="@{user._image}"
+            app:setImage="@{user._image}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/user_name"
             app:layout_constraintHorizontal_bias="0.5"
@@ -42,8 +35,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@{user._fullName, default = name}"
+            android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@+id/score"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="@id/avatar_img"
             app:layout_constraintStart_toEndOf="@+id/avatar_img"
             app:layout_constraintTop_toTopOf="@id/avatar_img" />
 
@@ -52,16 +47,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(score), default = 55}"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/user_name"
             app:layout_constraintTop_toTopOf="@id/user_name" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

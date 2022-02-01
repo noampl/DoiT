@@ -77,6 +77,9 @@
         <argument
             android:name="groupId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_chosenGroupFragment_to_summaryDialog"
+            app:destination="@id/summaryDialog" />
     </fragment>
     <fragment
         android:id="@+id/myTasksFragment"
@@ -149,6 +152,15 @@
         <action
             android:id="@+id/action_addTaskDialog_to_additionDialog"
             app:destination="@id/additionDialog"/>
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/summaryDialog"
+        android:name="com.example.doit.view.dialogs.SummaryDialog"
+        android:label="dialog_summary"
+        tools:layout="@layout/dialog_summary" >
         <argument
             android:name="groupId"
             app:argType="string" />

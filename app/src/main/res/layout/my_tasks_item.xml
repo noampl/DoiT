@@ -41,13 +41,6 @@
         android:onClick="@{()->taskViewModel.details(task, itemPosition)}"
         >
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <ImageView
             android:id="@+id/task_img"
             android:layout_width="@dimen/large_avatar"
@@ -140,14 +133,6 @@
             app:layout_constraintEnd_toStartOf="@id/checkbox"
             app:layout_constraintTop_toTopOf="@+id/description"
             app:layout_goneMarginTop="@dimen/margin" />
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/small_margin"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintTop_toBottomOf="@id/task_img" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier2"

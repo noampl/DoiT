@@ -11,6 +11,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.doit.model.entities.Group;
+import com.example.doit.model.entities.User;
 import com.example.doit.model.entities.relations.GroupWithTasks;
 import com.example.doit.model.entities.relations.UserWithGroups;
 
@@ -30,6 +31,9 @@ public interface GroupDao {
 
     @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
     Group getGroup(String groupId);
+
+    @Query("SELECT * FROM `group` JOIN user WHERE _groupId = :groupId AND _userId ") // TODO frishman please??
+    List<User> getGroupMembers(String groupId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);

@@ -74,8 +74,12 @@ public class UsersViewModel extends ViewModel {
         // FIXME needed?
     }
 
-    public int getUserScore(User item) {
-        return 0;
+    public int getUserScore(User item, String groupId) {
+        return Repository.getInstance().getUserScoreByGroup(item, groupId);
+    }
+
+    public void fetchUsers(){
+        Repository.getInstance().getUsersFromLocalDb();
     }
 
     // endregion

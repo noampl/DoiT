@@ -96,6 +96,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                 }
             }
         });
+        _binding.summary.setOnClickListener((v)->{
+            ChosenGroupFragmentDirections.ActionChosenGroupFragmentToSummaryDialog action =
+                    ChosenGroupFragmentDirections.actionChosenGroupFragmentToSummaryDialog(_group.get_groupId());
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                        .navigate(action); });
     }
 
     private Group initVM(String selectedGroupId){

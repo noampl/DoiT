@@ -40,6 +40,17 @@
             />
 
         <Button
+            android:id="@+id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/large_avatar"
+            android:text="@string/summary"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <Button
             android:id="@+id/add_task"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/large_avatar"

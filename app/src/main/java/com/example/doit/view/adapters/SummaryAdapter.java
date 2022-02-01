@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.doit.R;
 import com.example.doit.databinding.DialogSummaryBinding;
+import com.example.doit.databinding.SummaryItemBinding;
 import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.UsersViewModel;
 
@@ -20,12 +21,13 @@ public class SummaryAdapter extends ListAdapter<User, SummaryAdapter.SummaryView
     // region Members
 
     private UsersViewModel _usersViewModel;
+    private String _groupId;
 
     // endregion
 
     // region C'tor
 
-    protected SummaryAdapter() {
+    public SummaryAdapter(String _groupId) {
         super(new DiffUtil.ItemCallback<User>() {
             @Override
             public boolean areItemsTheSame(@NonNull User oldItem, @NonNull User newItem) {
@@ -37,6 +39,7 @@ public class SummaryAdapter extends ListAdapter<User, SummaryAdapter.SummaryView
                 return oldItem.equals(newItem);
             }
         });
+        this._groupId = _groupId;
     }
 
     // endregion
@@ -54,28 +57,28 @@ public class SummaryAdapter extends ListAdapter<User, SummaryAdapter.SummaryView
     @NonNull
     @Override
     public SummaryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        DialogSummaryBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()), R.layout.group_item, parent, false);
+        SummaryItemBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()), R.layout.summary_item, parent, false);
         return new SummaryViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SummaryViewHolder holder, int position) {
-        holder.bind(getItem(position), _usersViewModel.getUserScore(getItem(position)));
+        holder.bind(getItem(position), _usersViewModel.getUserScore(getItem(position), _groupId));
     }
 
     public static class SummaryViewHolder extends RecyclerView.ViewHolder {
 
-        private DialogSummaryBinding _binding;
+        private SummaryItemBinding _binding;
 
-        public SummaryViewHolder(@NonNull DialogSummaryBinding binding) {
+        public SummaryViewHolder(@NonNull SummaryItemBinding binding) {
             super(binding.getRoot());
             _binding = binding;
-        }
+}
 
         public void bind(User user, int Score) {
-
-
+            _binding.setUser(user);
+            _binding.setScore(Score);
             _binding.executePendingBindings();
         }
     }
