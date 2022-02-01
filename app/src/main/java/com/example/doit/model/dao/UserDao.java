@@ -19,12 +19,12 @@ import java.util.List;
 public interface UserDao {
 
     @Query("select * from user")
-    LiveData<List<User>> getAll();
+    List<User> getAll();
 
     @Query("DELETE FROM user")
     void deleteAll();
 
-    @Query("SELECT * FROM user WHERE :groupId LIKE (_groupsId)")
+    @Query("SELECT * FROM user WHERE :groupId IN (_groupsId)") //TODO fix that
     List<User> getUsersByGroup(String groupId);
 
     @Query("select * from user where _userId = :userId")

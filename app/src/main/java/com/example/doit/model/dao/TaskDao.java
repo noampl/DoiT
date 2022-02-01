@@ -33,6 +33,9 @@ public interface TaskDao {
     @Query("select * from Task WHERE _groupId =:groupId")
     List<Task> getTasksByGroup(String groupId);
 
+    @Query("SELECT SUM(_value) FROM `Task` WHERE _groupId = :groupId AND _assigneeId = :userId AND _finishDate != 0")
+    int getUserScoreByGroup(String userId, String groupId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Task...Tasks);
 

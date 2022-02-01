@@ -423,6 +423,13 @@ public class Repository {
         _executorService.execute(()->LocalDB.db.taskDao().update(task)); // TODO update firebase
     }
 
+    public int getUserScoreByGroup(User user, String groupId) {
+        return LocalDB.db.taskDao().getUserScoreByGroup(user.get_userId(),groupId);
+    }
+
+    public void getUsersFromLocalDb(){
+        _executorService.execute(()-> _users.postValue(LocalDB.db.userDao().getAll()));
+    }
 
     // endregion
 

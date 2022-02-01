@@ -53,6 +53,7 @@
     <string name="delete">Delete</string>
     <string name="task_image">Task image</string>
     <string name="save">Save</string>
+    <string name="total_task_done">Total Task Done</string>
 
 
 </resources>
