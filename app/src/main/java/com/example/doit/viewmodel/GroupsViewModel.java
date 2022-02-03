@@ -32,6 +32,7 @@ public class GroupsViewModel extends ViewModel {
     private MutableLiveData<List<User>> _newGroupMembers;
     private String selectedGroupId;
     private WeakReference<IActionBarHelper> _actionBarHelper;
+    private MutableLiveData<Boolean> _isEdit;
 
     // endregion
 
@@ -42,11 +43,20 @@ public class GroupsViewModel extends ViewModel {
         _isBottomNavigationUp = Repository.getInstance().get_isBottomNavigationUp();
         _newGroupMembers = Repository.getInstance().get_newGroupUsers();
         _actionBarHelper = Repository.getInstance().getActionBarHelper();
+        _isEdit = new MutableLiveData<>(false);
     }
 
     // endregion
 
     // region Properties
+
+    public MutableLiveData<Boolean> get_isEdit() {
+        return _isEdit;
+    }
+
+    public void set_isEdit(boolean isEdit) {
+        this._isEdit.setValue(isEdit);
+    }
 
     public WeakReference<IActionBarHelper> get_actionBarHelper() {
         return _actionBarHelper;
@@ -54,6 +64,10 @@ public class GroupsViewModel extends ViewModel {
 
     public String getSelectedGroupId() {
         return selectedGroupId;
+    }
+
+    public void setSelectedGroupId(String groupId){
+        selectedGroupId = groupId;
     }
 
     public IFragmentNavigitionHelper get_iFragmentNavigitionHelper() {
@@ -159,6 +173,28 @@ public class GroupsViewModel extends ViewModel {
 
     public Group getGroupById(String id){
         return Repository.getInstance().getGroupById(id);
+    }
+
+    public void saveEditGroup(String name, String desc, Group groupToUpdate) {
+        if (name != null && !name.equals("")){
+            groupToUpdate.set_name(name);
+        }
+        if(desc != null && !desc.equals("")){
+            groupToUpdate.set_description(desc);
+        }
+        updateGroup(groupToUpdate);
+        set_isEdit(false);
+    }
+
+    public void updateGroup(Group group){
+        Repository.getInstance().updateGroup(group);
+    }
+
+    public void deleteGroup(Group group){
+        Repository.getInstance().deleteGroup(group);
+    }
+    public void deleteGroup(String groupId){
+        Repository.getInstance().deleteGroupById(groupId);
     }
 
     // endregion

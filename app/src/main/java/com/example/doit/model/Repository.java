@@ -433,4 +433,23 @@ public class Repository {
 
     // endregion
 
+    // region Db interaction
+
+    public void deleteGroup(Group group){
+        _executorService.execute(()->{
+            LocalDB.db.groupDao().delete(group);
+            _groups.postValue(LocalDB.db.groupDao().getAll());
+        });
+    }
+
+    public void deleteGroupById(String groupId){
+        _executorService.execute(()-> deleteGroup(LocalDB.db.groupDao().getGroup(groupId)));
+    }
+
+    public void updateGroup(Group group) {
+        _executorService.execute(()->LocalDB.db.groupDao().update(group));
+    }
+
+    // endregion
+
 }

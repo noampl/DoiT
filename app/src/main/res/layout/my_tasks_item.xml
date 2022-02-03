@@ -46,12 +46,13 @@
             android:layout_width="@dimen/large_avatar"
             android:layout_height="@dimen/large_avatar"
             android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            app:setImage="@{task._image}"
+            android:layout_marginTop="@dimen/small_margin"
             android:src="@drawable/no_profile_picture"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:setImage="@{task._image}" />
 
         <TextView
             android:id="@+id/title"

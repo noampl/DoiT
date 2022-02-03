@@ -89,6 +89,7 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
                 @Override
                 public boolean onLongClick(View v) {
                     _groupViewModel.set_selectedPosition(getAdapterPosition());
+                    _groupViewModel.setSelectedGroupId(_binding.getGroup().get_groupId());
                     return true;
                 }
             });
