@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.common.Consts;
 import com.example.doit.databinding.FragmentGroupsBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
@@ -143,13 +144,15 @@ public class GroupsFragment extends Fragment implements
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
         switch (item.getItemId()) {
             case R.id.delete:
-                Log.d("Peleg", "DELETE in Groups fragment");
-
+                _groupsViewModel.deleteGroup(_groupsViewModel.getSelectedGroupId());
                 return true;
             case R.id.edit:
-
-                Log.d("Peleg", "EDIT in Groups fragment");
+                GroupsFragmentDirections.ActionGroupsFragment2ToGroupsDetailsFragment action =
+                GroupsFragmentDirections.actionGroupsFragment2ToGroupsDetailsFragment(_groupsViewModel.getSelectedGroupId());
+                _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
                 return true;
+
             default:
 
                 break;
@@ -158,4 +161,8 @@ public class GroupsFragment extends Fragment implements
     };
 
     // endregion
+
+
+
+
 }

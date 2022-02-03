@@ -211,6 +211,14 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     // endregion
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        if (navHostFragment.getNavController().getCurrentBackStackEntry().getDestination().getId() == R.id.logInFragment2){
+//            exitDialog();
+//        }
+    }
 }
 
 
