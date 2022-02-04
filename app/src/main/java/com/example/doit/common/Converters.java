@@ -19,7 +19,7 @@ public class Converters {
         @TypeConverter
         public static List<String> fromString(String value) {
             Type listType = new TypeToken<List<String>>() {}.getType();
-            return new Gson().fromJson(value, listType);
+            return new ArrayList<>(new Gson().fromJson(value, listType));
         }
 
         @TypeConverter

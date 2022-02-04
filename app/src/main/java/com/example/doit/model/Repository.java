@@ -99,11 +99,11 @@ public class Repository {
 
     // region Properties
 
-    public WeakReference<IActionBarHelper> getActionBarHelper(){
+    public WeakReference<IActionBarHelper> getActionBarHelper() {
         return actionBarHelper;
     }
 
-    public void setActionBarHelper(IActionBarHelper helper){
+    public void setActionBarHelper(IActionBarHelper helper) {
         actionBarHelper = new WeakReference<IActionBarHelper>(helper);
     }
 
@@ -199,7 +199,7 @@ public class Repository {
             _tasks = new MutableLiveData<>(new ArrayList<>());
             _tasks.postValue(LocalDB.db.taskDao().getAll());
         }
-        return  _tasks;
+        return _tasks;
     }
 
     // endregion
@@ -277,14 +277,15 @@ public class Repository {
         return LocalDB.db.taskDao().getTasksByGroup(groupId);
     }
 
-    public void setTaskByGroupId(String groupId){
-        _executorService.execute(()->_tasks.postValue(LocalDB.db.taskDao().getTasksByGroup(groupId)));
+    public void setTaskByGroupId(String groupId) {
+        _executorService.execute(() -> _tasks.postValue(LocalDB.db.taskDao().getTasksByGroup(groupId)));
     }
 
-    public void deleteTask(com.example.doit.model.entities.Task task) {
+    public void deleteLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {
-                LocalDB.db.taskDao().delete(task);
-                userFirebaseWorker.deleteTask(task);});
+            LocalDB.db.taskDao().delete(task);
+            userFirebaseWorker.deleteTask(task);
+        });
     }
 
     public void createTask(com.example.doit.model.entities.Task task) {
@@ -306,7 +307,6 @@ public class Repository {
                 synchronized (this) {
                     LocalDB.db.taskDao().insertAll(task);
                 }
-                _tasks.postValue(LocalDB.db.taskDao().getAll());
             }
         });
     }
@@ -324,6 +324,17 @@ public class Repository {
         });
     }
 
+    public void updateLocalGroup(Group group) {
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    LocalDB.db.groupDao().update(group);
+                }
+            }
+        });
+    }
+
 
     public void searchUsersByNameOrMail(String query) {
         _executorService.execute(() ->
@@ -331,8 +342,8 @@ public class Repository {
     }
 
 
-    public List<User> getUsersByGroup(String groupId){
-       return LocalDB.db.userDao().getUsersByGroup(groupId);
+    public List<User> getUsersByGroup(String groupId) {
+        return LocalDB.db.userDao().getUsersByGroup(groupId);
     }
 
 
@@ -392,9 +403,9 @@ public class Repository {
     }
 
 
-    public User getUserFromSql(String userId) {
+    public User getUserFromLocal(String userId) {
         User user = LocalDB.db.userDao().getUserById(userId);
-        if (user == null ){
+        if (user == null) {
             userFirebaseWorker.getUser(userId);
         }
         return LocalDB.db.userDao().getUserById(userId);
@@ -417,40 +428,54 @@ public class Repository {
         return LocalDB.db.taskDao().getTaskById(tasksDetailsId);
     }
 
-    public void setUsersById(String id) { // TODO make it work
-        _executorService.execute(()->{
-                _users.postValue(LocalDB.db.userDao().getUsersByGroup(id));});
+    public void setUsersById(String id) {
+        _executorService.execute(() -> {
+            ArrayList<User> members = new ArrayList<>();
+            List<String> membersId = new ArrayList<>(LocalDB.db.groupDao().getMembersId(id));
+            String[] membersArray = membersId.toString().replace("[","").replace("]","").replace("\"","").split(",");
+            for(String userId : membersArray){
+                members.add(LocalDB.db.userDao().getUserById(userId));
+            }
+            if(members.size() > 0){
+                _users.postValue(members);
+            }
+        });
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
-        _executorService.execute(()->LocalDB.db.taskDao().update(task)); // TODO update firebase
+        _executorService.execute(() -> groupFirebaseWorker.updateTask(task));
     }
 
     public int getUserScoreByGroup(User user, String groupId) {
-        return LocalDB.db.taskDao().getUserScoreByGroup(user.get_userId(),groupId);
+        return LocalDB.db.taskDao().getUserScoreByGroup(user.get_userId(), groupId);
     }
 
-    public void getUsersFromLocalDb(){
-        _executorService.execute(()-> _users.postValue(LocalDB.db.userDao().getAll()));
+    public void getUsersFromLocalDb() {
+        _executorService.execute(() -> _users.postValue(LocalDB.db.userDao().getAll()));
     }
 
     // endregion
 
     // region Db interaction
 
-    public void deleteGroup(Group group){
-        _executorService.execute(()->{
-            LocalDB.db.groupDao().delete(group);
-            _groups.postValue(LocalDB.db.groupDao().getAll());
-        });
+    public void deleteGroup(Group group) {
+//        _executorService.execute(() -> {
+//            LocalDB.db.groupDao().delete(group);
+//            _groups.postValue(LocalDB.db.groupDao().getAll());
+//        });
+        _executorService.execute(() -> groupFirebaseWorker.deleteUserFromGroup(group, Objects.requireNonNull(get_authUser().getValue())));
     }
 
-    public void deleteGroupById(String groupId){
-        _executorService.execute(()-> deleteGroup(LocalDB.db.groupDao().getGroup(groupId)));
+    public void deleteGroupById(String groupId) {
+        _executorService.execute(() -> groupFirebaseWorker.deleteUserFromGroup(getGroupById(groupId), Objects.requireNonNull(get_authUser().getValue())));
     }
 
     public void updateGroup(Group group) {
-        _executorService.execute(()->LocalDB.db.groupDao().update(group));
+        _executorService.execute(() -> groupFirebaseWorker.updateGroup(group));
+    }
+
+    public void deleteTask(com.example.doit.model.entities.Task task){
+        _executorService.execute(() -> groupFirebaseWorker.deleteTask(task));
     }
 
     // endregion

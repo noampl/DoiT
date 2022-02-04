@@ -19,7 +19,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class TasksViewModel extends ViewModel {
 
@@ -139,7 +138,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public User getUserById(String id) {
-        return Repository.getInstance().getUserFromSql(id);
+        return Repository.getInstance().getUserFromLocal(id);
     }
 
     public void fetchTasks(){

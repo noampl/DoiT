@@ -22,9 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,7 +30,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GroupFirebaseWorker implements IDataWorker {
@@ -202,6 +199,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
+                                                            Repository.getInstance().deleteGroup(group);
                                                             Log.d(TAG, group.get_name() + " deleted from " + user.get_email());
                                                         } else {
                                                             Log.d(TAG, group.get_name() + " failed to be deleted from " + user.get_email());
@@ -229,7 +227,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Users group updated");
                             for (String id : group.getMembersId()) {
-                                addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
+                                addGroupToUser(Repository.getInstance().getUserFromLocal(id), group);
                             }
                         }
                     }
@@ -294,6 +292,20 @@ public class GroupFirebaseWorker implements IDataWorker {
                 });
     }
 
+    public void updateGroup(Group group){
+        groupsRef.document(group.get_groupId()).update(group.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "updated group: " + task.toString());
+                    Repository.getInstance().updateLocalGroup(group);
+                } else {
+                    Log.d(TAG, "problem with update group: " + task.toString());
+                }
+            }
+        });
+    }
+
     public void deleteTask(com.example.doit.model.entities.Task task) {
         groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
                 .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -304,6 +316,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                     }
                 });
     }
+
 
     // endregion
 
