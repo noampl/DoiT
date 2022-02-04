@@ -31,18 +31,12 @@ import java.util.Objects;
 public class LogInFragment extends Fragment {
 
     //region members
+
     private static final String TAG = "Login Fragment";
     private FragmentLogInBinding _binding;
     private LoginViewModel viewModel;
+
     //endregion
-
-    public LogInFragment() {
-        // Required empty public constructor
-    }
-
-    public static LogInFragment newInstance() {
-        return new LogInFragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +54,7 @@ public class LogInFragment extends Fragment {
         viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         _binding.registerButton.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
+
         viewModel.get_Error().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {

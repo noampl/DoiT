@@ -30,22 +30,20 @@ import com.squareup.picasso.Picasso;
 import java.util.Objects;
 
 public class AccountFragment extends Fragment {
+
     //region members
+
     private static final String TAG = "Account Fragment";
     private FragmentAccountBinding _binding;
     private AccountViewModel viewModel;
     private boolean editDetails;
     private boolean image_changed;
+
     //endregion
 
     public AccountFragment() {
         // Required empty public constructor
     }
-
-    public static AccountFragment newInstance() { return new AccountFragment(); }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
