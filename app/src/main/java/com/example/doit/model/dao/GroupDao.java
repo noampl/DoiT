@@ -32,8 +32,11 @@ public interface GroupDao {
     @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
     Group getGroup(String groupId);
 
-    @Query("SELECT * FROM `group` JOIN user WHERE _groupId = :groupId AND _userId ") // TODO frishman please??
+    @Query("SELECT * FROM `group` JOIN user WHERE _groupId = :groupId AND _userId ")
     List<User> getGroupMembers(String groupId);
+
+    @Query("SELECT membersId FROM `group` WHERE :groupId = _groupId")
+    List<String> getMembersId(String groupId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Group...Groups);

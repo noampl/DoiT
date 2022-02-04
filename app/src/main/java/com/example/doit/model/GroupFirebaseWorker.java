@@ -227,7 +227,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Users group updated");
                             for (String id : group.getMembersId()) {
-                                addGroupToUser(Repository.getInstance().getUserFromSql(id), group);
+                                addGroupToUser(Repository.getInstance().getUserFromLocal(id), group);
                             }
                         }
                     }

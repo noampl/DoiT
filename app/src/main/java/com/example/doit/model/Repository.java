@@ -278,7 +278,7 @@ public class Repository {
         _executorService.execute(() -> _tasks.postValue(LocalDB.db.taskDao().getTasksByGroup(groupId)));
     }
 
-    public void deleteTask(com.example.doit.model.entities.Task task) {
+    public void deleteLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {
             LocalDB.db.taskDao().delete(task);
             userFirebaseWorker.deleteTask(task);
@@ -400,7 +400,7 @@ public class Repository {
     }
 
 
-    public User getUserFromSql(String userId) {
+    public User getUserFromLocal(String userId) {
         User user = LocalDB.db.userDao().getUserById(userId);
         if (user == null) {
             userFirebaseWorker.getUser(userId);
@@ -425,9 +425,17 @@ public class Repository {
         return LocalDB.db.taskDao().getTaskById(tasksDetailsId);
     }
 
-    public void setUsersById(String id) { // TODO make it work
+    public void setUsersById(String id) {
         _executorService.execute(() -> {
-            _users.postValue(LocalDB.db.userDao().getUsersByGroup(id));
+            ArrayList<User> members = new ArrayList<>();
+            List<String> membersId = new ArrayList<>(LocalDB.db.groupDao().getMembersId(id));
+            String[] membersArray = membersId.toString().replace("[","").replace("]","").replace("\"","").split(",");
+            for(String userId : membersArray){
+                members.add(LocalDB.db.userDao().getUserById(userId));
+            }
+            if(members.size() > 0){
+                _users.postValue(members);
+            }
         });
     }
 
@@ -448,10 +456,11 @@ public class Repository {
     // region Db interaction
 
     public void deleteGroup(Group group) {
-        _executorService.execute(() -> {
-            LocalDB.db.groupDao().delete(group);
-            _groups.postValue(LocalDB.db.groupDao().getAll());
-        });
+//        _executorService.execute(() -> {
+//            LocalDB.db.groupDao().delete(group);
+//            _groups.postValue(LocalDB.db.groupDao().getAll());
+//        });
+        _executorService.execute(() -> groupFirebaseWorker.deleteUserFromGroup(group, Objects.requireNonNull(get_authUser().getValue())));
     }
 
     public void deleteGroupById(String groupId) {
@@ -460,6 +469,10 @@ public class Repository {
 
     public void updateGroup(Group group) {
         _executorService.execute(() -> groupFirebaseWorker.updateGroup(group));
+    }
+
+    public void deleteTask(com.example.doit.model.entities.Task task){
+        _executorService.execute(() -> groupFirebaseWorker.deleteTask(task));
     }
 
     // endregion
