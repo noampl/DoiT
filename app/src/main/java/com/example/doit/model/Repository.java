@@ -303,7 +303,6 @@ public class Repository {
                 synchronized (this) {
                     LocalDB.db.taskDao().insertAll(task);
                 }
-                _tasks.postValue(LocalDB.db.taskDao().getAll());
             }
         });
     }
@@ -317,6 +316,17 @@ public class Repository {
                     LocalDB.db.groupDao().insertAll(group);
                 }
                 _groups.postValue(LocalDB.db.groupDao().getAll());
+            }
+        });
+    }
+
+    public void updateLocalGroup(Group group){
+        _executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    LocalDB.db.groupDao().update(group);
+                }
             }
         });
     }
@@ -420,7 +430,7 @@ public class Repository {
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
-        _executorService.execute(()->LocalDB.db.taskDao().update(task)); // TODO update firebase
+        _executorService.execute(()->groupFirebaseWorker.updateTask(task));
     }
 
     public int getUserScoreByGroup(User user, String groupId) {
@@ -447,7 +457,7 @@ public class Repository {
     }
 
     public void updateGroup(Group group) {
-        _executorService.execute(()->LocalDB.db.groupDao().update(group));
+        _executorService.execute(()->groupFirebaseWorker.updateGroup(group));
     }
 
     // endregion

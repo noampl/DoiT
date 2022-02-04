@@ -294,6 +294,20 @@ public class GroupFirebaseWorker implements IDataWorker {
                 });
     }
 
+    public void updateGroup(Group group){
+        groupsRef.document(group.get_groupId()).update(group.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "updated group: " + task.toString());
+                    Repository.getInstance().updateLocalGroup(group);
+                } else {
+                    Log.d(TAG, "problem with update group: " + task.toString());
+                }
+            }
+        });
+    }
+
     public void deleteTask(com.example.doit.model.entities.Task task) {
         groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
                 .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
