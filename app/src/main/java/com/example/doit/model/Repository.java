@@ -107,7 +107,6 @@ public class Repository {
         actionBarHelper = new WeakReference<IActionBarHelper>(helper);
     }
 
-
     public String get_taskDetailsId() {
         return _taskDetailsId;
     }
@@ -214,7 +213,10 @@ public class Repository {
     }
 
     public void login(Map<String, String> user) {
-        if (!Objects.equals(user.get("Email"), null) && !Objects.equals(user.get("Password"), null)) {
+        if (!Objects.equals(user.get(Consts.EMAIL), null) && !Objects.equals(user.get(Consts.PASSWORD), null) &&
+                !Objects.equals(user.get(Consts.EMAIL) ,Consts.INVALID_STRING)
+                && !Objects.equals(user.get(Consts.PASSWORD), Consts.INVALID_STRING)) {
+
             userFirebaseWorker.login(user, get_loggedIn());
         }
     }
@@ -229,6 +231,7 @@ public class Repository {
         set_isSynced(false);
         getGroups().setValue(new ArrayList<>());
         get_users().setValue(new ArrayList<>());
+        _authUser.setValue(new User());
         cleanCache();
     }
 

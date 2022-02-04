@@ -27,12 +27,10 @@ public class RegisterViewModel extends ViewModel {
     private MutableLiveData<String> _lastName = new MutableLiveData<>("");
     private MutableLiveData<String> _password = new MutableLiveData<>("");
     private MutableLiveData<String> _email = new MutableLiveData<>("");
-    private MutableLiveData<String> _phoneCountryCode = new MutableLiveData<>(ISRAEL_COUNTRY_CODE);
-    private MutableLiveData<String> _phone = new MutableLiveData<>("");
     private MutableLiveData<String> _passwordValidation = new MutableLiveData<>("");
     private MutableLiveData<Map<String,Boolean>> isClicked = new MutableLiveData<>(new HashMap<>());
     private MutableLiveData<Boolean> attrValid = new MutableLiveData<>(false);
-    private MutableLiveData<String> registerError = new MutableLiveData<>("");
+    private MutableLiveData<String> registerError;
     private Roles _role = Roles.CLIENT;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> passwordsIdentical;
@@ -47,6 +45,7 @@ public class RegisterViewModel extends ViewModel {
         _authUser = repo.get_authUser();
         passwordsIdentical = new MutableLiveData<>();
         passwordsIdentical.setValue(true);
+        registerError = repo.get_remoteError();
         initClicked();
     }
 
@@ -61,6 +60,9 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public Uri getImageUri() {
+        if (ImageUri == null) {
+            ImageUri = Uri.EMPTY;
+        }
         return ImageUri;
     }
 
@@ -101,18 +103,9 @@ public class RegisterViewModel extends ViewModel {
         return _email;
     }
 
-    public MutableLiveData<String> get_phoneCountryCode() {
-        if (_phoneCountryCode == null) { _phoneCountryCode.postValue("+972"); }
-        return _phoneCountryCode;
-    }
-
     public void setPasswordsIdentical(MutableLiveData<Boolean> passwordsIdentical) {
         if(passwordsIdentical == null) { passwordsIdentical = new MutableLiveData<>(); }
         this.passwordsIdentical = passwordsIdentical;
-    }
-
-    public MutableLiveData<String> get_phone() {
-        return _phone;
     }
 
     public MutableLiveData<User> get_authUser() {
@@ -160,14 +153,6 @@ public class RegisterViewModel extends ViewModel {
         this._email.postValue(_email);
     }
 
-    public void set_phoneCountryCode(String _phoneCountryCode) {
-        this._phoneCountryCode.postValue(_phoneCountryCode);
-    }
-
-    public void set_phone(String _phone) {
-        this._phone.postValue(_phone);
-    }
-
     public void set_passwordValidation(String _passwordValidation) {
         this._passwordValidation.postValue(_passwordValidation);
     }
@@ -199,12 +184,6 @@ public class RegisterViewModel extends ViewModel {
         _lastName.postValue(s.toString());
         isClicked.getValue().put("lastName",true);
         _user.setLastName(s.toString());
-    }
-
-    public void onPhoneChange(CharSequence s, int start, int before, int count) {
-        _phone.postValue(s.toString());
-        isClicked.getValue().put("phone",true);
-        _user.setPhone(s.toString());
     }
 
     public void onEmailChange(CharSequence s, int start, int before, int count) {

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.common.Consts;
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
@@ -124,12 +125,9 @@ public class UserFirebaseWorker implements IDataWorker {
         newUser.set_userId((String) Objects.requireNonNull(doc.get("id")));
         newUser.setPassword((String) doc.get("password"));
         newUser.setEmail((String) doc.get("email"));
-        newUser.setPhone((String) doc.get("phone"));
         newUser.setFirstName((String) doc.get("firstName"));
         newUser.setLastName((String) doc.get("lastName"));
-        newUser.setPhone((String) doc.get("phone"));
         newUser.set_groupsId((List<String>) doc.get("groups"));
-        newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
         if (doc.get("role") != null) {
             newUser.setRole(Roles.valueOf((String) doc.get("role")));
         }
@@ -138,8 +136,7 @@ public class UserFirebaseWorker implements IDataWorker {
     }
 
     public User getAuthenticatedUserDetails() {
-        Objects.requireNonNull(authUser.getValue())
-                .setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+        Objects.requireNonNull(authUser.getValue()).setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
         authUser.getValue().set_userId(mAuth.getCurrentUser().getUid());
         return authUser.getValue();
     }
@@ -150,7 +147,7 @@ public class UserFirebaseWorker implements IDataWorker {
 
     public MutableLiveData<String> get_firebaseError() {
         if (_firebaseError == null) {
-            _firebaseError = new MutableLiveData<>();
+            _firebaseError = new MutableLiveData<>(Consts.INVALID_STRING);
         }
         return _firebaseError;
     }
@@ -197,7 +194,6 @@ public class UserFirebaseWorker implements IDataWorker {
             }
         });
     }
-
 
     public void upload_task_image(String uri, com.example.doit.model.entities.Task imgTask) {
         if (uri == null) {
@@ -327,7 +323,7 @@ public class UserFirebaseWorker implements IDataWorker {
                             logedIn.postValue(true);
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            _registerErrorReason = Objects.requireNonNull(task.getException()).getMessage();
+                            _firebaseError.postValue(Objects.requireNonNull(task.getException()).getMessage());
                             logedIn.postValue(false);
                         }
                     }
@@ -407,7 +403,6 @@ public class UserFirebaseWorker implements IDataWorker {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Failed to change password", e);
-                _firebaseError.postValue("Failed to change password");
             }
         });
     }
@@ -417,7 +412,7 @@ public class UserFirebaseWorker implements IDataWorker {
         authUser.postValue((new User()));
         String email = (String) user.get("Email");
         String password = (String) user.get("Password");
-        if (email == null || email.equals("NONE") || password == null || password.equals("NONE") ||
+        if (email == null || email.equals(Consts.INVALID_STRING) || password == null || password.equals(Consts.INVALID_STRING) ||
                 email.equals("") || password.equals("")) {
             Log.d(TAG, "email or password are invalid so connection canceled");
             return null;

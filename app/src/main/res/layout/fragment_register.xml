@@ -16,26 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register"
-            android:textSize="30sp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-             />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profile_image_layout"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             app:cardCornerRadius="250dp"
             android:layout_gravity="center">
 
@@ -55,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:maxLength="20"
             android:inputType="textPersonName"
             android:autofillHints="name"
             android:hint="@string/first_name"
@@ -75,6 +65,7 @@
             android:layout_height="wrap_content"
             android:autofillHints="name"
             android:ems="10"
+            android:maxLength="20"
             android:inputType="textPersonName"
             style="@style/Widget.AppCompat.EditText"
             app:isValid="@{RegisterViewModel.attrValid}"
@@ -94,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:maxLength="20"
             android:inputType="textEmailAddress"
             style="@style/Widget.AppCompat.EditText"
             android:hint="@string/email"
@@ -107,36 +99,18 @@
             />
 
         <EditText
-            android:id="@+id/phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="phone"
-            app:isValid="@{RegisterViewModel.attrValid}"
-            app:regularValidation="@{RegisterViewModel._phone}"
-            app:isClicked="@{RegisterViewModel.isClicked.get(@string/isClickedPhone)}"
-            style="@style/Widget.AppCompat.EditText"
-            android:ems="10"
-            android:inputType="phone"
-            android:hint="@string/phone_number"
-            android:layout_marginTop="10dp"
-            android:onTextChanged="@{RegisterViewModel::onPhoneChange}"
-            app:layout_constraintTop_toBottomOf="@id/email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <EditText
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.EditText"
             android:autofillHints="password"
             android:ems="10"
+            android:maxLength="20"
             android:inputType="textPassword"
             android:hint="@string/password"
             android:layout_marginTop="10dp"
             android:onTextChanged="@{RegisterViewModel::onPasswordChange}"
-            app:layout_constraintTop_toBottomOf="@id/phone"
+            app:layout_constraintTop_toBottomOf="@id/email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             />
@@ -147,6 +121,7 @@
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.EditText"
             android:ems="10"
+            android:maxLength="20"
             android:autofillHints="password"
             android:inputType="textPassword"
             android:hint="@string/password"

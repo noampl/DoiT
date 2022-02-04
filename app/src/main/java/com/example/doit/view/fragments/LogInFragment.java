@@ -11,22 +11,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-import com.example.doit.model.Repository;
+import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentLogInBinding;
 import com.example.doit.viewmodel.LoginViewModel;
-
-import java.util.Objects;
 
 public class LogInFragment extends Fragment {
 
@@ -38,32 +33,61 @@ public class LogInFragment extends Fragment {
 
     //endregion
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    // region LifeCycle
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_log_in, container, false);
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        _binding.setLoginViewModel(viewModel);
-        _binding.setLifecycleOwner(this);
-        viewModel.set_isBottomNavUp(false);
-        viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
-        _binding.registerButton.setOnClickListener(
-                Navigation.createNavigateOnClickListener(R.id.action_logInFragment2_to_registerFragment2));
+        viewModel.get_Error().setValue(Consts.INVALID_STRING);
+        init();
 
+
+        return _binding.getRoot();
+    }
+
+    // endregion
+
+    // region Private Methods
+
+    private void init(){
+        viewModel.set_isBottomNavUp(false);
+        initMenu();
+        initBinding();
+        initObservers();
+        initListeners();
+    }
+
+    private void initListeners(){
+        _binding.registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(
+                        R.id.action_logInFragment2_to_registerFragment2);
+            }
+        });
+    }
+
+    private void initObservers(){
+        viewModel.get_logedIn().observe(getViewLifecycleOwner(),onUserAuthentication());
         viewModel.get_Error().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(s.length() > 0){
+                if(s.length() > 0 && !s.equals(Consts.INVALID_STRING)){
                     Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        return _binding.getRoot();
+    }
+
+    private void initBinding(){
+        _binding.setLoginViewModel(viewModel);
+        _binding.setLifecycleOwner(this);
+    }
+
+    private void initMenu(){
+        viewModel.get_actionBarHelper().get().setNavIcon(null);
     }
 
     private Observer<Boolean> onUserAuthentication() {
@@ -84,7 +108,7 @@ public class LogInFragment extends Fragment {
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
                                 R.id.action_logInFragment2_to_groupsFragment2);
                     } else {
-                       if(viewModel.get_Error() != null && viewModel.get_Error().getValue() != null){
+                       if(viewModel.get_Error() != null && !viewModel.get_Error().getValue().equals(Consts.INVALID_STRING)){
                            Toast.makeText(getContext(), viewModel.get_Error().getValue(), Toast.LENGTH_SHORT).show();
                        }
                     }
@@ -103,4 +127,7 @@ public class LogInFragment extends Fragment {
             editor.apply();
         }
     }
+
+    // endregion
+
 }
