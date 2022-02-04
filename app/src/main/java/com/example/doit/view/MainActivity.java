@@ -45,10 +45,8 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
     private ActivityMainBinding _binding;
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-    private HashMap<String,String> credentials;
     private AccountViewModel accountViewModel;
     private NavHostFragment navHostFragment;
-    private boolean _triedToConnect;
     private AppBarConfiguration _appBarConfiguration;
 
     // endregion
@@ -66,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
         context = getApplicationContext();
-        Repository.getInstance().login(getUserCredentials());
         init();
     }
 
@@ -114,26 +111,7 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
         });
     }
 
-    private Map<String, String> getUserCredentials(){
-        if(_triedToConnect){
-            return credentials;
-        }
-        _triedToConnect = true;
-        credentials = new HashMap<>();
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        credentials.put("Email",sharedPref.getString(getString(R.string.email), "NONE"));
-        credentials.put("Password",sharedPref.getString(getString(R.string.password), "NONE"));
-        saveUserForLater();
-        return credentials;
-    }
 
-    private void saveUserForLater(){
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), getUserCredentials().get("Email"));
-        editor.putString(getString(R.string.password), getUserCredentials().get("Password"));
-        editor.apply();
-    }
 
     private void exitDialog(){
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(this).create();
@@ -147,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
                 alertDialog.dismiss());
         alertDialog.show();
     }
+
+    // endregion
+
+    // region IActionBarHelper
 
     @Override
     public void setNavIcon(Integer id) {
@@ -195,14 +177,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
             case R.id.exitButton:
                 exitDialog();
                 return true;
-            case R.id.delete:
-                // TODO
-                Log.d("Peleg", "DELETE in main activity");
-                break;
-            case R.id.edit:
-                // TODO
-                Log.d("Peleg", "EDIT in main activity");
-                break;
             default:
                 Log.e("MainActivity", "Unrecognaize item pressed");
         }

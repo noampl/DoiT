@@ -70,6 +70,9 @@ public class LoginViewModel extends ViewModel {
         return Repository.getInstance().get_remoteError();
     }
 
+    public void login(Map<String, String> user){
+        Repository.getInstance().login(user);
+    }
 
     public boolean Login(String email, String password){
         Log.d(TAG, "Login: " + email);

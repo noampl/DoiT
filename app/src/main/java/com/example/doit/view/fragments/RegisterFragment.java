@@ -29,27 +29,16 @@ import com.example.doit.databinding.FragmentRegisterBinding;
 import com.example.doit.viewmodel.RegisterViewModel;
 import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RegisterFragment extends Fragment{
+
+    // region Members
+
     private FragmentRegisterBinding _binding;
     private RegisterViewModel viewModel;
 
-    public RegisterFragment() {
-        // Required empty public constructor
-    }
+    // endregion
 
-    public static RegisterFragment newInstance() {
-        return new RegisterFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    // region LifeCycle
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -66,6 +55,10 @@ public class RegisterFragment extends Fragment{
                 .into(_binding.profileImageButton);
         return _binding.getRoot();
     }
+
+    // endregion
+
+    // region Private Methods
 
     private Observer<Boolean> passwordIdenticalObserver(){
         return new Observer<Boolean>() {
@@ -139,4 +132,6 @@ public class RegisterFragment extends Fragment{
         editor.putString(getString(R.string.password), viewModel.get_password().getValue());
         editor.apply();
     }
+
+    // endregionl
 }

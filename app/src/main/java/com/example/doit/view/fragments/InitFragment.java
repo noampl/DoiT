@@ -19,13 +19,16 @@ import com.example.doit.R;
 import com.example.doit.databinding.FragmentInitBinding;
 import com.example.doit.viewmodel.LoginViewModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class InitFragment extends Fragment {
 
-    private String _email;
-    private String _password;
-    private NavController _navController;
     private LoginViewModel _loginViewModel;
+    private boolean _triedToConnect;
+    private HashMap<String,String> credentials;
+
 
     public InitFragment() {
         // Required empty public constructor
@@ -42,27 +45,35 @@ public class InitFragment extends Fragment {
                 if (aBoolean) {
                         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
                                 .navigate(R.id.action_initFragment_to_groupsFragment2);
-                    } else {
-                        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
-                                .navigate(R.id.action_initFragment_to_logInFragment2);
-                    }
+                }
+                else {
+                    Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                            .navigate(R.id.action_initFragment_to_logInFragment2);
+                }
             }
         });
+        _loginViewModel.login(getUserCredentials());
         return binding.getRoot();
     }
 
-    private boolean isUserExist(){
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        _email = sharedPref.getString(getString(R.string.email), "NONE");
-        _password  = sharedPref.getString(getString(R.string.password), "NONE");
-        return !(_email.equals("NONE") || _password.equals("NONE"));
+    private Map<String, String> getUserCredentials(){
+        if(_triedToConnect){
+            return credentials;
+        }
+        _triedToConnect = true;
+        credentials = new HashMap<>();
+        SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        credentials.put("Email",sharedPref.getString(getString(R.string.email), "NONE"));
+        credentials.put("Password",sharedPref.getString(getString(R.string.password), "NONE"));
+        saveUserForLater();
+        return credentials;
     }
 
     private void saveUserForLater(){
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), _email);
-        editor.putString(getString(R.string.password), _password);
+        editor.putString(getString(R.string.email), getUserCredentials().get("Email"));
+        editor.putString(getString(R.string.password), getUserCredentials().get("Password"));
         editor.apply();
     }
 }
