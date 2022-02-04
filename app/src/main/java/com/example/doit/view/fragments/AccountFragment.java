@@ -2,7 +2,9 @@ package com.example.doit.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -41,29 +43,58 @@ public class AccountFragment extends Fragment {
 
     //endregion
 
-    public AccountFragment() {
-        // Required empty public constructor
-    }
+    // region LifeCycle
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container,false);
         viewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        _binding.setAccountViewModel(viewModel);
-        _binding.setLifecycleOwner(this);
-        editDetails = false;
-        _binding.userEditButton.setOnClickListener(userEditButtonListener);
-        _binding.profileImage.setOnClickListener(profileImageListener);
-        _binding.profileImage.setClickable(false);
-        _binding.profileImage.setEnabled(false);
-        viewModel.updateUserDetails();
-        viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
-        viewModel.get_operationError().observe(getViewLifecycleOwner(),errorHandler());
+        init();
+
         return _binding.getRoot();
     }
 
-    ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
+    // endregion
+
+    // region Private Methods
+
+    private void init(){
+        initBinding();
+        initObservers();
+        initListeners();
+        viewModel.updateUserDetails();
+
+    }
+
+    private void initListeners(){
+        _binding.userEditButton.setOnClickListener(userEditButtonListener);
+        _binding.profileImage.setOnClickListener(profileImageListener);
+        _binding.logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearLoginUser();
+                viewModel.onClickLogoutButton();
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).
+                        navigate(R.id.action_accountFragment2_to_logInFragment2);
+            }
+        });
+    }
+
+    private void initObservers(){
+        viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
+        viewModel.get_operationError().observe(getViewLifecycleOwner(),errorHandler());
+    }
+
+    private void initBinding(){
+        _binding.setAccountViewModel(viewModel);
+        _binding.setLifecycleOwner(this);
+        editDetails = false;
+        _binding.profileImage.setClickable(false);
+        _binding.profileImage.setEnabled(false);
+    }
+
+    private final ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -79,6 +110,17 @@ public class AccountFragment extends Fragment {
                 }
             }
     );
+
+    private void clearLoginUser(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear().apply();
+        editor.putString(getString(R.string.email), "NONE");
+        editor.putString(getString(R.string.password), "NONE");
+        editor.apply();
+    }
+
+    // region Observers
 
     private Observer<String> errorHandler() {
         return new Observer<String>() {
@@ -105,8 +147,11 @@ public class AccountFragment extends Fragment {
         }
     };
 
+    // endregion
+
     //region listeners
-    View.OnClickListener profileImageListener = new View.OnClickListener() {
+
+    private final View.OnClickListener profileImageListener = new View.OnClickListener() {
         @SuppressLint("IntentReset")
         @Override
         public void onClick(View v) {
@@ -116,7 +161,7 @@ public class AccountFragment extends Fragment {
         }
     };
 
-    View.OnClickListener userEditButtonListener = new View.OnClickListener() {
+    private final View.OnClickListener userEditButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Boolean editDetails = viewModel.getEditDetails().getValue();
@@ -129,5 +174,8 @@ public class AccountFragment extends Fragment {
             }
         }
     };
-}
+
     // endregion
+
+    // endregion
+}

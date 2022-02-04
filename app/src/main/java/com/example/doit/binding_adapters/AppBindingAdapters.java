@@ -1,6 +1,7 @@
 package com.example.doit.binding_adapters;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +18,7 @@ import com.example.doit.viewmodel.UsersViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.squareup.picasso.Picasso;
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,7 +26,7 @@ public class AppBindingAdapters {
 
     @BindingAdapter("image")
     public static void setImage(ImageButton v, String image) {
-        if (image != null) {
+        if (image != null && !image.equals(Uri.EMPTY.toString())) {
             Picasso.with(v.getContext()).load(image).fit().into(v);
         }
     }

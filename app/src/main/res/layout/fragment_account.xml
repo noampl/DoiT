@@ -112,7 +112,6 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="@string/logout"
-        android:onClick="@{() -> AccountViewModel.onClickLogoutButton()}"
         android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

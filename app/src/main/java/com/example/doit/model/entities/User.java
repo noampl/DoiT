@@ -25,8 +25,7 @@ public class User {
     private static final String TAG = "User Model";
     @Ignore
     private static final String NO_IMAGE = "no_image";
-    @Ignore
-    private static final String ISRAEL_COUNRTY_CODE = "+972";
+
     @PrimaryKey(autoGenerate = false)
     @NonNull
     private String _userId;
@@ -35,8 +34,6 @@ public class User {
     private String _firstName;
     private String _password;
     private String _image;
-    private String _phone;
-    private String _countryPhoneCode;
     @TypeConverters(Converters.class)
     private Roles _role;
     private List<String> _groupsId;
@@ -46,7 +43,6 @@ public class User {
 
     public User() {
         _role = Roles.CLIENT;
-        _countryPhoneCode = "+972";
     }
 
     @Ignore
@@ -57,8 +53,6 @@ public class User {
         this._lastName = _lastName;
         this._password = _password;
         this._image = _image;
-        this._phone = _phone;
-        this._countryPhoneCode = _countryPhoneCode;
         this._role = _role;
         this._firstName = firstName;
         this._groupsId = groups;
@@ -66,7 +60,7 @@ public class User {
 
     // endregion
 
-    // endregion Properties
+    // region Properties
 
     public String get_userId() {
         if (_userId == null)
@@ -118,10 +112,6 @@ public class User {
         this._userId = _userId;
     }
 
-    public void setPhoneCountryCode(String phoneCountryCode) {
-        _countryPhoneCode = phoneCountryCode;
-    }
-
     public void addGroupOrUpdate(Group group){
         for(String groupId : get_groupsId()){
             if(Objects.equals(groupId, group.get_groupId())){
@@ -145,26 +135,6 @@ public class User {
         this._image = _image;
     }
 
-    public String get_phone() {
-        if (_phone == null)
-            _phone = "";
-        return _phone;
-    }
-
-    public void setPhone(String _phone) {
-        this._phone = _phone;
-    }
-
-    public String get_countryPhoneCode() {
-        if (_countryPhoneCode == null)
-            _countryPhoneCode = "";
-        return _countryPhoneCode;
-    }
-
-    public void setCountryPhoneCode(String _countryPhoneCode) {
-        this._countryPhoneCode = _countryPhoneCode;
-    }
-
     public Roles get_role() {
         return _role;
     }
@@ -184,7 +154,7 @@ public class User {
 
     // endregion
 
-    //todo: add setImage
+    // region Public Methods
 
     public Map<String, Object> create(){
         Map<String, Object> user = new HashMap<String, Object>();
@@ -192,14 +162,16 @@ public class User {
         user.put("firstName",get_firstName());
         user.put("lastName",get_lastName());
         user.put("role",get_role());
-        user.put("phone",get_phone());
-        user.put("countryCode",get_countryPhoneCode());
         user.put("image",get_image());
         user.put("groups", get_groupsId());
 
 
         return user;
     }
+
+    // endregion
+
+    // region Object
 
     @Override
     public String toString() {
@@ -210,8 +182,6 @@ public class User {
                 ", _firstName='" + _firstName + '\'' +
                 ", _password='" + _password + '\'' +
                 ", _image='" + _image + '\'' +
-                ", _phone='" + _phone + '\'' +
-                ", _countryPhoneCode='" + _countryPhoneCode + '\'' +
                 ", _role=" + _role +
                 ", _groups=" + _groupsId +
                 '}';
@@ -229,6 +199,8 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(_userId, _email, _lastName, _firstName, _password, _image, _phone, _countryPhoneCode, _role, _groupsId);
+        return Objects.hash(_userId, _email, _lastName, _firstName, _password, _image, _role, _groupsId);
     }
+
+    // endregion
 }

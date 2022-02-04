@@ -71,12 +71,9 @@ public class firebaseUtils {
         newUser.set_userId((String) Objects.requireNonNull(doc.get("id")));
         newUser.setPassword((String) doc.get("password"));
         newUser.setEmail((String) doc.get("email"));
-        newUser.setPhone((String) doc.get("phone"));
         newUser.setFirstName((String) doc.get("firstName"));
         newUser.setLastName((String) doc.get("lastName"));
-        newUser.setPhone((String) doc.get("phone"));
         newUser.set_groupsId((List<String>) doc.get("groups"));
-        newUser.setPhoneCountryCode((String) doc.get("phone_country_code"));
         if (doc.get("role") != null) {
             newUser.setRole(Roles.valueOf((String) doc.get("role")));
         }

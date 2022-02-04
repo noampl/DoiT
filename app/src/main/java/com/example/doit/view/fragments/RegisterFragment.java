@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentRegisterBinding;
@@ -45,20 +46,37 @@ public class RegisterFragment extends Fragment{
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
         viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-        viewModel.get_authUser().observe(getViewLifecycleOwner(), loggedInObserver());
-        viewModel.getPasswordsIdentical().observe(getViewLifecycleOwner(), passwordIdenticalObserver());
-        viewModel.getRegisterError().observe(getViewLifecycleOwner(), errorObserver());
-        _binding.setRegisterViewModel(viewModel);
-        _binding.setLifecycleOwner(this);
-        _binding.profileImageButton.setOnClickListener(replaceImage());
-        Picasso.with(_binding.getRoot().getContext()).load(R.drawable.no_profile_picture).fit()
-                .into(_binding.profileImageButton);
+        viewModel.getRegisterError().setValue(Consts.INVALID_STRING);
+        init();
         return _binding.getRoot();
     }
 
     // endregion
 
     // region Private Methods
+
+    private void init(){
+        initObservers();
+        initBinding();
+        initListeners();
+        Picasso.with(_binding.getRoot().getContext()).load(R.drawable.no_profile_picture).fit()
+                .into(_binding.profileImageButton);
+    }
+
+    private void initObservers(){
+        viewModel.get_authUser().observe(getViewLifecycleOwner(), loggedInObserver());
+        viewModel.getPasswordsIdentical().observe(getViewLifecycleOwner(), passwordIdenticalObserver());
+        viewModel.getRegisterError().observe(getViewLifecycleOwner(), errorObserver());
+    }
+
+    private void initBinding(){
+        _binding.setRegisterViewModel(viewModel);
+        _binding.setLifecycleOwner(this);
+    }
+
+    private void initListeners(){
+        _binding.profileImageButton.setOnClickListener(replaceImage());
+    }
 
     private Observer<Boolean> passwordIdenticalObserver(){
         return new Observer<Boolean>() {
@@ -77,7 +95,7 @@ public class RegisterFragment extends Fragment{
         return new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(s != null && !s.equals("")){
+                if(s != null && !s.equals(Consts.INVALID_STRING)){
                     Toast.makeText(getContext(), s,Toast.LENGTH_SHORT).show();
                 }
             }
@@ -88,7 +106,7 @@ public class RegisterFragment extends Fragment{
         return new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                if (user.get_userId() != null) {
+                if (user.get_userId() != null && user.get_userId().length() > 5) {
                     Toast.makeText(getContext(), "hello " + user.get_firstName(), Toast.LENGTH_SHORT).show();
                     saveUserForLater();
                     Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(

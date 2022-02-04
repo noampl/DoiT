@@ -5,11 +5,15 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.common.Consts;
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginViewModel extends ViewModel {
 
@@ -22,6 +26,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<Boolean> _isBottomNavUp;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _logedIn;
+    private WeakReference<IActionBarHelper> _actionBarHelper;
 
     //endregion
 
@@ -30,7 +35,12 @@ public class LoginViewModel extends ViewModel {
         _password = "";
         _isBottomNavUp = Repository.getInstance().get_isBottomNavigationUp();
         _logedIn = Repository.getInstance().get_loggedIn();
+        _actionBarHelper = Repository.getInstance().getActionBarHelper();
 
+    }
+
+    public WeakReference<IActionBarHelper> get_actionBarHelper() {
+        return _actionBarHelper;
     }
 
     public String getUserName(){
@@ -70,16 +80,18 @@ public class LoginViewModel extends ViewModel {
         return Repository.getInstance().get_remoteError();
     }
 
-    public void login(Map<String, String> user){
+    public void login(Map<String, String> user) {
+        if (Objects.equals(user.get(Consts.EMAIL), Consts.INVALID_STRING) ||
+                Objects.equals(user.get(Consts.PASSWORD), Consts.INVALID_STRING)){
+            return;
+        }
         Repository.getInstance().login(user);
     }
 
     public boolean Login(String email, String password){
-        Log.d(TAG, "Login: " + email);
-        Log.d(TAG, "Password: " + password);
         Map<String, String> user = new HashMap<>();
-        user.put("Email", email);
-        user.put("Password", password);
+        user.put(Consts.EMAIL, email);
+        user.put(Consts.PASSWORD, password);
         if(email != null && !email.equals("") &&  password != null && !password.equals("")){
             Repository.getInstance().login(user);
         }

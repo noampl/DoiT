@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.common.Consts;
 import com.example.doit.databinding.FragmentInitBinding;
 import com.example.doit.viewmodel.LoginViewModel;
 
@@ -25,14 +26,15 @@ import java.util.Map;
 
 public class InitFragment extends Fragment {
 
+    // region Members
+
     private LoginViewModel _loginViewModel;
     private boolean _triedToConnect;
     private HashMap<String,String> credentials;
 
+    // endregion
 
-    public InitFragment() {
-        // Required empty public constructor
-    }
+    // region LifeCycle
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +58,10 @@ public class InitFragment extends Fragment {
         return binding.getRoot();
     }
 
+    // endregion
+
+    // region Private Methods
+
     private Map<String, String> getUserCredentials(){
         if(_triedToConnect){
             return credentials;
@@ -63,8 +69,8 @@ public class InitFragment extends Fragment {
         _triedToConnect = true;
         credentials = new HashMap<>();
         SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
-        credentials.put("Email",sharedPref.getString(getString(R.string.email), "NONE"));
-        credentials.put("Password",sharedPref.getString(getString(R.string.password), "NONE"));
+        credentials.put(Consts.EMAIL,sharedPref.getString(getString(R.string.email), Consts.INVALID_STRING));
+        credentials.put(Consts.PASSWORD,sharedPref.getString(getString(R.string.password), Consts.INVALID_STRING));
         saveUserForLater();
         return credentials;
     }
@@ -72,8 +78,11 @@ public class InitFragment extends Fragment {
     private void saveUserForLater(){
         SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.email), getUserCredentials().get("Email"));
-        editor.putString(getString(R.string.password), getUserCredentials().get("Password"));
+        editor.putString(getString(R.string.email), getUserCredentials().get(Consts.EMAIL));
+        editor.putString(getString(R.string.password), getUserCredentials().get(Consts.PASSWORD));
         editor.apply();
     }
+
+    // endregion
+
 }
