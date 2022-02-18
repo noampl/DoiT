@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +15,7 @@ public class UsersViewModel extends ViewModel {
     // region Members
 
     private MutableLiveData<List<User>> _users;
-    private List<User> _selectedUser;
+    private MutableLiveData<List<User>> _selectedUser;
 
     // endregion
 
@@ -29,12 +30,12 @@ public class UsersViewModel extends ViewModel {
 
     // region Properties
 
-    public List<User> get_selectedUser() {
+    public MutableLiveData<List<User>> get_selectedUser() {
         return _selectedUser;
     }
 
     public void set_selectedUser(List<User> _selectedUser) {
-        this._selectedUser = _selectedUser;
+        this._selectedUser.setValue(_selectedUser);
     }
 
     public MutableLiveData<List<User>> get_users() {
@@ -53,22 +54,25 @@ public class UsersViewModel extends ViewModel {
         Repository.getInstance().searchUsersByNameOrMail(query);
     }
 
-    public void addUser(int position) {
-        User temp = _users.getValue().get(position);
-        if (_selectedUser.contains(temp)) {
-            _selectedUser.remove(temp);
+    public void addUser(User user) {
+        List<User> tmpList = _selectedUser.getValue();
+        if (tmpList.contains(user)) {
+            tmpList.remove(user);
         }
         else{
-            _selectedUser.add(temp);
+            tmpList.add(user);
         }
+        _selectedUser.setValue(tmpList);
     }
 
     public void setUsersById(String groupId){
         Repository.getInstance().setUsersById(groupId); // TODO this is not working
     }
 
-    public void removeUser(int position){
-        _selectedUser.remove(_users.getValue().get(position));
+    public void removeUser(User user){
+        List<User> tmpList = _selectedUser.getValue();
+        tmpList.remove(user);
+        _selectedUser.setValue(tmpList);
     }
 
     public void submitUsers() {

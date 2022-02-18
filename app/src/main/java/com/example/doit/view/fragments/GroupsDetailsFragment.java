@@ -56,8 +56,15 @@ public class GroupsDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups_details, container, false);
         _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        CompletableFuture<Group> group = _groupsViewModel.getGroupById(groupId);
+        group.thenAccept((group1) ->{
+            _group = group1;
+            _binding.setGroup(group1);
+            _groupsViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
+
+        });
         _usersViewModel.setUsersById(groupId);
-        init(groupId);
+        init();
 
         _binding.executePendingBindings();
         return _binding.getRoot();
@@ -67,27 +74,22 @@ public class GroupsDetailsFragment extends Fragment {
 
     // region Private Methods
 
-    private void init(String groupId) {
-       initBinding(groupId);
+    private void init() {
+       initBinding();
        initListeners();
        initMenu();
     }
 
     private void initMenu() {
-        _groupsViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
         _groupsViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
         _groupsViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
     }
 
-    private void  initBinding(String groupId) {
-        CompletableFuture<Group> group = _groupsViewModel.getGroupById(groupId);
+    private void  initBinding() {
         _groupsViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
         _binding.setGroupsViewModel(_groupsViewModel);
         _binding.setLifecycleOwner(getViewLifecycleOwner());
-        group.thenAccept((group1) ->{
-            _group = group1;
-            _binding.setGroup(group1);
-        });
+
     }
 
     private void initListeners(){

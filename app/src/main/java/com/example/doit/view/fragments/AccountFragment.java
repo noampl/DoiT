@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentAccountBinding;
@@ -126,7 +127,7 @@ public class AccountFragment extends Fragment {
         return new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(!Objects.equals(s, "")) {
+                if(!Objects.equals(s, "") && !Objects.equals(s, Consts.INVALID_STRING)) {
                     Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
                     viewModel.updateUserDetails();
                     viewModel.get_operationError().postValue("");

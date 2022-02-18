@@ -57,7 +57,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         String groupId = AdditionDialogArgs.fromBundle(getArguments()).getGroupId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.addition_dialog_fragment, container, false);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        usersViewModel.get_selectedUser().clear();
+        usersViewModel.set_selectedUser(new ArrayList<>());
 
         if(groupId != null && !groupId.equals("")){
             usersViewModel.setUsersById(groupId);

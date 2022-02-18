@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.UsersViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.squareup.picasso.Picasso;
@@ -38,16 +39,16 @@ public class AppBindingAdapters {
         }
     }
 
-    @BindingAdapter({"onChecked", "position"})
-    public static void onChecked(CheckBox checkBox, UsersViewModel viewModel, int position) {
+    @BindingAdapter({"onChecked", "user"})
+    public static void onChecked(CheckBox checkBox, UsersViewModel viewModel, User user) {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isChecked()) {
-                    viewModel.addUser(position);
+                    viewModel.addUser(user);
                 }
                 else{
-                    viewModel.removeUser(position);
+                    viewModel.removeUser(user);
                 }
             }
     });

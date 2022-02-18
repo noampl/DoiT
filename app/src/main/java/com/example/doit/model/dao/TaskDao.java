@@ -39,7 +39,7 @@ public interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Task...Tasks);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Task task);
 
     @Delete
