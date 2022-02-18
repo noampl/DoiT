@@ -33,6 +33,7 @@ import com.example.doit.viewmodel.UsersViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class GroupsDetailsFragment extends Fragment {
 
@@ -79,11 +80,14 @@ public class GroupsDetailsFragment extends Fragment {
     }
 
     private void  initBinding(String groupId) {
-        _group = _groupsViewModel.getGroupById(groupId);
+        CompletableFuture<Group> group = _groupsViewModel.getGroupById(groupId);
         _groupsViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
-        _binding.setGroup(_group);
         _binding.setGroupsViewModel(_groupsViewModel);
         _binding.setLifecycleOwner(getViewLifecycleOwner());
+        group.thenAccept((group1) ->{
+            _group = group1;
+            _binding.setGroup(group1);
+        });
     }
 
     private void initListeners(){

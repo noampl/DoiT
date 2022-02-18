@@ -65,8 +65,12 @@ public class TasksDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        _task = _taskViewModel.getTaskById(taskId);
-        _usersViewModel.setUsersById(_task.get_groupId());
+        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
+        _taskViewModel.getTaskById(taskId).thenAccept((t)->{
+            _task = t;
+            _usersViewModel.setUsersById(_task.get_groupId());
+            initBinding();
+        });
         init();
 
         // Inflate the layout for this fragment
@@ -79,7 +83,6 @@ public class TasksDetailsFragment extends Fragment {
 
     private void init(){
         initTollBar();
-        initBinding();
         initListeners();
         initObservers();
     }
@@ -93,9 +96,10 @@ public class TasksDetailsFragment extends Fragment {
         _taskViewModel.setTargetDate(_task.get_targetDate());
         _binding.valueSpinner.setAdapter( ArrayAdapter.createFromResource(requireContext(),
                 R.array.values, R.layout.value_spinner));
-        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
         _binding.assigneeSpinner.setAdapter(_usersAdapter);
         _binding.setLifecycleOwner(this);
+        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
+        _binding.executePendingBindings();
     }
 
     private void initTollBar(){
@@ -156,7 +160,6 @@ public class TasksDetailsFragment extends Fragment {
     }
 
     private void initObservers() {
-        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
         _taskViewModel.get_isEdit().observe(getViewLifecycleOwner(), isEdit -> {
             if (isEdit){
                 _binding.taskDescSwitcher.showNext();

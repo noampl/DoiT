@@ -16,6 +16,7 @@ import com.example.doit.interfaces.IDialogNavigationHelper;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * THis View Model holds all the logged in user's groups
@@ -171,7 +172,7 @@ public class GroupsViewModel extends ViewModel {
         set_selectedPosition(Consts.INVALID_POSITION);
     }
 
-    public Group getGroupById(String id){
+    public CompletableFuture<Group> getGroupById(String id){
         return Repository.getInstance().getGroupById(id);
     }
 

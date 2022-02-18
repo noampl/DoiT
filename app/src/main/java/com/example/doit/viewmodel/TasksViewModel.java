@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class TasksViewModel extends ViewModel {
 
@@ -125,11 +126,11 @@ public class TasksViewModel extends ViewModel {
 
     // region Public
 
-    public Task getTaskById(String taskId) {
+    public CompletableFuture<Task> getTaskById(String taskId) {
         return Repository.getInstance().getTaskById(taskId);
     }
 
-    public Group getGroupByTask(Task task) {
+    public CompletableFuture<Group> getGroupByTask(Task task) {
             return Repository.getInstance().getGroupById(task.get_groupId());
     }
 
@@ -174,7 +175,7 @@ public class TasksViewModel extends ViewModel {
 
     public void getTasksByGroupId(String groupId) {
         set_groupId(groupId);
-        set_tasks(Repository.getInstance().getTasksByGroupId(groupId));
+        Repository.getInstance().getTasksByGroupId(groupId).thenAccept(this::set_tasks);
     }
 
     public void setTargetDate(DatePicker datePicker){

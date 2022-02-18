@@ -74,7 +74,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
         adapter.set_tasksViewModel(_tasksViewModel);
         _tasksViewModel.fetchTasks();
         _tasksViewModel.set_iFragmentNavigationHelper(this);
-        adapter.submitList(_tasksViewModel.get_tasks().getValue());
+        adapter.submitList(_tasksViewModel.get_tasks().getValue().stream().filter(t->(t.get_finishDate() != 0)).collect(Collectors.toList()));
         _binding.taskLst.setAdapter(adapter);
         _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
