@@ -287,7 +287,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "updated task: " + task.toString());
-                        Repository.getInstance().insertTaskLocal(task);
+                        Repository.getInstance().updateLocalTask(task);
                     }
                 });
     }

@@ -162,10 +162,10 @@ public class TasksViewModel extends ViewModel {
         }
         String ImageUri = uri != null ? uri.toString() : "";
 
-        if (Repository.getInstance().get_selectedUsers().size() == 0) {
+        if (Repository.getInstance().get_selectedUsers().getValue().size() == 0) {
             _assigneeId = "";
         } else {
-            _assigneeId = Repository.getInstance().get_selectedUsers().get(0).get_userId();
+            _assigneeId = Repository.getInstance().get_selectedUsers().getValue().get(0).get_userId();
         }
         Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
                 (_targetDate.getValue() != null ? _targetDate.getValue() : 0), _createdById, _assigneeId, taskValue, ImageUri);
@@ -212,6 +212,10 @@ public class TasksViewModel extends ViewModel {
 
     public void deleteTask(Task task) {
         Repository.getInstance().deleteTask(task);
+    }
+
+    public void deleteTask(int index) {
+        Repository.getInstance().deleteTask(_tasks.getValue().get(index));
     }
 
     public void setTaskChecked(Task task, boolean isChecked) {

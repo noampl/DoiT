@@ -54,7 +54,7 @@ public class Repository {
     private final UserFirebaseWorker userFirebaseWorker;
     private final GroupFirebaseWorker groupFirebaseWorker;
     private MutableLiveData<Boolean> _isSynced;
-    private List<User> _selectedUsers = new ArrayList<>();
+    private MutableLiveData<List<User>> _selectedUsers = new MutableLiveData<>(new ArrayList<>());
     private String _taskDetailsId = "";
     /**
      * Uses for addGroup dialog
@@ -108,7 +108,7 @@ public class Repository {
         return _taskDetailsId;
     }
 
-    public List<User> get_selectedUsers() {
+    public MutableLiveData<List<User>> get_selectedUsers() {
         return this._selectedUsers;
     }
 
@@ -357,7 +357,7 @@ public class Repository {
             @Override
             public void run() {
                 synchronized (this) {
-                    LocalDB.db.taskDao().insertAll(task);
+                   LocalDB.db.taskDao().insertAll(task);
                 }
             }
         });
@@ -436,6 +436,21 @@ public class Repository {
 
     public void updateTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> groupFirebaseWorker.updateTask(task));
+    }
+
+    public void updateLocalTask(com.example.doit.model.entities.Task task) {
+        _executorService.execute(() -> {
+            LocalDB.db.taskDao().update(task);
+            List<com.example.doit.model.entities.Task> tmp = _tasks.getValue();
+            for (com.example.doit.model.entities.Task t : _tasks.getValue()){
+                if (t.get_taskId().equals(task.get_taskId())){
+                    tmp.remove(t);
+                    break;
+                }
+            }
+            tmp.add(task);
+            _tasks.postValue(tmp);
+        });
     }
 
     public CompletableFuture<Integer> getUserScoreByGroup(User user, String groupId) {

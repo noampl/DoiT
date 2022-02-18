@@ -10,14 +10,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -32,17 +30,16 @@ import android.widget.DatePicker;
 import com.example.doit.R;
 import com.example.doit.databinding.FragmentTasksDetailsBinding;
 import com.example.doit.model.entities.Task;
-import com.example.doit.model.entities.User;
-import com.example.doit.view.adapters.AdditionAdapter;
 import com.example.doit.view.adapters.UsersAdapter;
 import com.example.doit.viewmodel.TasksViewModel;
 import com.example.doit.viewmodel.UsersViewModel;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
 
 public class TasksDetailsFragment extends Fragment {
 
@@ -53,24 +50,22 @@ public class TasksDetailsFragment extends Fragment {
     private UsersViewModel _usersViewModel;
     private UsersAdapter _usersAdapter;
     private Task _task;
+    private String _prevAssigneeId;
 
     // endregion
 
     // region LifeCycle
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String taskId = TasksDetailsFragmentArgs.fromBundle(getArguments()).getTaskId();
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
-        _taskViewModel.getTaskById(taskId).thenAccept((t)->{
-            _task = t;
-            _usersViewModel.setUsersById(_task.get_groupId());
-            initBinding();
-        });
+        _binding.assigneeSpinner.setAdapter(_usersAdapter);
+        _taskViewModel.getTaskById(taskId).thenAccept(this::onFutureComplete);
         init();
 
         // Inflate the layout for this fragment
@@ -85,20 +80,15 @@ public class TasksDetailsFragment extends Fragment {
         initTollBar();
         initListeners();
         initObservers();
+        initBinding();
     }
 
     private void initBinding(){
-        _binding.setTask(_task);
-        _binding.setAssignee(_taskViewModel.getUserById(_task.get_assigneeId()));
-        _binding.setOpenBy(_taskViewModel.getUserById(_task.get_createdById()));
         _binding.setTaskViewModel(_taskViewModel);
         _binding.setTargetDate(_taskViewModel.get_targetDate());
-        _taskViewModel.setTargetDate(_task.get_targetDate());
-        _binding.valueSpinner.setAdapter( ArrayAdapter.createFromResource(requireContext(),
+        _binding.valueSpinner.setAdapter(ArrayAdapter.createFromResource(requireContext(),
                 R.array.values, R.layout.value_spinner));
-        _binding.assigneeSpinner.setAdapter(_usersAdapter);
         _binding.setLifecycleOwner(this);
-        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
         _binding.executePendingBindings();
     }
 
@@ -149,6 +139,7 @@ public class TasksDetailsFragment extends Fragment {
                 _taskViewModel.saveChanges(_task, _binding.taskNameEdit.getText().toString(),
                         _binding.taskDescEdit.getText().toString());
                 _binding.setTask(_task);
+                _usersViewModel.set_selectedUser(new ArrayList<>());
         });
 
         _binding.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -173,13 +164,35 @@ public class TasksDetailsFragment extends Fragment {
                 _binding.valueNumberSwitcher.showNext();
                 _binding.assigneeAvatarSwitcher.showNext();
             }
+            _binding.setIsEdit(isEdit);
         });
         _usersViewModel.get_users().observe(getViewLifecycleOwner(), users -> {
             _usersAdapter.set_users(users);
             _usersAdapter.notifyDataSetChanged();
-            Log.d("Peleg", "set users at taskDetails size " + users.size());
         });
+        _usersViewModel.get_selectedUser().observe(getViewLifecycleOwner(), users ->{
+                if (users!= null && users.size() > 0) {
+                    _binding.setAssignee(users.get(0));
+                    _task.set_assigneeId(users.get(0).get_userId());
+                    _binding.executePendingBindings();
+                    Log.d("peleg", "set selected user to " + users.get(0).get_firstName());
+                }
+                else {
+                    if (_prevAssigneeId != null)
+                        _task.set_assigneeId(_prevAssigneeId);
+                }
+        });
+    }
 
+    private void onFutureComplete(Task task){
+        _task = task;
+        _prevAssigneeId = task.get_assigneeId();
+        _usersViewModel.setUsersById(_task.get_groupId());
+        _binding.setTask(_task);
+        _binding.setAssignee(_taskViewModel.getUserById(_task.get_assigneeId()));
+        _binding.setOpenBy(_taskViewModel.getUserById(_task.get_createdById()));
+        _taskViewModel.setTargetDate(_task.get_targetDate());
+        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
     }
 
     // endregion
@@ -192,12 +205,10 @@ public class TasksDetailsFragment extends Fragment {
             case R.id.delete:
                 _taskViewModel.deleteTask(_task);
                 Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
-                Log.d("Peleg", "DELETE in Task Details fragment");
-
                 return true;
             case R.id.edit:
                 _taskViewModel.set_isEdit(!_taskViewModel.get_isEdit().getValue());
-                Log.d("Peleg", "EDIT in Task Details fragment");
+
                 return true;
             default:
 

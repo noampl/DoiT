@@ -10,7 +10,9 @@
         <variable
             name="targetDate"
             type="androidx.lifecycle.MutableLiveData&lt;Long&gt;" />
-
+        <variable
+            name="isEdit"
+            type="boolean" />
         <variable
             name="task"
             type="com.example.doit.model.entities.Task" />
@@ -178,11 +180,10 @@
 
             <Spinner
                 android:id="@+id/assignee_spinner"
-                android:layout_width="@dimen/small_avatar"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/small_avatar"/>
 
         </ViewSwitcher>
-
 
         <TextView
             android:id="@+id/created_date_val"
@@ -245,12 +246,11 @@
                 app:layout_constraintTop_toTopOf="@id/value_title"
                 app:layout_constraintBottom_toBottomOf="@+id/value_title"
                 app:layout_constraintStart_toEndOf="@id/value_title"
-                android:selectedItemPosition="@{(task._value -1)}"
+                android:selectedItemPosition="@{(task._value-1)}"
                 android:layout_marginBottom="2dp"
                 />
 
         </ViewSwitcher>
-
 
         <TextView
             android:id="@+id/status_title"
@@ -278,7 +278,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/save"
-            android:visibility="@{taskViewModel._isEdit ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isEdit ? View.VISIBLE : View.GONE}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

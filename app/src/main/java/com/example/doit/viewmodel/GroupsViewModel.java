@@ -155,7 +155,7 @@ public class GroupsViewModel extends ViewModel {
         String description = desc != null ? desc : "";
 
         List<String> membersId = new ArrayList<>();
-        Repository.getInstance().get_selectedUsers().forEach((u)->membersId.add(u.get_userId()));
+        Repository.getInstance().get_selectedUsers().getValue().forEach((u)->membersId.add(u.get_userId()));
 
         Group group = new Group("", name , description, membersId, uri.toString() , new ArrayList<String>());
         Repository.getInstance().insertGroup(group);
