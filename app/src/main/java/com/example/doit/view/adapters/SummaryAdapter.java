@@ -16,6 +16,8 @@ import com.example.doit.databinding.SummaryItemBinding;
 import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.UsersViewModel;
 
+import java.util.concurrent.CompletableFuture;
+
 public class SummaryAdapter extends ListAdapter<User, SummaryAdapter.SummaryViewHolder> {
 
     // region Members
@@ -76,9 +78,9 @@ public class SummaryAdapter extends ListAdapter<User, SummaryAdapter.SummaryView
             _binding = binding;
 }
 
-        public void bind(User user, int Score) {
+        public void bind(User user, CompletableFuture<Integer> score) {
             _binding.setUser(user);
-            _binding.setScore(Score);
+            score.thenAccept((score1)-> _binding.setScore(score1));
             _binding.executePendingBindings();
         }
     }

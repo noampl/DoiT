@@ -20,6 +20,9 @@ import com.example.doit.model.entities.Task;
 import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.TasksViewModel;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder> {
 
     // region Members
@@ -80,7 +83,7 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
     public void onBindViewHolder(@NonNull TasksAdapter.TaskViewHolder holder, int position) {
         if(getItemCount() > 0){
             User user =_tasksViewModel.getUserByTask(getItem(position));
-            Group group = _tasksViewModel.getGroupByTask(getItem(position));
+            CompletableFuture<Group> group = _tasksViewModel.getGroupByTask(getItem(position));
             holder.bind(getItem(position), group, user, _isMyTasksScreen, _tasksViewModel);
         }
     }
@@ -92,7 +95,7 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         private final MyTasksItemBinding _binding;
-        private LifecycleOwner _lifeCycleOwner;
+        private final LifecycleOwner _lifeCycleOwner;
 
         public TaskViewHolder(@NonNull MyTasksItemBinding binding , LifecycleOwner lifecycleOwner) {
             super(binding.getRoot());
@@ -100,17 +103,16 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             _lifeCycleOwner = lifecycleOwner;
         }
 
-        public void bind(Task task, Group group, User user, boolean _isMyTasksScreen, TasksViewModel tasksViewModel){
+        public void bind(Task task, CompletableFuture<Group> group, User user, boolean _isMyTasksScreen, TasksViewModel tasksViewModel){
             _binding.setTask(task);
-            _binding.setGroup(group);
+            group.thenAccept(_binding::setGroup);
             _binding.setUser(user);
             _binding.constraint.setOnLongClickListener(view -> {
                 tasksViewModel.set_selectedTaskIndex(getAdapterPosition());
                 return true;
             });
 
-            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, integer ->
-                    _binding.setSelectedTask(integer));
+            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, _binding::setSelectedTask);
 
             _binding.checkbox.setOnCheckedChangeListener((compoundButton, isChecked) ->
                     tasksViewModel.setTaskChecked(task, isChecked));

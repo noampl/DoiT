@@ -27,6 +27,8 @@ import com.example.doit.viewmodel.GroupsViewModel;
 import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -56,7 +58,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                              Bundle savedInstanceState) {
         String selectedId = ChosenGroupFragmentArgs.fromBundle(getArguments()).getGroupId();
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chosen_group ,container, false);
-        _binding.setGroup(initVM(selectedId));
+        initVM(selectedId).thenAccept((group -> {
+            _group = group;
+            _binding.setGroup(group);
+            initToolBar();
+        }));
         _binding.setTasksViewModel(_tasksViewModel);
         _binding.setLifecycleOwner(this);
         initListeners();
@@ -89,7 +95,9 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                     _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                 }
                 else {
-                    _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
+                    if (_group != null){
+                        _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
+                    }
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
                     _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
@@ -103,15 +111,14 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                         .navigate(action); });
     }
 
-    private Group initVM(String selectedGroupId){
+    private CompletableFuture<Group> initVM(String selectedGroupId)  {
+        GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
+        CompletableFuture<Group> group = groupsViewModel.getGroupById(selectedGroupId);
         _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _tasksViewModel.set_iDialogNavigationHelper(this);
         _tasksViewModel.set_groupId(selectedGroupId);
         _tasksViewModel.set_iFragmentNavigationHelper(this);
-        GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
-        _group = groupsViewModel.getGroupById(selectedGroupId);
-        initToolBar();
-        return _group;
+        return group;
     }
 
     private void initToolBar(){

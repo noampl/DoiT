@@ -7,6 +7,7 @@ import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class UsersViewModel extends ViewModel {
 
@@ -74,7 +75,7 @@ public class UsersViewModel extends ViewModel {
         // FIXME needed?
     }
 
-    public int getUserScore(User item, String groupId) {
+    public CompletableFuture<Integer> getUserScore(User item, String groupId) {
         return Repository.getInstance().getUserScoreByGroup(item, groupId);
     }
 
