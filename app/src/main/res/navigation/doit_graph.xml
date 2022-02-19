@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/doit_graph"
-    app:startDestination="@id/initFragment">
+    app:startDestination="@id/groupsFragment2">
     <fragment
         android:id="@+id/about"
         android:name="com.example.doit.view.fragments.AboutFragment"
@@ -105,26 +105,6 @@
             android:name="taskId"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/initFragment"
-        android:name="com.example.doit.view.fragments.InitFragment"
-        android:label="Loading"
-        tools:layout="@layout/fragment_init" >
-        <action
-            android:id="@+id/action_initFragment_to_groupsFragment2"
-            app:destination="@id/groupsFragment2"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/groupsFragment2"
-            app:popUpToInclusive="true"
-            />
-        <action
-            android:id="@+id/action_initFragment_to_logInFragment2"
-            app:destination="@id/logInFragment2"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/logInFragment2"
-            app:popUpToInclusive="true"
-            />
-    </fragment>
     <dialog
         android:id="@+id/addGroupDialog"
         android:name="com.example.doit.view.dialogs.AddGroupDialog"
@@ -144,9 +124,6 @@
             app:nullable="true"
             android:defaultValue="''"/>
     </dialog>
-    <action
-        android:id="@+id/action_global_initFragment"
-        app:destination="@id/initFragment" />
     <dialog
         android:id="@+id/addTaskDialog"
         android:name="com.example.doit.view.dialogs.AddTaskDialog"

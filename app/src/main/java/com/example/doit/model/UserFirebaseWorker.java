@@ -415,9 +415,11 @@ public class UserFirebaseWorker implements IDataWorker {
         if (email == null || email.equals(Consts.INVALID_STRING) || password == null || password.equals(Consts.INVALID_STRING) ||
                 email.equals("") || password.equals("")) {
             Log.d(TAG, "email or password are invalid so connection canceled");
+            loggedIn.postValue(false);
             return null;
         }
         if (Boolean.TRUE.equals(loggedIn.getValue())) {
+            loggedIn.postValue(false);
             return null;
         }
         return mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {

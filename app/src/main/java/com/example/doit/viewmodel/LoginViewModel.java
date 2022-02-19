@@ -1,6 +1,6 @@
 package com.example.doit.viewmodel;
 
-import android.util.Log;
+
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,7 +13,7 @@ import com.example.doit.model.entities.User;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 
 public class LoginViewModel extends ViewModel {
 
@@ -80,12 +80,8 @@ public class LoginViewModel extends ViewModel {
         return Repository.getInstance().get_remoteError();
     }
 
-    public void login(Map<String, String> user) {
-        if (Objects.equals(user.get(Consts.EMAIL), Consts.INVALID_STRING) ||
-                Objects.equals(user.get(Consts.PASSWORD), Consts.INVALID_STRING)){
-            return;
-        }
-        Repository.getInstance().login(user);
+    public void initLogin(Map<String, String> user) {
+        Repository.getInstance().initlogin(user);
     }
 
     public boolean Login(String email, String password){

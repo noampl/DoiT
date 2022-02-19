@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.MyApplication;
 import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
@@ -113,7 +114,7 @@ public class AccountFragment extends Fragment {
     );
 
     private void clearLoginUser(){
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = MyApplication.getAppContext().getSharedPreferences(getString(R.string.file_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear().apply();
         editor.putString(getString(R.string.email), "NONE");

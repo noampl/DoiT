@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.MyApplication;
 import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
@@ -144,7 +145,7 @@ public class RegisterFragment extends Fragment{
     }
 
     private void saveUserForLater(){
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref =  MyApplication.getAppContext().getSharedPreferences(getString(R.string.file_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.email), viewModel.get_email().getValue());
         editor.putString(getString(R.string.password), viewModel.get_password().getValue());
