@@ -206,12 +206,22 @@ public class Repository {
     }
 
     public void login(Map<String, String> user) {
-        if (!Objects.equals(user.get(Consts.EMAIL), null) && !Objects.equals(user.get(Consts.PASSWORD), null) &&
-                !Objects.equals(user.get(Consts.EMAIL) ,Consts.INVALID_STRING)
-                && !Objects.equals(user.get(Consts.PASSWORD), Consts.INVALID_STRING)) {
+        _executorService.execute(()->{
+                System.out.println("peleg -> trying to login");
+                userFirebaseWorker.login(user, get_loggedIn());
+        });
+    }
 
+    public void initlogin(Map<String, String> user) {
+        _executorService.execute(()->{
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("peleg -> trying to login");
             userFirebaseWorker.login(user, get_loggedIn());
-        }
+        });
     }
 
     public void logout() {

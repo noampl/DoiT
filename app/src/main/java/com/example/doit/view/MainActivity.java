@@ -4,6 +4,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -15,7 +17,8 @@ import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,11 +46,11 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     private final String TAG = "MainActivity";
     private ActivityMainBinding _binding;
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
     private AccountViewModel accountViewModel;
     private NavHostFragment navHostFragment;
     private AppBarConfiguration _appBarConfiguration;
+    private boolean isLoggedIn;
+    private FragmentManager _fragmentManager;
 
     // endregion
 
@@ -57,13 +60,14 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
+        Intent intent = getIntent();
+        isLoggedIn = intent.getBooleanExtra("LOGIN",false);
         LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         accountViewModel.setActionBarHelper(this);
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
-        context = getApplicationContext();
+        _fragmentManager = getSupportFragmentManager();
         init();
     }
 
@@ -75,13 +79,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     // endregion
 
-    // region Public Methods
-
-    public Context getContext() {
-        return getApplicationContext();
-    }
-
-    // endregion
 
     // region Private Methods
 
@@ -99,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
                 new AppBarConfiguration.Builder(navHostFragment.getNavController().getGraph()).build();
         NavigationUI.setupWithNavController(
                 _binding.mainToolbar, navHostFragment.getNavController(), _appBarConfiguration);
+        if (!isLoggedIn) {
+           navHostFragment.getNavController().navigate(R.id.logInFragment2);
+        }
     }
 
     private void initListeners(){
@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
             }
         });
     }
-
-
 
     private void exitDialog(){
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(this).create();
@@ -185,13 +183,17 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     // endregion
 
-
+    @SuppressLint("RestrictedApi")
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        if (navHostFragment.getNavController().getCurrentBackStackEntry().getDestination().getId() == R.id.logInFragment2){
-//            exitDialog();
-//        }
+        String currentFragment = navHostFragment.getNavController().getCurrentBackStackEntry().
+                getDestination().getDisplayName();
+        if (currentFragment.equals("com.example.doit:id/groupsFragment2") ||
+                currentFragment.equals("com.example.doit:id/logInFragment2"))
+            exitDialog();
+        else
+            super.onBackPressed();
+
     }
 }
 

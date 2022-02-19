@@ -1,5 +1,6 @@
 package com.example.doit.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.example.MyApplication;
 import com.example.doit.common.Consts;
 import com.example.doit.model.entities.User;
 import com.example.doit.R;
@@ -42,7 +44,6 @@ public class LogInFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         viewModel.get_Error().setValue(Consts.INVALID_STRING);
         init();
-
 
         return _binding.getRoot();
     }
@@ -119,7 +120,7 @@ public class LogInFragment extends Fragment {
 
     private void saveUserForLater(){
         if(viewModel.getUserName() != "" && viewModel.getUserName() != null){
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref =  MyApplication.getAppContext().getSharedPreferences(getString(R.string.file_key),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.clear().apply();
             editor.putString(getString(R.string.email), viewModel.getUserName());
