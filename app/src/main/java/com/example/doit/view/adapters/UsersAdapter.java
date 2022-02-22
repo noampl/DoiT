@@ -29,7 +29,8 @@ public class UsersAdapter extends BaseAdapter {
     }
 
     public void set_users(List<User> _users) {
-    this._users = _users;
+        this._users = _users;
+        _userViewModel.set_selectedUser(_users);
     }
 
     @Override
@@ -55,6 +56,7 @@ public class UsersAdapter extends BaseAdapter {
                 binding.setUsersViewModel(_userViewModel);
                 binding.setPosition(i);
                 binding.setUser(_users.get(i));
+                binding.setIsChecked(true);
 
         return binding.getRoot();
     }

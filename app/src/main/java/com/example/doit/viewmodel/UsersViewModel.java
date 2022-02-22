@@ -56,17 +56,12 @@ public class UsersViewModel extends ViewModel {
 
     public void addUser(User user) {
         List<User> tmpList = _selectedUser.getValue();
-        if (tmpList.contains(user)) {
-            tmpList.remove(user);
-        }
-        else{
-            tmpList.add(user);
-        }
+        tmpList.add(user);
         _selectedUser.setValue(tmpList);
     }
 
     public void setUsersById(String groupId){
-        Repository.getInstance().setUsersById(groupId); // TODO this is not working
+        Repository.getInstance().setUsersById(groupId);
     }
 
     public void removeUser(User user){
@@ -76,7 +71,7 @@ public class UsersViewModel extends ViewModel {
     }
 
     public void submitUsers() {
-        // FIXME needed?
+        _users.setValue(_selectedUser.getValue());
     }
 
     public CompletableFuture<Integer> getUserScore(User item, String groupId) {

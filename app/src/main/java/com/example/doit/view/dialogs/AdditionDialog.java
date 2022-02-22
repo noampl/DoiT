@@ -1,17 +1,13 @@
 package com.example.doit.view.dialogs;
 
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +35,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     private AdditionDialogFragmentBinding _binding;
     private AlertDialog _dialog;
     private UsersViewModel usersViewModel;
+    private boolean _isRemoteSearcher;
 
     // endregion
 
@@ -55,11 +52,12 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         String groupId = AdditionDialogArgs.fromBundle(getArguments()).getGroupId();
+        _isRemoteSearcher = AdditionDialogArgs.fromBundle(getArguments()).getIsRemoteSearcher();
         _binding = DataBindingUtil.inflate(inflater, R.layout.addition_dialog_fragment, container, false);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.set_selectedUser(new ArrayList<>());
 
-        if(groupId != null && !groupId.equals("")){
+        if(groupId != null && !groupId.equals("") && groupId.length() > 5){
             usersViewModel.setUsersById(groupId);
         }
 
@@ -67,21 +65,15 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
         _dialog.setCancelable(true);
         _dialog.setTitle("Select User");
         _binding.searchBox.setOnQueryTextListener(this);
-        _binding.searchBox.callOnClick();
         initListeners();
         _binding.setLifecycleOwner(this);
         return _binding.getRoot();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        usersViewModel.get_users().getValue().clear();
-    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (query != null) {
+        if (query != null && _isRemoteSearcher) {
             usersViewModel.searchUsers(query);
         }
         return true;
@@ -89,14 +81,14 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (newText != null){
+        if (newText != null && _isRemoteSearcher) {
             usersViewModel.searchUsers(newText);
         }
         return true;
     }
 
     private void initListeners() {
-        AdditionAdapter adapter = new AdditionAdapter();
+        AdditionAdapter adapter = new AdditionAdapter(AdditionDialogArgs.fromBundle(getArguments()).getIsChecked());
         adapter.set_usersViewModel(usersViewModel);
         usersViewModel.get_users().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -112,7 +104,7 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
             @Override
             public void onClick(View view) {
                 usersViewModel.set_users(new ArrayList<User>());
-                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigateUp();
             }
         });
 
@@ -120,9 +112,9 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
             @Override
             public void onClick(View view) {
                 usersViewModel.submitUsers();
-                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigateUp();
             }
         });
-
     }
+
 }

@@ -16,6 +16,10 @@
             name="position"
             type="int" />
 
+        <variable
+            name="isChecked"
+            type="boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +34,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/small_margin"
-            app:setImage="@{user._image}"
+            app:setUserImage="@{user._image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,6 +59,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toTopOf="parent"
             app:onChecked="@{usersViewModel}"
+            android:checked="@{isChecked}"
             app:layout_constraintHorizontal_bias="0.95"
             app:user="@{user}" />
 

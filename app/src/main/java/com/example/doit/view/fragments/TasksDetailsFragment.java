@@ -63,8 +63,8 @@ public class TasksDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
-        _binding.assigneeSpinner.setAdapter(_usersAdapter);
+//        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
+//        _binding.assigneeSpinner.setAdapter(_usersAdapter);
         _taskViewModel.getTaskById(taskId).thenAccept(this::onFutureComplete);
         init();
 
@@ -137,7 +137,7 @@ public class TasksDetailsFragment extends Fragment {
 
         _binding.save.setOnClickListener(view -> {
                 _taskViewModel.saveChanges(_task, _binding.taskNameEdit.getText().toString(),
-                        _binding.taskDescEdit.getText().toString());
+                        _binding.taskDescEdit.getText().toString(), _binding.checkbox.isChecked());
                 _binding.setTask(_task);
                 _usersViewModel.set_selectedUser(new ArrayList<>());
         });
@@ -148,6 +148,8 @@ public class TasksDetailsFragment extends Fragment {
                 _taskViewModel.setTaskChecked(_task, b);
             }
         });
+
+        _binding.assigneeBtn.setOnClickListener((v)->selectAssignee());
     }
 
     private void initObservers() {
@@ -166,10 +168,7 @@ public class TasksDetailsFragment extends Fragment {
             }
             _binding.setIsEdit(isEdit);
         });
-        _usersViewModel.get_users().observe(getViewLifecycleOwner(), users -> {
-            _usersAdapter.set_users(users);
-            _usersAdapter.notifyDataSetChanged();
-        });
+
         _usersViewModel.get_selectedUser().observe(getViewLifecycleOwner(), users ->{
                 if (users!= null && users.size() > 0) {
                     _binding.setAssignee(users.get(0));
@@ -193,8 +192,16 @@ public class TasksDetailsFragment extends Fragment {
         _binding.setOpenBy(_taskViewModel.getUserById(_task.get_createdById()));
         _taskViewModel.setTargetDate(_task.get_targetDate());
         _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
+        _taskViewModel.set_isEdit(TasksDetailsFragmentArgs.fromBundle(getArguments()).getIsEdit());
     }
 
+    private void selectAssignee(){
+        TasksDetailsFragmentDirections.ActionTasksDetailsToAdditionDialog action =
+                TasksDetailsFragmentDirections.actionTasksDetailsToAdditionDialog();
+        action.setGroupId(_task.get_groupId());
+        action.setIsChecked(false);
+        Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
+    }
     // endregion
 
     // region Toolbar.OnMenuItemClickListener

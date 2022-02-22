@@ -145,6 +145,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
         AddTaskDialogDirections.ActionAddTaskDialogToAdditionDialog action =
         AddTaskDialogDirections.actionAddTaskDialogToAdditionDialog();
         action.setGroupId(_groupId);
+        action.setIsRemoteSearcher(false);
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }

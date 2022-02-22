@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.doit.R;
 import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.UsersViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -106,18 +107,35 @@ public class AppBindingAdapters {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String text = sdf.format(new Date(date));
             v.setText(text);
+            v.setBackgroundResource(R.color.transparent);
         }
         else{
-            v.setText("-");
+            v.setBackgroundResource(R.drawable.ic_baseline_date_range_24);
         }
 
     }
 
-    @BindingAdapter("setImage")
-    public static void setImage(ImageView imageView, String url){
+    @BindingAdapter("setUserImage")
+    public static void setUserImage(ImageView imageView, String url){
+        setImage(imageView,url,R.drawable.no_profile_picture);
+    }
+
+    @BindingAdapter("setTaskImage")
+    public static void setTaskImage(ImageView imageView, String url){
+        setImage(imageView,url,R.drawable.clipboard);
+    }
+
+    @BindingAdapter("setGroupImage")
+    public static void setGroupImage(ImageView imageView, String url){
+        setImage(imageView,url,R.drawable.multiple_users);
+    }
+
+    private static void setImage(ImageView imageView, String url, int Res){
         if (url != null && url.length() > 5 && !url.equals("")) {
             Picasso.with(imageView.getContext()).load(url).fit().into(imageView);
         }
+        else{
+            Picasso.with(imageView.getContext()).load(Res).fit().into(imageView);
+        }
     }
-
 }

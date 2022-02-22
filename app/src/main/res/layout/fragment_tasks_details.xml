@@ -10,9 +10,11 @@
         <variable
             name="targetDate"
             type="androidx.lifecycle.MutableLiveData&lt;Long&gt;" />
+
         <variable
             name="isEdit"
             type="boolean" />
+
         <variable
             name="task"
             type="com.example.doit.model.entities.Task" />
@@ -24,6 +26,7 @@
         <variable
             name="openBy"
             type="com.example.doit.model.entities.User" />
+
         <variable
             name="taskViewModel"
             type="com.example.doit.viewmodel.TasksViewModel" />
@@ -39,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="@string/task_image"
-            app:setImage="@{task._image}"
+            app:setTaskImage="@{task._image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +68,7 @@
                 android:textStyle="bold"
                 />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/task_name_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +100,7 @@
 
                 />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/task_desc_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,6 +108,7 @@
                 android:textSize="18sp"
                 android:inputType="text"
                 android:autofillHints="no" />
+
         </ViewSwitcher>
 
         <TextView
@@ -156,7 +160,7 @@
             app:layout_constraintEnd_toEndOf="@id/open_by_title"
             app:layout_constraintStart_toStartOf="@id/open_by_title"
             android:layout_marginTop="@dimen/small_margin"
-            app:setImage="@{openBy._image}"
+            app:setUserImage="@{openBy._image}"
             />
 
         <ViewSwitcher
@@ -175,13 +179,17 @@
                 app:layout_constraintTop_toBottomOf="@id/assignee_text"
                 app:layout_constraintStart_toStartOf="@id/assignee_text"
                 app:layout_constraintEnd_toEndOf="@id/assignee_text"
-                app:setImage="@{assignee._image}"
+                app:setUserImage="@{assignee._image}"
                 />
 
-            <Spinner
-                android:id="@+id/assignee_spinner"
+            <Button
+                android:id="@+id/assignee_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/small_avatar"/>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:icon="@drawable/ic_baseline_arrow_drop_down_24"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                />
 
         </ViewSwitcher>
 
@@ -270,6 +278,7 @@
             app:layout_constraintBottom_toBottomOf="@id/status_title"
             app:layout_constraintEnd_toEndOf="parent"
             android:checked="@{task._finishDate != 0}"
+            android:onCheckedChanged="@{()->taskViewModel.setTaskChecked(task, (task._finishDate != 0), isEdit)}"
             />
 
         <Button

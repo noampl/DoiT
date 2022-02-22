@@ -52,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setImage="@{task._image}" />
+            app:setTaskImage="@{task._image}" />
 
         <TextView
             android:id="@+id/title"
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@{@drawable/ic_baseline_account_circle_24}"
-                app:setImage="@{user._image}"
+                app:setUserImage="@{user._image}"
                 android:visibility="@{isMyTasks ? View.GONE : View.VISIBLE}"
                 />
             </androidx.cardview.widget.CardView>

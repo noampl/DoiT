@@ -46,8 +46,7 @@ public class User {
     }
 
     @Ignore
-    public User(@NonNull String id, String _email, String firstName, String _lastName, String _password, String _image, String _phone,
-                String _countryPhoneCode, Roles _role, List<String> groups) {
+    public User(@NonNull String id, String _email, String firstName, String _lastName, String _password, String _image, Roles _role, List<String> groups) {
         this._userId = id;
         this._email = _email;
         this._lastName = _lastName;

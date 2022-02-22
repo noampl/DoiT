@@ -23,6 +23,7 @@ import com.example.doit.model.entities.Task;
 import com.example.doit.view.adapters.TasksAdapter;
 import com.example.doit.viewmodel.TasksViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,22 +38,14 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
 
     // endregion
 
-    // region C'tor
-
-    public MyTasksFragment() {
-        // Required empty public constructor
-    }
-
-    // endregion
-
     // region LifeCycle
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
+        _tasksViewModel.set_tasks(new ArrayList<>());
         _tasksViewModel.fetchTasks();
-
     }
 
     @Override
@@ -92,7 +85,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             public void onChanged(Integer integer) {
                 if (integer >= 0) {
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
-                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
 
                 }
@@ -106,15 +99,20 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
         });
     }
 
+    private void openTaskDetails(boolean isEdit){
+        MyTasksFragmentDirections.ActionMyTasksFragmentToTasksDetails action =
+                MyTasksFragmentDirections.actionMyTasksFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
+        action.setIsEdit(isEdit);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
+    }
+
     // endregion
 
     // region IFragmentNavigitionHelper
 
     @Override
     public void openFragment() {
-        MyTasksFragmentDirections.ActionMyTasksFragmentToTasksDetails action =
-                MyTasksFragmentDirections.actionMyTasksFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
+        openTaskDetails(false);
     }
 
     // endregion
@@ -123,18 +121,10 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
 
     @SuppressLint("NonConstantResourceId")
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
-        switch (item.getItemId()) {
-            case R.id.delete:
-                Log.d("Peleg", "DELETE in MyTasks fragment");
+        if (item.getItemId() == R.id.delete) {
+            _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue());
 
-                return true;
-            case R.id.edit:
-
-                Log.d("Peleg", "EDIT in MyTasks fragment");
-                return true;
-            default:
-
-                break;
+            return true;
         }
         return false;
     };

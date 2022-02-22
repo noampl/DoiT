@@ -1,6 +1,6 @@
 package com.example.doit.view.fragments;
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

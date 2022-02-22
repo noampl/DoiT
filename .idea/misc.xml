@@ -26,15 +26,24 @@
         <entry key="..\:/Users/Frish/Documents/GitHub/DoiT/app/src/main/res/menu/manu.xml" value="0.21145833333333333" />
         <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/user/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_assignment_24.xml" value="0.16302083333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_assignment_24_dark.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_date_range_24.xml" value="0.16302083333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.16302083333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.16302083333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_group_24.xml" value="0.16302083333333334" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_baseline_group_24_dark.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/activity_intro.xml" value="0.13541666666666666" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/addition_dialog_fragment.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/base_model_item.xml" value="0.264" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/common_appbar.xml" value="0.10520833333333333" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/dialog_fragment_add_group.xml" value="0.24010416666666667" />
-        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/dialog_fragment_add_task.xml" value="0.10790273556231003" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/dialog_fragment_add_task.xml" value="0.23615160349854228" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/dialog_summary.xml" value="0.10416666666666667" />
-        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_about.xml" value="0.10416666666666667" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_about.xml" value="0.264" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_chosen_group.xml" value="0.16510416666666666" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.20833333333333334" />
@@ -53,6 +62,7 @@
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/menu/app_menu.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/menu/edit_menu.xml" value="0.21875" />
+        <entry key="..\:/Users/user/Desktop/repos/GitHub/DoiT/app/src/main/res/menu/only_delete.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_account.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/user/source/repos/DoiT/app/src/main/res/layout/fragment_groups.xml" value="0.36666666666666664" />
