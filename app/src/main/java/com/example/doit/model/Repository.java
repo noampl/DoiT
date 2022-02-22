@@ -207,7 +207,6 @@ public class Repository {
 
     public void login(Map<String, String> user) {
         _executorService.execute(()->{
-                System.out.println("peleg -> trying to login");
                 userFirebaseWorker.login(user, get_loggedIn());
         });
     }
@@ -215,11 +214,10 @@ public class Repository {
     public void initlogin(Map<String, String> user) {
         _executorService.execute(()->{
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("peleg -> trying to login");
             userFirebaseWorker.login(user, get_loggedIn());
         });
     }
@@ -349,7 +347,6 @@ public class Repository {
             @Override
             public void run() {
                 groupFirebaseWorker.createNewGroup(group);
-                Log.d("PELEG", "update groups");
             }
         });
     }

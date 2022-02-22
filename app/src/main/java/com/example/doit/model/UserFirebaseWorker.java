@@ -507,7 +507,7 @@ public class UserFirebaseWorker implements IDataWorker {
                 () -> usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users))
         );
         executorService.execute(
-                () -> usersRef.whereEqualTo("firstName", look).get().addOnSuccessListener(insertUserDocToUsersList(users))
+                () -> usersRef.whereEqualTo("lastName", look).get().addOnSuccessListener(insertUserDocToUsersList(users))
         );
     }
 
@@ -578,13 +578,15 @@ public class UserFirebaseWorker implements IDataWorker {
                     List<User> user;
                     if (users != null) {
                         user = users.getValue();
-                        if (users.getValue() != null) {
+                        if (user != null) {
                             for (User u : user) {
                                 if (Objects.equals(u.get_userId(), newUser.get_userId())) {
                                     return;
                                 }
                             }
                         }
+                        if (newUser.get_userId().equals(authUser.getValue().get_userId()))
+                            return;
                         user.add(newUser);
                         users.postValue(user);
                     }

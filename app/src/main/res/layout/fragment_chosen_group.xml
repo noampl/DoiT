@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:src="@{group._image, default = @color/blue}"
-            app:setImage="@{group._image}"
+            app:setGroupImage="@{group._image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -104,6 +104,13 @@
         <argument
             android:name="taskId"
             app:argType="string" />
+        <argument
+            android:name="isEdit"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_tasksDetails_to_additionDialog"
+            app:destination="@id/additionDialog" />
     </fragment>
     <dialog
         android:id="@+id/addGroupDialog"
@@ -122,7 +129,15 @@
             android:name="groupId"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue="''"/>
+            android:defaultValue=""/>
+        <argument
+            android:name="isChecked"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="isRemoteSearcher"
+            app:argType="boolean"
+            android:defaultValue="true" />
     </dialog>
     <dialog
         android:id="@+id/addTaskDialog"
@@ -153,5 +168,8 @@
         <argument
             android:name="groupId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_groupsDetailsFragment_to_additionDialog"
+            app:destination="@id/additionDialog" />
     </fragment>
 </navigation>

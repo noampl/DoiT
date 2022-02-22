@@ -58,6 +58,15 @@
             app:layout_constraintStart_toStartOf="@id/task_img"
             app:layout_constraintTop_toBottomOf="@id/task_img" />
 
+        <TextView
+            android:id="@+id/value_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/value_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/value_spinner"
+            app:layout_constraintStart_toStartOf="@id/task_dec"
+            android:text="@string/value_title"
+            />
         <Spinner
             android:id="@+id/value_spinner"
             android:layout_width="0dp"
@@ -67,7 +76,7 @@
             android:textSize="16sp"
             android:layout_marginTop="@dimen/small_margin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/task_dec"
+            app:layout_constraintStart_toEndOf="@+id/value_title"
             app:layout_constraintTop_toBottomOf="@id/task_dec" />
 
         <ImageView

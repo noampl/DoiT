@@ -36,7 +36,7 @@
             android:layout_marginTop="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
             android:src="@{@drawable/ic_baseline_group_24}"
-            app:setImage="@{group._image}"
+            app:setGroupImage="@{group._image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -32,6 +32,7 @@ import com.example.doit.viewmodel.GroupsViewModel;
 import com.example.doit.viewmodel.UsersViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -56,6 +57,7 @@ public class GroupsDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups_details, container, false);
         _groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        _groupsViewModel.set_isEdit(true);
         CompletableFuture<Group> group = _groupsViewModel.getGroupById(groupId);
         group.thenAccept((group1) ->{
             _group = group1;
@@ -70,6 +72,12 @@ public class GroupsDetailsFragment extends Fragment {
         return _binding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        _usersViewModel.set_selectedUser(new ArrayList<>());
+        super.onDestroy();
+    }
+
     // endregion
 
     // region Private Methods
@@ -78,6 +86,8 @@ public class GroupsDetailsFragment extends Fragment {
        initBinding();
        initListeners();
        initMenu();
+       initAdapter();
+       initObserver();
     }
 
     private void initMenu() {
@@ -93,16 +103,9 @@ public class GroupsDetailsFragment extends Fragment {
     }
 
     private void initListeners(){
-        _binding.save.setOnClickListener(view -> _groupsViewModel.saveEditGroup(_binding.groupNameEdit.getText().toString(), _binding.groupDescText.getText().toString(), _group));
-
-        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
-        _usersViewModel.get_users().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
-            @Override
-            public void onChanged(List<User> users) {
-                _usersAdapter.set_users(users);
-                _usersAdapter.notifyDataSetChanged();
-            }
-        });
+        _binding.save.setOnClickListener(view ->
+                _groupsViewModel.saveEditGroup(_binding.groupNameEdit.getText().toString(),
+                        _binding.groupDescText.getText().toString(), _group, _usersViewModel.get_users().getValue()));
 
         _binding.groupImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +115,17 @@ public class GroupsDetailsFragment extends Fragment {
                     pickPhoto.setType("image/*");
                     pickPhotoResultLauncher.launch(pickPhoto);
                 }
+            }
+        });
+
+        _binding.addUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GroupsDetailsFragmentDirections.ActionGroupsDetailsFragmentToAdditionDialog action =
+                GroupsDetailsFragmentDirections.actionGroupsDetailsFragmentToAdditionDialog();
+                action.setGroupId(_group.get_groupId());
+                action.setIsChecked(true);
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
             }
         });
 
@@ -128,8 +142,30 @@ public class GroupsDetailsFragment extends Fragment {
                 }
             }
         });
+
     }
 
+    private void initAdapter(){
+        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
+        _usersViewModel.get_users().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                _usersAdapter.set_users(users);
+                _usersAdapter.notifyDataSetChanged();
+            }
+        });
+        _binding.membersSpinner.setAdapter(_usersAdapter);
+    }
+
+    private void initObserver(){
+        _usersViewModel.get_selectedUser().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                if (users.size() != _usersViewModel.get_users().getValue().size())
+                    _usersViewModel.set_users(users);
+            }
+        });
+    }
     // endregion
 
     // region Toolbar.OnMenuItemClickListener

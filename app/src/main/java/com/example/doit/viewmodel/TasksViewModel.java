@@ -35,9 +35,9 @@ public class TasksViewModel extends ViewModel {
     private String _assigneeId;
     private String _createdById;
     private String _tasksDetailsId;
-    private WeakReference<IActionBarHelper> _actionBarHelper;
-    private MutableLiveData<Integer> _selectedTaskIndex;
-    private MutableLiveData<Boolean> _isEdit;
+    private final WeakReference<IActionBarHelper> _actionBarHelper;
+    private final MutableLiveData<Integer> _selectedTaskIndex;
+    private final MutableLiveData<Boolean> _isEdit;
 
     // endregion
 
@@ -199,12 +199,15 @@ public class TasksViewModel extends ViewModel {
         Repository.getInstance().updateTask(task);
     }
 
-    public void saveChanges(Task task, String name, String description) {
+    public void saveChanges(Task task, String name, String description, boolean isChecked) {
         if (name != null && !name.equals("")){
             task.set_name(name);
         }
         if(description != null && !description.equals("")){
             task.set_description(description);
+        }
+        if (isChecked){
+            task.set_finishDate(new Date().getTime());
         }
         updateTask(task);
         set_isEdit(false);
@@ -233,6 +236,10 @@ public class TasksViewModel extends ViewModel {
             Repository.getInstance().updateTask(task);
     }
 
+    public void setTaskChecked(Task task,boolean isChecked, boolean isEdit){
+        if (!isEdit)
+            setTaskChecked(task, isChecked);
+    }
     // endregion
 
 }

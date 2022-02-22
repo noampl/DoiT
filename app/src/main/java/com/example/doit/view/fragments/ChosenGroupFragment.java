@@ -90,7 +90,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             public void onChanged(Integer integer) {
                 if (integer >= 0) {
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
-                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
                     _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                 }
@@ -126,6 +126,13 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
     }
 
+    private void openEditTask(boolean isEdit){
+        ChosenGroupFragmentDirections.ActionChosenGroupFragmentToTasksDetails action =
+                ChosenGroupFragmentDirections.actionChosenGroupFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
+        action.setIsEdit(isEdit);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
+    }
+
     // endregion
 
     // region IDialogNavigationHelper
@@ -144,9 +151,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @Override
     public void openFragment() {
-        ChosenGroupFragmentDirections.ActionChosenGroupFragmentToTasksDetails action =
-        ChosenGroupFragmentDirections.actionChosenGroupFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
+        openEditTask(false);
     }
 
     // endregion
@@ -155,19 +160,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @SuppressLint("NonConstantResourceId")
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
-        switch (item.getItemId()) {
-            case R.id.delete:
-                _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue());
-                Log.d("Peleg", "DELETE in ChosenGroup fragment");
+        if (item.getItemId() == R.id.delete) {
+            _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue());
+            Log.d("Peleg", "DELETE in ChosenGroup fragment");
 
-                return true;
-            case R.id.edit:
-
-                Log.d("Peleg", "EDIT in ChosenGroup fragment");
-                return true;
-            default:
-
-                break;
+            return true;
         }
         return false;
     };

@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * THis View Model holds all the logged in user's groups
@@ -176,12 +177,15 @@ public class GroupsViewModel extends ViewModel {
         return Repository.getInstance().getGroupById(id);
     }
 
-    public void saveEditGroup(String name, String desc, Group groupToUpdate) {
+    public void saveEditGroup(String name, String desc, Group groupToUpdate, List<User> users) {
         if (name != null && !name.equals("")){
             groupToUpdate.set_name(name);
         }
         if(desc != null && !desc.equals("")){
             groupToUpdate.set_description(desc);
+        }
+        if (users != null){
+            groupToUpdate.setMembersId(users.stream().map(User::get_userId).collect(Collectors.toList()));
         }
         updateGroup(groupToUpdate);
         set_isEdit(false);
@@ -194,6 +198,7 @@ public class GroupsViewModel extends ViewModel {
     public void deleteGroup(Group group){
         Repository.getInstance().deleteGroup(group);
     }
+
     public void deleteGroup(String groupId){
         Repository.getInstance().deleteGroupById(groupId);
     }
