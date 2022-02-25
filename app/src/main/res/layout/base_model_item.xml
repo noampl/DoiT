@@ -20,6 +20,10 @@
             name="isChecked"
             type="boolean" />
 
+        <variable
+            name="multipleChoice"
+            type="boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +65,9 @@
             app:onChecked="@{usersViewModel}"
             android:checked="@{isChecked}"
             app:layout_constraintHorizontal_bias="0.95"
-            app:user="@{user}" />
+            app:user="@{user}"
+            app:position="@{position}"
+            app:isMultipleChoice="@{multipleChoice}"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

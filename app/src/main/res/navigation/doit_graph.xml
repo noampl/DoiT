@@ -138,6 +138,10 @@
             android:name="isRemoteSearcher"
             app:argType="boolean"
             android:defaultValue="true" />
+        <argument
+            android:name="multipleChoice"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </dialog>
     <dialog
         android:id="@+id/addTaskDialog"

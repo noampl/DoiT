@@ -40,16 +40,24 @@ public class AppBindingAdapters {
         }
     }
 
-    @BindingAdapter({"onChecked", "user"})
-    public static void onChecked(CheckBox checkBox, UsersViewModel viewModel, User user) {
+    @BindingAdapter({"onChecked", "user", "position", "isMultipleChoice"})
+    public static void onChecked(CheckBox checkBox, UsersViewModel viewModel, User user, int position,
+                                 boolean isMultipleChoice) {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (compoundButton.isChecked()) {
-                    viewModel.addUser(user);
-                }
-                else{
-                    viewModel.removeUser(user);
+                synchronized (this){
+                    if (compoundButton.isChecked()) {
+                        if (isMultipleChoice){
+                            viewModel.addUser(user, position);
+                        }
+                        else{
+                            viewModel.switchUser(user, position);
+                        }
+                    }
+                    else{
+                        viewModel.removeUser(user, position);
+                    }
                 }
             }
     });

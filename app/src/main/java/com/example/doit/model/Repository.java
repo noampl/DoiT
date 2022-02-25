@@ -62,6 +62,7 @@ public class Repository {
      */
     private MutableLiveData<List<User>> _newGroupUsers;
     private WeakReference<IActionBarHelper> actionBarHelper;
+    private MutableLiveData<List<Integer>> _selectedCheckedBoxPosition = new MutableLiveData<>(new ArrayList<>());
 
     // endregion
 
@@ -96,6 +97,10 @@ public class Repository {
     // endregion
 
     // region Properties
+
+    public MutableLiveData<List<Integer>> getSelectedCheckBoxPosition() {
+       return _selectedCheckedBoxPosition;
+    }
 
     public WeakReference<IActionBarHelper> getActionBarHelper() {
         return actionBarHelper;
