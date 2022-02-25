@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.jar.JarOutputStream;
 
 public class Repository {
     private static final String TAG = "Repository";
@@ -442,21 +443,16 @@ public class Repository {
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
+        System.out.println("peleg - update remote task " + task.get_taskId());
         _executorService.execute(() -> groupFirebaseWorker.updateTask(task));
     }
 
     public void updateLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {
-            LocalDB.db.taskDao().update(task);
-            List<com.example.doit.model.entities.Task> tmp = _tasks.getValue();
-            for (com.example.doit.model.entities.Task t : _tasks.getValue()){
-                if (t.get_taskId().equals(task.get_taskId())){
-                    tmp.remove(t);
-                    break;
-                }
-            }
-            tmp.add(task);
-            _tasks.postValue(tmp);
+            System.out.println("peleg - update local task " + task.get_taskId());
+            LocalDB.db.taskDao().delete(task);
+            LocalDB.db.taskDao().insertAll(task);
+            _tasks.postValue(LocalDB.db.taskDao().getAll());
         });
     }
 
@@ -469,13 +465,16 @@ public class Repository {
     }
 
     public void deleteGroup(Group group) {
-        _executorService.execute(() -> groupFirebaseWorker.deleteUserFromGroup(group,
-                Objects.requireNonNull(get_authUser().getValue())));
+        _executorService.execute(() ->
+        {groupFirebaseWorker.deleteUserFromGroup(group,
+                Objects.requireNonNull(get_authUser().getValue()));
+        LocalDB.db.groupDao().delete(group);
+        _groups.postValue(LocalDB.db.groupDao().getAll());
+        });
     }
 
     public void deleteGroupById(String groupId) {
-        getGroupById(groupId).thenAccept((group -> groupFirebaseWorker.deleteUserFromGroup(group,
-                Objects.requireNonNull(get_authUser().getValue()))));
+        getGroupById(groupId).thenAccept((this::deleteGroup));
     }
 
     public void updateGroup(Group group) {
@@ -483,7 +482,11 @@ public class Repository {
     }
 
     public void deleteTask(com.example.doit.model.entities.Task task){
-        _executorService.execute(() -> groupFirebaseWorker.deleteTask(task));
+        _executorService.execute(() -> {
+            groupFirebaseWorker.deleteTask(task);
+            LocalDB.db.taskDao().delete(task);
+            _tasks.postValue(LocalDB.db.taskDao().getAll());
+        });
     }
 
     // endregion

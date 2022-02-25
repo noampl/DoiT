@@ -50,6 +50,9 @@ public interface GroupDao {
     @Delete
     void delete(Group group);
 
+    @Query("DELETE FROM `group` WHERE :groupId = _groupId")
+    void delete(String groupId);
+
     @Transaction
     @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
     List<GroupWithTasks> getGroupWithTasks(String groupId);

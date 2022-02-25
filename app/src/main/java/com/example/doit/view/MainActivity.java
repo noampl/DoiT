@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Repository.getInstance().cleanCache();
+        super.onDestroy();
     }
 
     // endregion
