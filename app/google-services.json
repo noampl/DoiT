@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "691418049962",
-    "project_id": "doit-f81a7",
-    "storage_bucket": "doit-f81a7.appspot.com"
+    "project_number": "146307891707",
+    "project_id": "doit-f11ca",
+    "storage_bucket": "doit-f11ca.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:691418049962:android:fc33bb70e535eb34a80fd3",
+        "mobilesdk_app_id": "1:146307891707:android:70bb5df408ea692b640b5e",
         "android_client_info": {
           "package_name": "com.example.doit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "691418049962-v43upik5c9j3jh5ej81jg04g88mnlca5.apps.googleusercontent.com",
+          "client_id": "146307891707-8hi8ee6nv71fom2bq4u01cp875q9f8ib.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBWqd2BZhvegLLGc3NKNHxQnp9NgPGIl7c"
+          "current_key": "AIzaSyDtNQS175NcVfx7DDZ3FdskIZPKjNUU53s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "691418049962-v43upik5c9j3jh5ej81jg04g88mnlca5.apps.googleusercontent.com",
+              "client_id": "146307891707-8hi8ee6nv71fom2bq4u01cp875q9f8ib.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

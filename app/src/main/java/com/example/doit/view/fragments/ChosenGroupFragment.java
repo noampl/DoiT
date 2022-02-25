@@ -80,8 +80,11 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
+                if (tasks != null)
+                    System.out.println("peleg - tasks size " + tasks.size());
                 adapter.submitList(tasks.stream().filter((t)->t.get_groupId().equals(_tasksViewModel.get_groupId()) &&
                         t.get_finishDate() == 0).collect(Collectors.toList()));
+                adapter.notifyDataSetChanged();
             }
         });
         _binding.taskLst.setAdapter(adapter);

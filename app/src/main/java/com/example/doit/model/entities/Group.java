@@ -118,12 +118,17 @@ public class Group {
 
     @Override
     public synchronized boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return get_groupId().equals(group.get_groupId()) && get_name().equals(group.get_name()) &&
-                get_description().equals(group.get_description()) && Objects.equals(getMembersId(), group.getMembersId()) &&
-                Objects.equals(get_image(), group.get_image()) && Objects.equals(get_tasksId(), group.get_tasksId());
+        try {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Group group = (Group) o;
+            return get_groupId().equals(group.get_groupId()) && get_name().equals(group.get_name()) &&
+                    get_description().equals(group.get_description()) && Objects.equals(getMembersId(), group.getMembersId()) &&
+                    Objects.equals(get_image(), group.get_image()) && Objects.equals(get_tasksId(), group.get_tasksId());
+        }
+        catch (NullPointerException ex){
+            return false;
+        }
     }
 
     @Override
