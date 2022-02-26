@@ -119,7 +119,9 @@ public class AddGroupDialog extends DialogFragment implements IDialogNavigationH
 
     @Override
     public void openDialog() {
-        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
-                R.id.action_addGroupDialog_to_additionDialog);
+        AddGroupDialogDirections.ActionAddGroupDialogToAdditionDialog action =
+                AddGroupDialogDirections.actionAddGroupDialogToAdditionDialog();
+        action.setMultipleChoice(true);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
 }

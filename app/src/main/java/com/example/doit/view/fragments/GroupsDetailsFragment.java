@@ -125,6 +125,7 @@ public class GroupsDetailsFragment extends Fragment {
                 GroupsDetailsFragmentDirections.actionGroupsDetailsFragmentToAdditionDialog();
                 action.setGroupId(_group.get_groupId());
                 action.setIsChecked(true);
+                action.setMultipleChoice(true);
                 Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
             }
         });

@@ -88,7 +88,9 @@ public class AdditionDialog extends DialogFragment implements SearchView.OnQuery
     }
 
     private void initListeners() {
-        AdditionAdapter adapter = new AdditionAdapter(AdditionDialogArgs.fromBundle(getArguments()).getIsChecked());
+        AdditionAdapter adapter = new AdditionAdapter(AdditionDialogArgs.fromBundle(getArguments()).getIsChecked(),
+                getViewLifecycleOwner(),AdditionDialogArgs.fromBundle(getArguments()).getMultipleChoice());
+
         adapter.set_usersViewModel(usersViewModel);
         usersViewModel.get_users().observe(getViewLifecycleOwner(), new Observer<List<User>>() {
             @SuppressLint("NotifyDataSetChanged")
