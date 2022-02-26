@@ -242,6 +242,9 @@ public class Repository {
     public void register(String image_uri, User user) {
         user.set_image(image_uri);
         Task<AuthResult> createUser = userFirebaseWorker.create(user, get_loggedIn());
+        if(!createUser.isSuccessful()){
+            return;
+        }
         createUser.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
