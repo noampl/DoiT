@@ -169,7 +169,6 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
         if (item.getItemId() == R.id.delete) {
             _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue());
-            Log.d("Peleg", "DELETE in ChosenGroup fragment");
 
             return true;
         }

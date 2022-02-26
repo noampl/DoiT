@@ -142,7 +142,7 @@ public class TasksDetailsFragment extends Fragment {
         _binding.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                _taskViewModel.setTaskChecked(_task, b);
+                _taskViewModel.setTaskChecked(_task, b, _binding.getIsEdit());
             }
         });
 
@@ -171,7 +171,6 @@ public class TasksDetailsFragment extends Fragment {
                     _binding.setAssignee(users.get(0));
                     _task.set_assigneeId(users.get(0).get_userId());
                     _binding.executePendingBindings();
-                    Log.d("peleg", "set selected user to " + users.get(0).get_firstName());
                 }
                 else {
                     if (_prevAssigneeId != null)
