@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.ref.WeakReference;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -371,6 +372,7 @@ public class Repository {
             public void run() {
                 synchronized (this) {
                    LocalDB.db.taskDao().insertAll(task);
+                   _tasks.postValue(LocalDB.db.taskDao().getAll());
                 }
             }
         });
@@ -448,16 +450,17 @@ public class Repository {
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
-        System.out.println("peleg - update remote task " + task.get_taskId());
         _executorService.execute(() -> groupFirebaseWorker.updateTask(task));
     }
 
     public void updateLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {
-            System.out.println("peleg - update local task " + task.get_taskId());
-            LocalDB.db.taskDao().delete(task);
+            System.out.println("peleg - update local task " + task.get_assigneeId());
+            LocalDB.db.taskDao().delete(task.get_taskId());
             LocalDB.db.taskDao().insertAll(task);
-            _tasks.postValue(LocalDB.db.taskDao().getAll());
+            List<com.example.doit.model.entities.Task> tasks = LocalDB.db.taskDao().getAll();
+            System.out.println("peleg - total local task size is " + tasks.size());
+            _tasks.postValue(tasks);
         });
     }
 
@@ -473,8 +476,18 @@ public class Repository {
         _executorService.execute(() ->
         {groupFirebaseWorker.deleteUserFromGroup(group,
                 Objects.requireNonNull(get_authUser().getValue()));
-        LocalDB.db.groupDao().delete(group);
-        _groups.postValue(LocalDB.db.groupDao().getAll());
+
+        });
+    }
+
+    public void deleteLocalGroup(Group group){
+        _executorService.execute(()->{
+            for (String taskId : group.get_tasksId()){
+                LocalDB.db.taskDao().delete(taskId);
+            }
+            LocalDB.db.groupDao().delete(group);
+            _groups.postValue(LocalDB.db.groupDao().getAll());
+
         });
     }
 

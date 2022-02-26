@@ -46,6 +46,7 @@ public class Task {
         this._assigneeId = _assignee;
         this._value = _value;
         this._image = _image;
+        this._finishDate = 0;
     }
 
     // endregion

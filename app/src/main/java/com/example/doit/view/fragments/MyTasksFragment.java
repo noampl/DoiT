@@ -67,13 +67,23 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
         adapter.set_tasksViewModel(_tasksViewModel);
         _tasksViewModel.fetchTasks();
         _tasksViewModel.set_iFragmentNavigationHelper(this);
-        adapter.submitList(_tasksViewModel.get_tasks().getValue().stream().filter(t->(t.get_finishDate() != 0)).collect(Collectors.toList()));
+        adapter.submitList(_tasksViewModel.get_tasks().getValue().stream()
+                .filter(t->((t.get_finishDate() != 0) &&
+                (t.get_assigneeId().equals(_tasksViewModel.getLoggedInUserId())))
+                ).collect(Collectors.toList()));
         _binding.taskLst.setAdapter(adapter);
         _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                adapter.submitList(tasks.stream().filter((t)->(t.get_finishDate() == 0)).collect(Collectors.toList()));
+                List<Task> tmp = tasks.stream().filter((t)->(t.get_finishDate() == 0)).collect(Collectors.toList());
+                adapter.submitList(tmp);
+                if (tmp.size() > 0) {
+                    _binding.noTasksText.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    _binding.noTasksText.setVisibility(View.VISIBLE);
+                }
             }
         });
         menuChanger();

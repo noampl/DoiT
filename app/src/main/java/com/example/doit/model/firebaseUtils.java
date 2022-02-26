@@ -110,9 +110,6 @@ public class firebaseUtils {
                 }
                 if(value != null && value.exists()){
                     Task newTask = convertFirebaseDocumentToTask(value);
-                    List<Task> list = Repository.getInstance().get_tasks().getValue();
-                    list.add(newTask);
-                    Repository.getInstance().get_tasks().postValue(list);
                     Repository.getInstance().insertTaskLocal(newTask);
                 }
             }

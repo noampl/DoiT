@@ -48,7 +48,6 @@ public class TasksDetailsFragment extends Fragment {
     private FragmentTasksDetailsBinding _binding;
     private TasksViewModel _taskViewModel;
     private UsersViewModel _usersViewModel;
-    private UsersAdapter _usersAdapter;
     private Task _task;
     private String _prevAssigneeId;
 
@@ -63,8 +62,6 @@ public class TasksDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-//        _usersAdapter = new UsersAdapter(_usersViewModel, requireContext());
-//        _binding.assigneeSpinner.setAdapter(_usersAdapter);
         _taskViewModel.getTaskById(taskId).thenAccept(this::onFutureComplete);
         init();
 
@@ -186,12 +183,12 @@ public class TasksDetailsFragment extends Fragment {
     private void onFutureComplete(Task task){
         _task = task;
         _prevAssigneeId = task.get_assigneeId();
-        _usersViewModel.setUsersById(_task.get_groupId());
-        _binding.setTask(_task);
-        _binding.setAssignee(_taskViewModel.getUserById(_task.get_assigneeId()));
-        _binding.setOpenBy(_taskViewModel.getUserById(_task.get_createdById()));
-        _taskViewModel.setTargetDate(_task.get_targetDate());
-        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> _task.set_targetDate(aLong));
+        _usersViewModel.setUsersById(task.get_groupId());
+        _binding.setTask(task);
+        _binding.setAssignee(_taskViewModel.getUserById(task.get_assigneeId()));
+        _binding.setOpenBy(_taskViewModel.getUserById(task.get_createdById()));
+        _taskViewModel.setTargetDate(task.get_targetDate());
+        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> task.set_targetDate(aLong));
         _taskViewModel.set_isEdit(TasksDetailsFragmentArgs.fromBundle(getArguments()).getIsEdit());
     }
 
