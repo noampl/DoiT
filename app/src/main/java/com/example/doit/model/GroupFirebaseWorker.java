@@ -282,9 +282,6 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
-        System.out.println("peleg - sent task to firebase " + task.get_taskId());
-        System.out.println("peleg - sent task assigneee to firebase " + task.get_assigneeId());
-
         groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
                 .update(task.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -300,7 +297,6 @@ public class GroupFirebaseWorker implements IDataWorker {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     Log.d(TAG, "updated group: " + group.get_groupId());
-//                    Repository.getInstance().updateLocalGroup(group);
                 } else {
                     Log.d(TAG, "problem with update group: " + task.toString());
                 }

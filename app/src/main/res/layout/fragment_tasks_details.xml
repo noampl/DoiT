@@ -278,8 +278,7 @@
             app:layout_constraintBottom_toBottomOf="@id/status_title"
             app:layout_constraintEnd_toEndOf="parent"
             android:checked="@{task._finishDate != 0}"
-            android:onCheckedChanged="@{()->taskViewModel.setTaskChecked(task, (task._finishDate != 0), isEdit)}"
-            />
+        />
 
         <Button
             android:id="@+id/save"

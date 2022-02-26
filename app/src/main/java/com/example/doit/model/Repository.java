@@ -371,7 +371,7 @@ public class Repository {
             @Override
             public void run() {
                 synchronized (this) {
-                   LocalDB.db.taskDao().insertAll(task);
+                    LocalDB.db.taskDao().insertAll(task);
                    _tasks.postValue(LocalDB.db.taskDao().getAll());
                 }
             }
@@ -384,8 +384,8 @@ public class Repository {
             public void run() {
                 synchronized (this) {
                     LocalDB.db.groupDao().insertAll(group);
+                    _groups.postValue(LocalDB.db.groupDao().getAll());
                 }
-                _groups.postValue(LocalDB.db.groupDao().getAll());
             }
         });
     }
@@ -453,17 +453,6 @@ public class Repository {
         _executorService.execute(() -> groupFirebaseWorker.updateTask(task));
     }
 
-    public void updateLocalTask(com.example.doit.model.entities.Task task) {
-        _executorService.execute(() -> {
-            System.out.println("peleg - update local task " + task.get_assigneeId());
-            LocalDB.db.taskDao().delete(task.get_taskId());
-            LocalDB.db.taskDao().insertAll(task);
-            List<com.example.doit.model.entities.Task> tasks = LocalDB.db.taskDao().getAll();
-            System.out.println("peleg - total local task size is " + tasks.size());
-            _tasks.postValue(tasks);
-        });
-    }
-
     public CompletableFuture<Integer> getUserScoreByGroup(User user, String groupId) {
         return CompletableFuture.supplyAsync(()->LocalDB.db.taskDao().getUserScoreByGroup(user.get_userId(), groupId));
     }
@@ -487,6 +476,7 @@ public class Repository {
             }
             LocalDB.db.groupDao().delete(group);
             _groups.postValue(LocalDB.db.groupDao().getAll());
+            _tasks.postValue(LocalDB.db.taskDao().getAll());
 
         });
     }

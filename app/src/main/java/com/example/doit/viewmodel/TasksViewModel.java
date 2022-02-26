@@ -221,19 +221,17 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void setTaskChecked(Task task, boolean isChecked) {
-        synchronized (_tasks){
-           List<Task> tasks = _tasks.getValue();
-           tasks.forEach((t)->{
-                    if(t.get_taskId().equals(task.get_taskId())){
-                       if (isChecked) {
-                           t.set_finishDate(new Date().getTime());
-                       } else {
-                           t.set_finishDate(0);
-                       }
-                    }
-           });
-                _tasks.setValue(tasks);
-                Repository.getInstance().updateTask(task);
+        for (Task t:_tasks.getValue()) {
+            if(t.get_taskId().equals(task.get_taskId())){
+                if (isChecked) {
+                    t.set_finishDate(new Date().getTime());
+                } else {
+                    t.set_finishDate(0);
+                }
+                Repository.getInstance().updateTask(t);
+                break;
+
+            }
         }
     }
 

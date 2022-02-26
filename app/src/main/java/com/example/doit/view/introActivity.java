@@ -37,7 +37,6 @@ public class introActivity extends AppCompatActivity {
         _loginViewModel.get_logedIn().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                System.out.println("peleg try to connect " + aBoolean);
                 if (!isFirstTime) {
                     Intent intent = new Intent(activity, MainActivity.class);
                     intent.putExtra("LOGIN", aBoolean);
