@@ -145,6 +145,7 @@ public class GroupsFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.delete:
                 _groupsViewModel.deleteGroup(_groupsViewModel.getSelectedGroupId());
+                _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
                 return true;
             case R.id.edit:
                 GroupsFragmentDirections.ActionGroupsFragment2ToGroupsDetailsFragment action =

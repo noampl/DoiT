@@ -15,6 +15,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/no_tasks_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:visibility="visible"
+            android:textSize="@dimen/error_text_size"
+            android:text="@string/there_is_no_task_assigned_to_you"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/task_lst"
             android:layout_width="match_parent"
@@ -22,7 +34,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:shadowColor="@color/doit_red"            />
+            android:shadowColor="@color/doit_red"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

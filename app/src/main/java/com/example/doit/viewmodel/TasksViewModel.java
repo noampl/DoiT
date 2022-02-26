@@ -156,7 +156,6 @@ public class TasksViewModel extends ViewModel {
     }
 
     public boolean createTask(Uri uri, String taskName, String taskDesc, int taskValue) {
-
         if (taskName == null || taskName.equals("")){
             return false;
         }
@@ -222,23 +221,29 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void setTaskChecked(Task task, boolean isChecked) {
-       List<Task> tasks = _tasks.getValue();
-       tasks.forEach((t)->{
-                if(t.get_taskId().equals(task.get_taskId())){
-                   if (isChecked) {
-                       t.set_finishDate(new Date().getTime());
-                   } else {
-                       t.set_finishDate(0);
-                   }
-                }
-       });
-            _tasks.setValue(tasks);
-            Repository.getInstance().updateTask(task);
+        synchronized (_tasks){
+           List<Task> tasks = _tasks.getValue();
+           tasks.forEach((t)->{
+                    if(t.get_taskId().equals(task.get_taskId())){
+                       if (isChecked) {
+                           t.set_finishDate(new Date().getTime());
+                       } else {
+                           t.set_finishDate(0);
+                       }
+                    }
+           });
+                _tasks.setValue(tasks);
+                Repository.getInstance().updateTask(task);
+        }
     }
 
     public void setTaskChecked(Task task,boolean isChecked, boolean isEdit){
         if (!isEdit)
             setTaskChecked(task, isChecked);
+    }
+
+    public String getLoggedInUserId() {
+        return Repository.getInstance().get_authUser().getValue().get_userId();
     }
     // endregion
 

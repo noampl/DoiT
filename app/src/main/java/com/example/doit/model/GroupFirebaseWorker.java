@@ -199,7 +199,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
-                                                            Repository.getInstance().deleteGroup(group);
+                                                            Repository.getInstance().deleteLocalGroup(group);
                                                             Log.d(TAG, group.get_name() + " deleted from " + user.get_email());
                                                         } else {
                                                             Log.d(TAG, group.get_name() + " failed to be deleted from " + user.get_email());
@@ -282,14 +282,16 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {
+        System.out.println("peleg - sent task to firebase " + task.get_taskId());
+        System.out.println("peleg - sent task assigneee to firebase " + task.get_assigneeId());
+
         groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
-                .update(task.create()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "peleg - updated task: " + task.get_taskId());
-                        Repository.getInstance().updateLocalTask(task);
-                    }
-                });
+                .update(task.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> fireBaseTask) {
+                Log.d(TAG, "Was task update successfully? " + fireBaseTask.isSuccessful());
+            }
+        });
     }
 
     public void updateGroup(Group group){
@@ -297,8 +299,8 @@ public class GroupFirebaseWorker implements IDataWorker {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Log.d(TAG, "updated group: " + task.toString());
-                    Repository.getInstance().updateLocalGroup(group);
+                    Log.d(TAG, "updated group: " + group.get_groupId());
+//                    Repository.getInstance().updateLocalGroup(group);
                 } else {
                     Log.d(TAG, "problem with update group: " + task.toString());
                 }
