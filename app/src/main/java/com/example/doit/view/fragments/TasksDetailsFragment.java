@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class TasksDetailsFragment extends Fragment {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_details, container, false);
         _taskViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        _taskViewModel.set_isEdit(TasksDetailsFragmentArgs.fromBundle(getArguments()).getIsEdit());
         _taskViewModel.getTaskById(taskId).thenAccept(this::onFutureComplete);
         init();
 
@@ -82,7 +84,6 @@ public class TasksDetailsFragment extends Fragment {
 
     private void initBinding(){
         _binding.setTaskViewModel(_taskViewModel);
-        _binding.setTargetDate(_taskViewModel.get_targetDate());
         _binding.valueSpinner.setAdapter(ArrayAdapter.createFromResource(requireContext(),
                 R.array.values, R.layout.value_spinner));
         _binding.setLifecycleOwner(this);
@@ -177,6 +178,15 @@ public class TasksDetailsFragment extends Fragment {
                         _task.set_assigneeId(_prevAssigneeId);
                 }
         });
+
+        _taskViewModel.get_targetDate().observe(getViewLifecycleOwner(), (l)-> {
+            if (_task != null) {
+                _task.set_targetDate(l);
+                _binding.setTargetDate(l);
+                _binding.executePendingBindings();
+            }
+        });
+
     }
 
     private void onFutureComplete(Task task){
@@ -186,9 +196,7 @@ public class TasksDetailsFragment extends Fragment {
         _binding.setTask(task);
         _binding.setAssignee(_taskViewModel.getUserById(task.get_assigneeId()));
         _binding.setOpenBy(_taskViewModel.getUserById(task.get_createdById()));
-        _taskViewModel.setTargetDate(task.get_targetDate());
-        _binding.getTargetDate().observe(getViewLifecycleOwner(), aLong -> task.set_targetDate(aLong));
-        _taskViewModel.set_isEdit(TasksDetailsFragmentArgs.fromBundle(getArguments()).getIsEdit());
+        _taskViewModel.get_targetDate().postValue(task.get_targetDate());
     }
 
     private void selectAssignee(){
@@ -198,6 +206,7 @@ public class TasksDetailsFragment extends Fragment {
         action.setIsChecked(false);
         Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
     }
+
     // endregion
 
     // region Toolbar.OnMenuItemClickListener

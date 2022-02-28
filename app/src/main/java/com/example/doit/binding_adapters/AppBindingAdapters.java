@@ -114,11 +114,12 @@ public class AppBindingAdapters {
         if (date > 0){
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String text = sdf.format(new Date(date));
-            v.setText(text);
             v.setBackgroundResource(R.color.transparent);
+            v.setText(text);
         }
-        else{
+        else {
             v.setBackgroundResource(R.drawable.ic_baseline_date_range_24);
+
         }
 
     }
