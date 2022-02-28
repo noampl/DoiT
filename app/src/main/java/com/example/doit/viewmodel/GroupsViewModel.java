@@ -35,6 +35,7 @@ public class GroupsViewModel extends ViewModel {
     private String selectedGroupId;
     private WeakReference<IActionBarHelper> _actionBarHelper;
     private MutableLiveData<Boolean> _isEdit;
+    private MutableLiveData<Boolean> _isLoading;
 
     // endregion
 
@@ -46,11 +47,20 @@ public class GroupsViewModel extends ViewModel {
         _newGroupMembers = Repository.getInstance().get_newGroupUsers();
         _actionBarHelper = Repository.getInstance().getActionBarHelper();
         _isEdit = new MutableLiveData<>(false);
+        _isLoading = Repository.getInstance().getIsLoading();
     }
 
     // endregion
 
     // region Properties
+
+    public MutableLiveData<Boolean> get_isLoading() {
+        return _isLoading;
+    }
+
+    public void set_isLoading(boolean _isLoading) {
+        this._isLoading.setValue(_isLoading);
+    }
 
     public MutableLiveData<Boolean> get_isEdit() {
         return _isEdit;

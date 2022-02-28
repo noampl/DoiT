@@ -68,13 +68,14 @@
                 android:textStyle="bold"
                 />
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/task_name_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@{task._name, default= taskname}"
+                android:text="@{task._name, default= taskname}"
                 android:importantForAutofill="no"
                 android:inputType="text"
+                android:maxLength="@integer/title_length"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 />
@@ -100,12 +101,13 @@
 
                 />
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/task_desc_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@{task._description, default=description}"
+                android:text="@{task._description, default=description}"
                 android:textSize="18sp"
+                android:maxLength="@integer/description_length"
                 android:inputType="text"
                 android:autofillHints="no" />
 

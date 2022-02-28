@@ -5,29 +5,57 @@
     tools:context=".view.fragments.GroupsFragment">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="groupsViewModel"
             type="com.example.doit.viewmodel.GroupsViewModel" />
+        <variable
+            name="isLoading"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/no_groups_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:textSize="@dimen/error_text_size"
+            android:visibility="invisible"
+            android:text="@string/there_is_no_groups_yet"
+            />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/groups_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="@{isLoading ? View.INVISIBLE : View.VISIBLE}"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/add_group"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:indeterminate="true"
+            android:visibility="@{isLoading ? View.VISIBLE : View.INVISIBLE}"
+            />
 
     <Button
         android:id="@+id/add_group"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/large_avatar"
         android:text="@string/add_group"
+        android:visibility="@{isLoading ? View.INVISIBLE : View.VISIBLE}"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"

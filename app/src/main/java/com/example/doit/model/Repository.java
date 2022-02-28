@@ -1,11 +1,14 @@
 package com.example.doit.model;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.doit.common.Consts;
 import com.example.doit.interfaces.IActionBarHelper;
@@ -26,9 +29,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.jar.JarOutputStream;
 
 public class Repository {
@@ -37,12 +46,11 @@ public class Repository {
     // region Members
 
     private static Repository instance;
-    private Map<String, IDataWorker> workers;
+    private final Map<String, IDataWorker> workers;
     /**
      * Uses for add users / admins query in addition dialog
      */
-    private MutableLiveData<List<User>> _users = new MutableLiveData<>(new ArrayList<>());
-
+    private final MutableLiveData<List<User>> _users = new MutableLiveData<>(new ArrayList<>());
     /**
      * THe User Groups
      */
@@ -56,14 +64,17 @@ public class Repository {
     private final UserFirebaseWorker userFirebaseWorker;
     private final GroupFirebaseWorker groupFirebaseWorker;
     private MutableLiveData<Boolean> _isSynced;
-    private MutableLiveData<List<User>> _selectedUsers = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<User>> _selectedUsers = new MutableLiveData<>(new ArrayList<>());
     private String _taskDetailsId = "";
     /**
      * Uses for addGroup dialog
      */
     private MutableLiveData<List<User>> _newGroupUsers;
     private WeakReference<IActionBarHelper> actionBarHelper;
-    private MutableLiveData<List<Integer>> _selectedCheckedBoxPosition = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Integer>> _selectedCheckedBoxPosition = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(true);
+    private ExecutorService loadingThread;
+    private final AtomicInteger delayCounter = new AtomicInteger(1);
 
     // endregion
 
@@ -85,7 +96,35 @@ public class Repository {
         groupFirebaseWorker = new GroupFirebaseWorker();
         userFirebaseWorker.setAuthUser(_authUser);
         _newGroupUsers = new MutableLiveData<>(new ArrayList<>());
+        _loggedIn = new MutableLiveData<>(false);
 
+        loadingThread = Executors.newSingleThreadExecutor();
+        _loggedIn.observeForever(new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loggedIn) {
+                if (loggedIn) {
+                    loadingThread.execute(() -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        while (true) {
+                            if (delayCounter.get() > 0) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                delayCounter.decrementAndGet();
+                            }
+                            _isLoading.postValue(false);
+                            break;
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public static Repository getInstance() {
@@ -98,6 +137,10 @@ public class Repository {
     // endregion
 
     // region Properties
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return _isLoading;
+    }
 
     public MutableLiveData<List<Integer>> getSelectedCheckBoxPosition() {
        return _selectedCheckedBoxPosition;
@@ -117,12 +160,6 @@ public class Repository {
 
     public MutableLiveData<List<User>> get_selectedUsers() {
         return this._selectedUsers;
-    }
-
-    public void cleanCache() {
-        LocalDB.db.taskDao().deleteAll();
-        LocalDB.db.groupDao().deleteAll();
-        LocalDB.db.userDao().deleteAll();
     }
 
     public MutableLiveData<Boolean> get_isSynced() {
@@ -174,16 +211,10 @@ public class Repository {
     }
 
     private void set_loggedIn(Boolean aBoolean) {
-        if (_loggedIn == null) {
-            _loggedIn = new MutableLiveData<>();
-        }
         _loggedIn.setValue(aBoolean);
     }
 
     public MutableLiveData<Boolean> get_loggedIn() {
-        if (_loggedIn == null) {
-            _loggedIn = new MutableLiveData<>(false);
-        }
         return _loggedIn;
     }
 
@@ -206,6 +237,12 @@ public class Repository {
 
     // region Public Methods
 
+    public void cleanCache() {
+        LocalDB.db.taskDao().deleteAll();
+        LocalDB.db.groupDao().deleteAll();
+        LocalDB.db.userDao().deleteAll();
+    }
+
     public void getAllAuthUserGroups() {
         synchronized (this) {
             Task<QuerySnapshot> a = userFirebaseWorker.getAuthenticatedUser();
@@ -221,7 +258,7 @@ public class Repository {
     public void initlogin(Map<String, String> user) {
         _executorService.execute(()->{
             try {
-                Thread.sleep(1100);
+                Thread.sleep(1100); // use for init screen to appear
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -282,68 +319,42 @@ public class Repository {
         return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
     }
 
-    public void deleteNotExistTask() {
-        _executorService.execute(() -> {
-            synchronized (this) {
-                Log.d(TAG, "deleteNotExistTask:: starting list" + get_tasks().getValue());
-                List<String> groupIds = new ArrayList<>();
-                for (Group g : LocalDB.db.groupDao().getAll()) {
-                    groupIds.add(g.get_groupId());
-                }
-                //TODO 2022-01-14 12:41:11.529 21197-21259/com.example.doit E/AndroidRuntime: FATAL EXCEPTION: pool-5-thread-3
-                //    Process: com.example.doit, PID: 21197
-                //    java.util.ConcurrentModificationException
-                //        at java.util.ArrayList$Itr.next(ArrayList.java:860)
-                //        at com.example.doit.model.Repository.lambda$deleteNotExistTask$5$com-example-doit-model-Repository(Repository.java:323)
-                //        at com.example.doit.model.Repository$$ExternalSyntheticLambda0.run(Unknown Source:2)
-                //        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
-                //        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
-                //        at java.lang.Thread.run(Thread.java:923)
-                List<com.example.doit.model.entities.Task> clone = new ArrayList<>(get_tasks().getValue());
-                for (com.example.doit.model.entities.Task task : get_tasks().getValue()) {
-                    if (!groupIds.contains(task.get_groupId())) {
-                        clone.remove(task);
-                        LocalDB.db.taskDao().delete(task);
-                    }
-                }
-                get_tasks().postValue(clone);
-                Log.d(TAG, "deleteNotExistTask:: finish list" + get_tasks().getValue());
-            }
-        });
-    }
-
     public void deleteNotExistGroupsOnFirebase(String userID) {
         _executorService.execute(new Runnable() {
             @Override
             public void run() {
                 synchronized (this) {
+                    boolean somethingChange = false;
                     for (Group g : LocalDB.db.groupDao().getAll()) {
                         if (!g.getMembersId().contains(userID)) {
                             LocalDB.db.groupDao().delete(g);
+                            somethingChange = true;
                         }
                     }
-                    ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
-                    for (Group group : getGroups().getValue()) {
-                        if (!group.getMembersId().contains(userID)) {
-                            clone.remove(group);
-                            for (String taskId : group.get_tasksId()) {
-                                LocalDB.db.taskDao().deleteTaskById(taskId);
+                    if (somethingChange) {
+                        ArrayList<Group> clone = new ArrayList<Group>(Objects.requireNonNull(getGroups().getValue()));
+                        for (Group group : getGroups().getValue()) {
+                            if (!group.getMembersId().contains(userID)) {
+                                clone.remove(group);
+                                for (String taskId : group.get_tasksId()) {
+                                    LocalDB.db.taskDao().deleteTaskById(taskId);
+                                }
                             }
                         }
+                        getGroups().postValue(clone);
                     }
-                    getGroups().postValue(clone);
                 }
             }
         });
     }
 
+    public void repeatLoadingThread(){
+        delayCounter.incrementAndGet();
+    }
+
     // endregion
 
     // region Db interaction
-
-//    public LiveData<List<Group>> getGroupsByUserId(String userId) {
-//        return LocalDB.db.groupDao().getAllUserGroups(userId);
-//    }
 
     public void deleteLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {

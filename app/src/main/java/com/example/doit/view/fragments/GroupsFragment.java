@@ -3,20 +3,14 @@ package com.example.doit.view.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +23,7 @@ import com.example.doit.model.entities.Group;
 import com.example.doit.view.adapters.GroupsAdapter;
 import com.example.doit.viewmodel.GroupsViewModel;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -60,6 +55,12 @@ public class GroupsFragment extends Fragment implements
     }
 
     @Override
+    public void onPause() {
+        _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+        super.onPause();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups, container, false);
@@ -69,10 +70,11 @@ public class GroupsFragment extends Fragment implements
         _groupsViewModel.set_iFragmentNavigitionHelper(this);
         _groupsViewModel.get_actionBarHelper().get().setNavIcon(null);
         _binding.setGroupsViewModel(_groupsViewModel);
+        _binding.setIsLoading(_groupsViewModel.get_isLoading().getValue());
         _binding.setLifecycleOwner(this);
         initAdapter();
         initObservers();
-               return _binding.getRoot();
+        return _binding.getRoot();
     }
 
     // endregion
@@ -81,14 +83,28 @@ public class GroupsFragment extends Fragment implements
 
     private void initAdapter() {
         adapter = new GroupsAdapter(_groupsViewModel, getViewLifecycleOwner());
-        adapter.submitList(_groupsViewModel.get_groups().getValue());
         _groupsViewModel.get_groups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Group> groups) {
-                synchronized (this){
-                    adapter.submitList(groups);
-                    adapter.notifyDataSetChanged();
+                groups.sort(new Comparator<Group>() {
+                    @Override
+                    public int compare(Group group, Group group2) {
+                        return group.get_name().compareTo(group2.get_name());
+                    }
+                });
+                adapter.submitList(groups);
+                adapter.notifyDataSetChanged();
+                if(!_groupsViewModel.get_isLoading().getValue()){
+                    if (groups.size() > 0) {
+                        _binding.noGroupsText.setVisibility(View.INVISIBLE);
+                    }
+                    else{
+                        _binding.noGroupsText.setVisibility(View.VISIBLE);
+                    }
+                }
+                else{
+                    _binding.noGroupsText.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -102,18 +118,30 @@ public class GroupsFragment extends Fragment implements
                 if (integer >= 0) {
                     _groupsViewModel.get_actionBarHelper().get().setTitle("");
                     _groupsViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
+                    _groupsViewModel.get_actionBarHelper().get().setNavigationClickListener(navigationMenuClickListener);
                     _groupsViewModel.get_actionBarHelper().get().setMenu(R.menu.edit_menu);
                     _groupsViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
                 }
                 else {
-                    _groupsViewModel.get_actionBarHelper().get().setTitle("My Groups");
-                    _groupsViewModel.get_actionBarHelper().get().setNavIcon(null);
-                    _groupsViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
-                    _groupsViewModel.get_actionBarHelper().get().setMenuClickListener(null);
+                   regularMenu();
 
                 }
             }
         });
+        _groupsViewModel.get_isLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                _binding.setIsLoading(isLoading);
+            }
+        });
+    }
+
+    private void regularMenu(){
+        _groupsViewModel.get_actionBarHelper().get().setTitle("My Groups");
+        _groupsViewModel.get_actionBarHelper().get().setNavIcon(null);
+        _groupsViewModel.get_actionBarHelper().get().setNavigationClickListener(null);
+        _groupsViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+        _groupsViewModel.get_actionBarHelper().get().setMenuClickListener(null);
     }
 
     // endregion
@@ -154,6 +182,7 @@ public class GroupsFragment extends Fragment implements
                 Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
                 return true;
 
+
             default:
 
                 break;
@@ -163,7 +192,11 @@ public class GroupsFragment extends Fragment implements
 
     // endregion
 
-
-
+    private final View.OnClickListener navigationMenuClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+        }
+    };
 
 }

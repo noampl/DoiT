@@ -69,6 +69,8 @@
     <string name="select_user">select user</string>
     <string name="this_group_n_does_not_have_tasks_yet">This Group\nDoes not have tasks yet</string>
     <string name="there_is_no_task_assigned_to_you">There is no task assigned to you</string>
+    <string name="there_is_no_groups_yet">You have no group yet</string>
+
 
 
 </resources>

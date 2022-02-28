@@ -25,6 +25,7 @@ import com.example.doit.view.adapters.TasksAdapter;
 import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,12 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
             @Override
             public void onChanged(List<Task> tasks) {
                 List<Task> tmp = tasks.stream().filter((t)->(t.get_finishDate() == 0)).collect(Collectors.toList());
+                tmp.sort(new Comparator<Task>() {
+                    @Override
+                    public int compare(Task task, Task task2) {
+                        return task2.get_value() - task.get_value();// from the highest value to the lowest
+                    }
+                });
                 adapter.submitList(tmp);
                 if (tmp.size() > 0) {
                     _binding.noTasksText.setVisibility(View.INVISIBLE);
@@ -104,6 +111,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                     _tasksViewModel.get_actionBarHelper().get().setTitle("My Tasks");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
+                    _tasksViewModel.get_actionBarHelper().get().setNavigationClickListener(null);
 
                 }
             }

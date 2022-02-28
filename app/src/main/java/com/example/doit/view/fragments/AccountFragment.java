@@ -65,8 +65,16 @@ public class AccountFragment extends Fragment {
         initBinding();
         initObservers();
         initListeners();
+        initMenu();
         viewModel.updateUserDetails();
 
+    }
+
+    private void initMenu() {
+        viewModel.getActionBarHelper().get().setTitle("My Account");
+        viewModel.getActionBarHelper().get().setMenu(R.menu.app_menu);
+        viewModel.getActionBarHelper().get().setNavigationClickListener(null);
+        viewModel.getActionBarHelper().get().setMenuClickListener(null);
     }
 
     private void initListeners(){

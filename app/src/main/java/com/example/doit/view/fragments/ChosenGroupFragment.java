@@ -29,6 +29,7 @@ import com.example.doit.view.adapters.TasksAdapter;
 import com.example.doit.viewmodel.GroupsViewModel;
 import com.example.doit.viewmodel.TasksViewModel;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -85,6 +86,12 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             public void onChanged(List<Task> tasks) {
                 List<Task> tmp = tasks.stream().filter((t)->t.get_groupId().equals(_tasksViewModel.get_groupId()) &&
                         t.get_finishDate() == 0).collect(Collectors.toList());
+                tmp.sort(new Comparator<Task>() {
+                    @Override
+                    public int compare(Task task, Task task2) {
+                        return task2.get_value() - task.get_value();
+                    }
+                });
                 adapter.submitList(tmp);
                 adapter.notifyDataSetChanged();
                 if (tmp.size() > 0) {
