@@ -9,7 +9,7 @@
 
         <variable
             name="targetDate"
-            type="androidx.lifecycle.MutableLiveData&lt;Long&gt;" />
+            type="long" />
 
         <variable
             name="isEdit"
@@ -209,14 +209,13 @@
             android:id="@+id/finish_at_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:date="@{targetDate}"
             app:layout_constraintBottom_toBottomOf="@id/created_date_val"
             app:layout_constraintEnd_toEndOf="@id/finish_at"
-            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintHorizontal_bias="0.43"
             app:layout_constraintStart_toStartOf="@id/finish_at"
             app:layout_constraintTop_toTopOf="@id/created_date_val"
-            app:layout_constraintVertical_bias="0.0"
-            app:date="@{targetDate}"
-            />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/value_title"

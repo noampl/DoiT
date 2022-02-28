@@ -177,8 +177,8 @@ public class TasksViewModel extends ViewModel {
         Repository.getInstance().getTasksByGroupId(groupId).thenAccept(this::set_tasks);
     }
 
-    public void setTargetDate(DatePicker datePicker){
-        _targetDate.setValue(datePicker.getAutofillValue().getDateValue());
+    public void setTargetDate(DatePicker datePicker) {
+        setTargetDate(datePicker.getAutofillValue().getDateValue());
     }
 
     public void setTargetDate(long targetDate){
