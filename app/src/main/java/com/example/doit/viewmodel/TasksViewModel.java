@@ -1,6 +1,7 @@
 package com.example.doit.viewmodel;
 
 import android.net.Uri;
+import android.util.Pair;
 import android.widget.DatePicker;
 
 import androidx.lifecycle.MutableLiveData;
@@ -19,6 +20,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class TasksViewModel extends ViewModel {
@@ -36,7 +38,7 @@ public class TasksViewModel extends ViewModel {
     private String _createdById;
     private String _tasksDetailsId;
     private final WeakReference<IActionBarHelper> _actionBarHelper;
-    private final MutableLiveData<Integer> _selectedTaskIndex;
+    private final MutableLiveData<Pair<Integer,String>> _selectedTaskIndex;
     private final MutableLiveData<Boolean> _isEdit;
 
     // endregion
@@ -48,7 +50,7 @@ public class TasksViewModel extends ViewModel {
         _createdById = Repository.getInstance().get_authUser().getValue().get_userId();
         _tasksDetailsId = Repository.getInstance().get_taskDetailsId();
         _actionBarHelper = Repository.getInstance().getActionBarHelper();
-        _selectedTaskIndex = new MutableLiveData<>(Consts.INVALID_POSITION);
+        _selectedTaskIndex = new MutableLiveData<>(new Pair<>(Consts.INVALID_POSITION, ""));
         _isEdit = new MutableLiveData<>(false);
         _targetDate = new MutableLiveData<>();
     }
@@ -114,12 +116,15 @@ public class TasksViewModel extends ViewModel {
         this._iFragmentNavigationHelper = _iFragmentNavigationHelper;
     }
 
-    public MutableLiveData<Integer> get_selectedTaskIndex() {
+    public MutableLiveData<Pair<Integer,String>> get_selectedTaskIndex() {
         return _selectedTaskIndex;
     }
 
-    public void set_selectedTaskIndex(int _selectedTaskIndex) {
+    public void set_selectedTaskIndex(Pair<Integer,String> _selectedTaskIndex) {
         this._selectedTaskIndex.setValue(_selectedTaskIndex);
+    }
+    public void set_selectedTaskIndex(Integer position, String id) {
+        this._selectedTaskIndex.setValue(new Pair<>(position,id));
     }
 
     // endregion
@@ -151,7 +156,7 @@ public class TasksViewModel extends ViewModel {
     }
 
     public void openDialog(){
-        set_selectedTaskIndex(Consts.INVALID_POSITION);
+        set_selectedTaskIndex(Consts.INVALID_POSITION,"");
         _iDialogNavigationHelper.openDialog();
     }
 
@@ -186,11 +191,11 @@ public class TasksViewModel extends ViewModel {
     }
 
     public boolean details(Task task, int itemPosition){
-        if(_selectedTaskIndex.getValue() != itemPosition) {
+        if(_selectedTaskIndex.getValue().first != itemPosition) {
             set_tasksDetailsId(task.get_taskId());
             _iFragmentNavigationHelper.openFragment();
         }
-        set_selectedTaskIndex(Consts.INVALID_POSITION);
+        set_selectedTaskIndex(Consts.INVALID_POSITION,"");
         return true;
     }
 
@@ -214,10 +219,19 @@ public class TasksViewModel extends ViewModel {
 
     public void deleteTask(Task task) {
         Repository.getInstance().deleteTask(task);
+        set_selectedTaskIndex(Consts.INVALID_POSITION, "");
     }
 
-    public void deleteTask(int index) {
-        Repository.getInstance().deleteTask(_tasks.getValue().get(index));
+    public void deleteTask(String taskId) {
+        Task task = null;
+        for (Task t: _tasks.getValue()) {
+            if (t.get_taskId().equals(taskId)){
+                task = t;
+                break;
+            }
+        }
+        Repository.getInstance().deleteTask(task);
+        set_selectedTaskIndex(Consts.INVALID_POSITION, "");
     }
 
     public void setTaskChecked(Task task, boolean isChecked) {

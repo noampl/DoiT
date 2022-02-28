@@ -41,6 +41,7 @@
             android:layout_marginEnd="@dimen/margin"
             android:hint="@string/task_name"
             android:inputType="text"
+            android:maxLength="@integer/title_length"
             app:layout_constraintBottom_toBottomOf="@id/task_img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/task_img"
@@ -54,6 +55,7 @@
             android:layout_marginEnd="@dimen/margin"
             android:hint="@string/group_dec"
             android:inputType="text"
+            android:maxLength="@integer/description_length"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/task_img"
             app:layout_constraintTop_toBottomOf="@id/task_img" />

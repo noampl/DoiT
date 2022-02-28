@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="title_length">15</integer>
+    <integer name="description_length">20</integer>
+
+</resources>

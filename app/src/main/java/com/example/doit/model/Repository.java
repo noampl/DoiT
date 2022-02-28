@@ -348,7 +348,7 @@ public class Repository {
     public void deleteLocalTask(com.example.doit.model.entities.Task task) {
         _executorService.execute(() -> {
             LocalDB.db.taskDao().delete(task);
-            userFirebaseWorker.deleteTask(task);
+            _tasks.postValue(LocalDB.db.taskDao().getAll());
         });
     }
 
@@ -495,8 +495,6 @@ public class Repository {
     public void deleteTask(com.example.doit.model.entities.Task task){
         _executorService.execute(() -> {
             groupFirebaseWorker.deleteTask(task);
-            LocalDB.db.taskDao().delete(task);
-            _tasks.postValue(LocalDB.db.taskDao().getAll());
         });
     }
 

@@ -62,6 +62,8 @@
             android:layout_marginTop="@dimen/small_margin"
             android:text="@{task._name, default = This_is_headline}"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
             app:layout_constraintStart_toEndOf="@id/task_img"
             app:layout_constraintTop_toTopOf="@id/task_img" />
 
@@ -69,6 +71,8 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="150dp"
             android:layout_marginTop="@dimen/margin"
             android:text="@{task._description, default = Description_of_task}"
             app:layout_constraintStart_toStartOf="@id/title"
@@ -90,6 +94,7 @@
             android:layout_height="wrap_content"
             android:text="@{group._name, default = group_name}"
             android:visibility="@{isMyTasks ? View.VISIBLE : View.GONE}"
+            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="@+id/value_number"
             app:layout_constraintStart_toStartOf="@+id/value_title"
             app:layout_constraintTop_toTopOf="@id/checkbox" />

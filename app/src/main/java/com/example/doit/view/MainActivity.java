@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
         });
     }
 
-    private void exitDialog(){
+    public void exitDialog(){
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(this).create();
         alertDialog.setTitle("Are you sure you want to exit");
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", (dialogInterface, i) -> {

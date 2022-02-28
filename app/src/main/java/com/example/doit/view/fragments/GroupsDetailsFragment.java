@@ -103,9 +103,13 @@ public class GroupsDetailsFragment extends Fragment {
     }
 
     private void initListeners(){
-        _binding.save.setOnClickListener(view ->
-                _groupsViewModel.saveEditGroup(_binding.groupNameEdit.getText().toString(),
-                        _binding.groupDescText.getText().toString(), _group, _usersViewModel.get_users().getValue()));
+        _binding.save.setOnClickListener(view -> {
+            _groupsViewModel.saveEditGroup(_binding.groupNameEdit.getText().toString(),
+                    _binding.groupDescEdit.getText().toString(), _group, _usersViewModel.get_users().getValue());
+            Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
+            }
+
+        );
 
         _binding.groupImage.setOnClickListener(new View.OnClickListener() {
             @Override
