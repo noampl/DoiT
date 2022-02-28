@@ -36,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -470,33 +471,6 @@ public class UserFirebaseWorker implements IDataWorker {
         });
     }
 
-    public void getAllAuthUserGroups() {
-        Log.d(TAG, "Getting all Authenticated user groups");
-        if (authUser.getValue() == null) {
-            Log.w(TAG, "There is no connected user");
-            return;
-        }
-        User user = authUser.getValue();
-        for (String groupID : user.get_groupsId()) {
-            groupsRef.document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    DocumentSnapshot groupDoc = task.getResult();
-                    if (groupDoc == null) {
-                        Log.w(TAG, "Couldn't find group");
-                        return;
-                    }
-                    groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
-                    Group group = convertFirebaseDocumentToGroup(groupDoc);
-                    authUser.getValue().addGroupOrUpdate(group);
-                    Repository.getInstance().insertGroupLocal(group);
-                }
-            });
-        }
-        Repository.getInstance().deleteNotExistGroupsOnFirebase(authUser.getValue().get_userId());
-
-    }
-
     public void lookForAllUsersByEmailOrName(String lookingFor, MutableLiveData<List<User>> users) {
         ExecutorService executorService = Repository.getInstance().getExecutorService();
         String look = lookingFor.toLowerCase();
@@ -513,7 +487,6 @@ public class UserFirebaseWorker implements IDataWorker {
 
     public void getAllAuthUserGroupAndTasks() {
         Log.d(TAG, "Getting all authenticated user tasks and groups");
-        ExecutorService executorService = Repository.getInstance().getExecutorService();
         if (authUser.getValue() == null) {
             Log.w(TAG, "There is no connected user");
             return;
@@ -530,13 +503,15 @@ public class UserFirebaseWorker implements IDataWorker {
                             return;
                         }
                         groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
-                        Group group = convertFirebaseDocumentToGroup(groupDoc);
-                        group.set_groupId(groupDoc.getId());
-                        Log.d(TAG, group.create().toString());
-                        User updatedAuth = authUser.getValue();
-                        updatedAuth.addGroupOrUpdate(group);
-                        authUser.postValue(updatedAuth);
-                        Repository.getInstance().insertGroupLocal(group);
+//                        Group group = convertFirebaseDocumentToGroup(groupDoc);
+//                        group.set_groupId(groupDoc.getId());
+//                        Log.d(TAG, group.create().toString());
+//                        User updatedAuth = authUser.getValue();
+//                        updatedAuth.addGroupOrUpdate(group);
+//                        authUser.postValue(updatedAuth);
+//                        System.out.println("peleg - get group from firebase");
+//                        Repository.getInstance().insertGroupLocal(group);
+////                        Repository.getInstance().repeatLoadingThread();
                     }
                 });
             }
@@ -544,22 +519,22 @@ public class UserFirebaseWorker implements IDataWorker {
         synchronized (this) {
             for (String groupID : user.get_groupsId()) {
                 groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
-                                for (DocumentSnapshot taskDoc : tasks) {
-                                    com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
-                                    task.set_taskId(taskDoc.getId());
-                                    getUser(task.get_assigneeId());
-                                    if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
-                                        getUser(task.get_createdById());
-                                    }
-                                    Repository.getInstance().insertTaskLocal(task);
-                                    taskDoc.getReference().addSnapshotListener(getTaskListener());
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot taskDoc : tasks) {
+                                com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
+                                task.set_taskId(taskDoc.getId());
+                                getUser(task.get_assigneeId());
+                                if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
+                                    getUser(task.get_createdById());
                                 }
+                                Repository.getInstance().insertTaskLocal(task);
+                                taskDoc.getReference().addSnapshotListener(getTaskListener());
                             }
-                        });
+                        }
+                    });
             }
         }
 

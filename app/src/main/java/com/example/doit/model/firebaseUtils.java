@@ -95,6 +95,7 @@ public class firebaseUtils {
                     Repository.getInstance().insertGroupLocal(newGroup);
                     String userId = Repository.getInstance().get_authUser().getValue().get_userId();
                     Repository.getInstance().deleteNotExistGroupsOnFirebase(userId);
+                    Repository.getInstance().repeatLoadingThread();
                 }
             }
         };

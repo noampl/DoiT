@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.example.MyApplication;
 import com.example.doit.R;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
     private NavHostFragment navHostFragment;
     private AppBarConfiguration _appBarConfiguration;
     private boolean isLoggedIn;
-    private FragmentManager _fragmentManager;
 
     // endregion
 
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
         accountViewModel.setActionBarHelper(this);
         _binding.setLoginViewModel(loginViewModel);
         _binding.setLifecycleOwner(this);
-        _fragmentManager = getSupportFragmentManager();
         init();
     }
 
@@ -103,12 +102,7 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
 
     private void initListeners(){
         _binding.mainToolbar.setOnMenuItemClickListener(this);
-        _binding.mainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavigationUI.navigateUp(navHostFragment.getNavController(), _appBarConfiguration);
-            }
-        });
+        _binding.mainToolbar.setNavigationOnClickListener(navigationMenuClickListener);
     }
 
     public void exitDialog(){
@@ -161,6 +155,16 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
         }
     }
 
+    @Override
+    public void setNavigationClickListener(View.OnClickListener listener) {
+        if (listener != null){
+            _binding.mainToolbar.setNavigationOnClickListener(listener);
+        }
+        else{
+            _binding.mainToolbar.setNavigationOnClickListener(navigationMenuClickListener);
+        }
+    }
+
     // endregion
 
     // region Toolbar
@@ -195,6 +199,13 @@ public class MainActivity extends AppCompatActivity implements IActionBarHelper,
             super.onBackPressed();
 
     }
+
+    private OnClickListener navigationMenuClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            NavigationUI.navigateUp(navHostFragment.getNavController(), _appBarConfiguration);
+        }
+    };
 }
 
 
