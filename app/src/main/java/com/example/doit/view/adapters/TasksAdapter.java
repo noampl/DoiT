@@ -1,5 +1,6 @@
 package com.example.doit.view.adapters;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,11 +109,16 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             group.thenAccept(_binding::setGroup);
             _binding.setUser(user);
             _binding.constraint.setOnLongClickListener(view -> {
-                tasksViewModel.set_selectedTaskIndex(getAdapterPosition());
+                tasksViewModel.set_selectedTaskIndex(getAdapterPosition(),task.get_taskId());
                 return true;
             });
 
-            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, _binding::setSelectedTask);
+            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, new Observer<Pair<Integer, String>>() {
+                @Override
+                public void onChanged(Pair<Integer, String> pair) {
+                    _binding.setSelectedTask(pair.first);
+                }
+            });
 
             _binding.checkbox.setOnCheckedChangeListener((compoundButton, isChecked) ->
                     tasksViewModel.setTaskChecked(task, isChecked));

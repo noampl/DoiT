@@ -309,12 +309,11 @@ public class GroupFirebaseWorker implements IDataWorker {
                 .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d(TAG, "deleted task: " + task.toString());
-                        Repository.getInstance().insertTaskLocal(task);
+                        Log.d(TAG, "peleg - deleted task: " + task.get_name());
+                        Repository.getInstance().deleteLocalTask(task);
                     }
                 });
     }
-
 
     // endregion
 

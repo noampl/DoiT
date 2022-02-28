@@ -83,6 +83,9 @@
         <action
             android:id="@+id/action_chosenGroupFragment_to_summaryDialog"
             app:destination="@id/summaryDialog" />
+        <action
+            android:id="@+id/action_chosenGroupFragment_to_groupsDetailsFragment"
+            app:destination="@id/groupsDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/myTasksFragment"

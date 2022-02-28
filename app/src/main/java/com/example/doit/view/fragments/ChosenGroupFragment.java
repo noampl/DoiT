@@ -12,11 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.example.doit.R;
+import com.example.doit.common.Consts;
 import com.example.doit.databinding.FragmentChosenGroupBinding;
 import com.example.doit.interfaces.IDialogNavigationHelper;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
@@ -92,10 +95,10 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             }
         });
         _binding.taskLst.setAdapter(adapter);
-        _tasksViewModel.get_selectedTaskIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        _tasksViewModel.get_selectedTaskIndex().observe(getViewLifecycleOwner(),new Observer<Pair<Integer, String>>() {
             @Override
-            public void onChanged(Integer integer) {
-                if (integer >= 0) {
+            public void onChanged(Pair<Integer, String> pair) {
+                if (pair.first >= 0) {
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
@@ -105,9 +108,9 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                     if (_group != null){
                         _tasksViewModel.get_actionBarHelper().get().setTitle(_group.get_name());
                     }
-                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+                    _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu_edit);
                     _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
-                    _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
+                    _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
                 }
             }
         });
@@ -167,10 +170,23 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
 
     @SuppressLint("NonConstantResourceId")
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
-        if (item.getItemId() == R.id.delete) {
-            _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue());
+        switch (item.getItemId()){
+            case R.id.delete:
+                _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue().second);
 
-            return true;
+                return true;
+            case R.id.about:
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(R.id.about);
+
+                return true;
+            case R.id.edit:
+            ChosenGroupFragmentDirections.ActionChosenGroupFragmentToGroupsDetailsFragment action =
+                    ChosenGroupFragmentDirections.actionChosenGroupFragmentToGroupsDetailsFragment(_group.get_groupId());
+            Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
+
+                return true;
+            default:
+                break;
         }
         return false;
     };
