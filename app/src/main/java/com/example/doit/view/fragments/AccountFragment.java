@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -40,8 +41,6 @@ public class AccountFragment extends Fragment {
     private static final String TAG = "Account Fragment";
     private FragmentAccountBinding _binding;
     private AccountViewModel viewModel;
-    private boolean editDetails;
-    private boolean image_changed;
 
     //endregion
 
@@ -72,21 +71,24 @@ public class AccountFragment extends Fragment {
 
     private void initMenu() {
         viewModel.getActionBarHelper().get().setTitle("My Account");
-        viewModel.getActionBarHelper().get().setMenu(R.menu.app_menu);
+        viewModel.getActionBarHelper().get().setMenu(R.menu.account_menu);
+        viewModel.getActionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
         viewModel.getActionBarHelper().get().setNavigationClickListener(null);
-        viewModel.getActionBarHelper().get().setMenuClickListener(null);
+        viewModel.getActionBarHelper().get().setMenuClickListener(menuItemClickListener);
     }
 
     private void initListeners(){
-        _binding.userEditButton.setOnClickListener(userEditButtonListener);
         _binding.profileImage.setOnClickListener(profileImageListener);
-        _binding.logoutButton.setOnClickListener(new View.OnClickListener() {
+        _binding.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearLoginUser();
-                viewModel.onClickLogoutButton();
-                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).
-                        navigate(R.id.action_accountFragment2_to_logInFragment2);
+               if (viewModel.saveDetails(_binding.EmailEditText.getText().toString(),
+                        _binding.FirstNameEditText.getText().toString(), _binding.LastNameEditText.getText().toString())){
+                    viewModel.setEditDetails(false);
+               }
+               else{
+                   Toast.makeText(requireContext(), "Invalid input",Toast.LENGTH_SHORT).show();
+               }
             }
         });
     }
@@ -94,14 +96,26 @@ public class AccountFragment extends Fragment {
     private void initObservers(){
         viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
         viewModel.get_operationError().observe(getViewLifecycleOwner(),errorHandler());
+        viewModel.getEditDetails().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isEdit) {
+                if (isEdit){
+                    _binding.firstNameTextSwitch.showNext();
+                    _binding.EmailSwitcher.showNext();
+                    _binding.LastNameSwitcher.showNext();
+                }
+                else if (_binding.firstNameTextSwitch.getNextView() == _binding.FirstNameTextView){
+                    _binding.firstNameTextSwitch.showNext();
+                    _binding.EmailSwitcher.showNext();
+                    _binding.LastNameSwitcher.showNext();
+                }
+            }
+        });
     }
 
     private void initBinding(){
         _binding.setAccountViewModel(viewModel);
         _binding.setLifecycleOwner(this);
-        editDetails = false;
-        _binding.profileImage.setClickable(false);
-        _binding.profileImage.setEnabled(false);
     }
 
     private final ActivityResultLauncher<Intent> pickPhotoResultLauncher = registerForActivityResult(
@@ -171,21 +185,37 @@ public class AccountFragment extends Fragment {
         }
     };
 
-    private final View.OnClickListener userEditButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Boolean editDetails = viewModel.getEditDetails().getValue();
-            if(Boolean.FALSE.equals(editDetails)){
-                viewModel.setImageChanged(false);
-                viewModel.setEditDetails(true);
-            } else {
-                viewModel.setEditDetails(false);
-                viewModel.changeDetails();
-            }
+
+    // endregion
+
+    // endregion
+
+    // region Listeners
+
+    @SuppressLint("NonConstantResourceId")
+    private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
+        switch (item.getItemId()){
+
+            case R.id.edit:
+                viewModel.setEditDetails(!viewModel.getEditDetails().getValue());
+
+                return true;
+            case R.id.about:
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(R.id.about);
+
+                return true;
+            case R.id.logout:
+                clearLoginUser();
+                viewModel.onClickLogoutButton();
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).
+                        navigate(R.id.action_accountFragment2_to_logInFragment2);
+
+                return true;
+            default:
+                break;
         }
+        return false;
     };
 
-    // endregion
-
-    // endregion
+    //
 }

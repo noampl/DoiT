@@ -105,6 +105,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
 
                 }
                 else {
@@ -112,7 +113,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
                     _tasksViewModel.get_actionBarHelper().get().setNavigationClickListener(null);
-
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                 }
             }
         });

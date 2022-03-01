@@ -6,10 +6,12 @@
     tools:context=".view.fragments.AccountFragment">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="AccountViewModel"
             type="com.example.doit.viewmodel.AccountViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -35,8 +37,8 @@
             android:contentDescription="@string/user_profile_image"
             android:scaleType="centerCrop"
             app:image="@{AccountViewModel.imageUrl}"
-            android:clickable="@{AccountViewModel.getEditDetails() ? true : false}"
-            android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
+            android:clickable="@{AccountViewModel.getEditDetails()}"
+            android:enabled="@{AccountViewModel.getEditDetails()}"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -49,86 +51,175 @@
 
     </androidx.cardview.widget.CardView>
 
-    <EditText
-        android:id="@+id/FirstNameTextView"
+    <TextView
+        android:id="@+id/firstNameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{AccountViewModel.firstName}"
-        app:textUpdate="@{AccountViewModel.firstName.length() == 0}"
-        android:onTextChanged="@{AccountViewModel::onFirstNameChange}"
-        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@id/numberOfGroupsMember"
-        app:layout_constraintEnd_toStartOf="@+id/LastNameTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/EmailTextView" />
-
-
-    <EditText
-        android:id="@+id/LastNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@{AccountViewModel.lastName}"
-        app:textUpdate="@{AccountViewModel.lastName.length() == 0}"
-        android:onTextChanged="@{AccountViewModel::onLastNameChange}"
-        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@id/numberOfGroupsMember"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/FirstNameTextView"
-        app:layout_constraintTop_toBottomOf="@id/EmailTextView" />
-
-    <EditText
-        android:id="@+id/EmailTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:inputType="textEmailAddress"
-        android:enabled="@{AccountViewModel.getEditDetails() ? true : false}"
-        app:textUpdate="@{AccountViewModel.userEmailAddress.length() == 0}"
-        android:text="@{AccountViewModel.userEmailAddress}"
-        android:onTextChanged="@{AccountViewModel::onEmailChange}"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_image_layout"
-        app:layout_constraintBottom_toTopOf="@id/LastNameTextView"/>
+        android:layout_marginTop="@dimen/large_margin"
+        android:layout_marginStart="@dimen/large_margin"
+        android:text="First Name:"
+        android:textSize="25sp"
+        />
+
+        <TextView
+            android:id="@+id/LastNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/firstNameTitle"
+            app:layout_constraintTop_toBottomOf="@id/firstNameTitle"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="Last Name:"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:id="@+id/EmailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/LastNameTitle"
+            app:layout_constraintTop_toBottomOf="@id/LastNameTitle"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="Email:"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:id="@+id/NumOfGroupsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/EmailTitle"
+            app:layout_constraintTop_toBottomOf="@id/EmailTitle"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="Number of Groups:"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:id="@+id/NumOfTasksTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/NumOfGroupsTitle"
+            app:layout_constraintTop_toBottomOf="@id/NumOfGroupsTitle"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="Number of Tasks:"
+            android:textSize="25sp"
+            />
+
+    <ViewSwitcher
+        android:id="@+id/firstNameTextSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/firstNameTitle"
+        app:layout_constraintStart_toEndOf="@+id/firstNameTitle"
+        android:layout_marginStart="@dimen/small_margin"
+        >
+
+        <TextView
+            android:id="@+id/FirstNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@{AccountViewModel.firstName, default = queen}"
+            android:textColor="@color/black"
+            android:textSize="25sp"/>
+
+        <EditText
+            android:id="@+id/FirstNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{AccountViewModel.firstName}"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:maxLength="20"
+            />
+
+    </ViewSwitcher>
+
+    <ViewSwitcher
+        android:id="@+id/LastNameSwitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/LastNameTitle"
+        app:layout_constraintStart_toEndOf="@+id/LastNameTitle"
+        android:layout_marginStart="@dimen/small_margin"
+        >
+
+        <TextView
+            android:id="@+id/LastNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{AccountViewModel.lastName, default = B}"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            />
+
+        <EditText
+            android:id="@+id/LastNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{AccountViewModel.lastName}"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:maxLength="20"
+            />
+
+    </ViewSwitcher>
+
+    <ViewSwitcher
+        android:id="@+id/EmailSwitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/EmailTitle"
+        app:layout_constraintTop_toTopOf="@id/EmailTitle"
+        >
+
+        <TextView
+            android:id="@+id/EmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:inputType="textEmailAddress"
+            android:text="@{AccountViewModel.userEmailAddress, default=Jordangmailcom}"
+            android:textSize="25sp"
+            android:layout_marginStart="@dimen/small_margin"
+            />
+
+        <EditText
+            android:id="@+id/EmailEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:inputType="textEmailAddress"
+            android:text="@{AccountViewModel.userEmailAddress,default=Jordangmailcom}"
+            android:textSize="25sp"
+            android:maxLength="20"
+            />
+
+    </ViewSwitcher>
 
     <Button
-        android:id="@+id/userEditButton"
+        android:id="@+id/submit_button"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:text="@{AccountViewModel.getEditDetails() ? @string/submit_changes : @string/user_details_edit }"
+        android:text="@string/submit"
         android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/numberOfTasksMade" />
-
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="@string/logout"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/userEditButton" />
+        android:visibility="@{AccountViewModel.editDetails ? View.VISIBLE : View.INVISIBLE}"
+        />
 
     <TextView
         android:id="@+id/numberOfGroupsMember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{AccountViewModel.numberOfGroups}"
+        android:text="@{AccountViewModel.numberOfGroups, default=6}"
         android:textColor="@color/black"
         android:textSize="25sp"
-        app:layout_constraintTop_toBottomOf="@id/LastNameTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/numberOfTasksMade"
+        app:layout_constraintTop_toTopOf="@id/NumOfGroupsTitle"
+        app:layout_constraintStart_toEndOf="@id/NumOfGroupsTitle"
+        android:layout_marginStart="@dimen/small_margin"
         />
 
     <TextView
@@ -136,12 +227,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:text="@{AccountViewModel.numberOfTasks}"
+        android:text="@{AccountViewModel.numberOfTasks, default=6}"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@id/userEditButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/numberOfGroupsMember" />
+        app:layout_constraintTop_toTopOf="@+id/NumOfTasksTitle"
+        app:layout_constraintStart_toEndOf="@+id/NumOfTasksTitle"
+        android:layout_marginStart="@dimen/small_margin"
+        />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

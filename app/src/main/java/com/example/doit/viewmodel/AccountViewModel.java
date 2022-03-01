@@ -10,10 +10,9 @@ import com.example.doit.interfaces.IResponseHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.UserFirebaseWorker;
-import com.example.doit.view.MainActivity;
 
 import java.lang.ref.WeakReference;
-import java.util.Objects;
+
 public class AccountViewModel extends ViewModel {
     //region members
     private static final String TAG = "AccountViewModel";
@@ -29,7 +28,6 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _authSuccess;
     private MutableLiveData<String> _firebaseError;
-    private boolean emailChanged = false;
     private boolean imageChanged = false;
     private String ImageUrl;
     //endregion
@@ -116,8 +114,7 @@ public class AccountViewModel extends ViewModel {
 
     public MutableLiveData<String> getNumberOfGroups() {
         String size = String.valueOf(Repository.getInstance().getGroups().getValue().size());
-        String stringOfGroups = "Number of groups: ";
-        numberOfGroups = new MutableLiveData<>(stringOfGroups + size);
+        numberOfGroups = new MutableLiveData<>(size);
         return numberOfGroups;
     }
 
@@ -132,8 +129,7 @@ public class AccountViewModel extends ViewModel {
 
     public MutableLiveData<String> getNumberOfTasks() {
         String size = String.valueOf(Repository.getInstance().get_tasks().getValue().size());
-        String stringOfTasks = "Number of tasks: ";
-        NumberOfTasks = new MutableLiveData<>(stringOfTasks + size);
+        NumberOfTasks = new MutableLiveData<>(size);
         return  NumberOfTasks;
     }
 
@@ -142,34 +138,33 @@ public class AccountViewModel extends ViewModel {
         NumberOfTasks.setValue(numberOfTasks);
     }
 
-    public boolean onClickLogoutButton() {
+    public void onClickLogoutButton() {
         repo.logout();
+    }
+
+    public boolean saveDetails(String email, String firstName, String lastName) {
+        User user = this._authUser.getValue();
+
+        if (email == null || email.equals("") || isInValidEmail(email)){
+            return false;
+        }
+        user.setEmail(email.toLowerCase().trim());
+        if (firstName == null || firstName.equals("") || firstName.length() < 1){
+            return false;
+        }
+        user.setFirstName(firstName);
+        if (lastName == null || lastName.equals("") || lastName.length() < 1){
+            return false;
+        }
+        user.setLastName(this.getLastName().getValue());
+        user.set_image(this.getImageUrl());
+        repo.updateAuthUserDetails(user,Uri.parse(this.ImageUrl), imageChanged, true);
+        imageChanged = false;
         return true;
     }
 
-    public void onFirstNameChange(CharSequence s, int start, int before, int count) {
-        this.setFirstName(s.toString());
-    }
-
-    public void onLastNameChange(CharSequence s, int start, int before, int count) {
-        this.setLastName(s.toString());
-    }
-
-    public void onEmailChange(CharSequence s, int start, int before, int count) {
-        this.setUserEmailAddress(s.toString());
-        emailChanged = true;
-    }
-
-    public void changeDetails() {
-        User user = this._authUser.getValue();
-        assert user != null;
-        user.setEmail(Objects.requireNonNull(this.getUserEmailAddress().getValue()).toLowerCase());
-        user.setFirstName(this.getFirstName().getValue());
-        user.setLastName(this.getLastName().getValue());
-        user.set_image(this.getImageUrl());
-        repo.updateAuthUserDetails(user,Uri.parse(this.ImageUrl), imageChanged, emailChanged);
-        emailChanged = false;
-        imageChanged = false;
+    private boolean isInValidEmail(String email) {
+        return (email.length() < 5 || !email.contains("@") || !email.contains("."));
     }
 
     public void setActionBarHelper(IActionBarHelper helper) {
