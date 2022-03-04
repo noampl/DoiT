@@ -6,10 +6,12 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.doit.interfaces.IActionBarHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.common.Roles;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -132,6 +134,9 @@ public class RegisterViewModel extends ViewModel {
         this._registering_job_run.setValue(_registering_job_run);
     }
 
+    public WeakReference<IActionBarHelper> getActionBarHelper() {
+        return repo.getActionBarHelper();
+    }
 
     public void set_user(User _user) {
         this._user = _user;

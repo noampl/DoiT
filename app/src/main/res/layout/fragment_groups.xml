@@ -56,10 +56,10 @@
         android:layout_height="@dimen/large_avatar"
         android:text="@string/add_group"
         android:visibility="@{isLoading ? View.INVISIBLE : View.VISIBLE}"
-        android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:onClick="@{()->groupsViewModel.addGroupDialog()}"
         />
 

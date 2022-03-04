@@ -89,6 +89,11 @@ public class LogInFragment extends Fragment {
 
     private void initMenu(){
         viewModel.get_actionBarHelper().get().setNavIcon(null);
+        viewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+        viewModel.get_actionBarHelper().get().setMenuClickListener(null);
+        viewModel.get_actionBarHelper().get().setNavigationClickListener(null);
+        viewModel.get_actionBarHelper().get().setTitle("Login");
+
     }
 
     private Observer<Boolean> onUserAuthentication() {

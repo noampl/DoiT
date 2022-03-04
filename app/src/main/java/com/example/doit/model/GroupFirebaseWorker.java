@@ -91,8 +91,6 @@ public class GroupFirebaseWorker implements IDataWorker {
                                                 for (String userId : group.getMembersId()) {
                                                     addGroupToUser(userId, group.get_groupId());
                                                 }
-//                                        Repository.getInstance()
-//                                                .updateAuthUserDetails(newAuth,null,false,false);
                                             }
                                             DocumentSnapshot docTask = task.getResult();
                                             if (docTask != null) {
@@ -296,6 +294,7 @@ public class GroupFirebaseWorker implements IDataWorker {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
+                    uploadImage(group.get_image(), group);
                     Log.d(TAG, "updated group: " + group.get_groupId());
                 } else {
                     Log.d(TAG, "problem with update group: " + task.toString());

@@ -25,6 +25,7 @@ import com.example.doit.databinding.FragmentAboutBinding;
 import com.example.doit.databinding.FragmentAccountBinding;
 import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.AccountViewModel;
+import com.example.doit.viewmodel.GroupsViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -39,17 +40,23 @@ public class AboutFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AboutFragment newInstance() { return new AboutFragment(); }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_about, container,false);
+        GroupsViewModel groupsViewModel = new ViewModelProvider(this).get(GroupsViewModel.class);
+        initMenu(groupsViewModel);
+
         _binding.setLifecycleOwner(this);
         return _binding.getRoot();
+    }
+
+    private void initMenu(GroupsViewModel groupsViewModel){
+        groupsViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
+        groupsViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
+        groupsViewModel.get_actionBarHelper().get().setNavigationClickListener(null);
+        groupsViewModel.get_actionBarHelper().get().setMenuClickListener(null);
     }
 
 }

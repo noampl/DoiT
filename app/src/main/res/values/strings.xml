@@ -27,6 +27,7 @@
     <string name="admins">ADMINS</string>
     <string name="assignee">Assignee</string>
     <string name="members">Members</string>
+    <string name="add_members">Add members</string>
     <string name="cancel">Cancel</string>
     <string name="submit">Submit</string>
     <string name="create">Create</string>
