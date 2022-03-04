@@ -100,6 +100,11 @@ public class Group {
         this._tasksId = _tasksId;
     }
 
+    public void addTask(String taskId){
+        if (!get_tasksId().contains(taskId))
+            _tasksId.add(taskId);
+    }
+
     // endregion
 
     //region Public Methods
