@@ -11,13 +11,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.doit.R;
+import com.example.doit.common.Consts;
 import com.example.doit.databinding.FragmentMyTasksBinding;
 import com.example.doit.interfaces.IFragmentNavigitionHelper;
 import com.example.doit.model.entities.Task;
@@ -96,10 +96,10 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
     }
 
     private void menuChanger(){
-        _tasksViewModel.get_selectedTaskIndex().observe(getViewLifecycleOwner(), new Observer<Pair<Integer, String>>() {
+        _tasksViewModel.get_selectedTaskID().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(Pair<Integer, String> pair) {
-                if (pair.first >= 0) {
+            public void onChanged(String id) {
+                if (!id.equals(Consts.INVALID_STRING)) {
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
@@ -140,7 +140,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
     @SuppressLint("NonConstantResourceId")
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
         if (item.getItemId() == R.id.delete) {
-            _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue().second);
+            _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskID().getValue());
 
             return true;
         }

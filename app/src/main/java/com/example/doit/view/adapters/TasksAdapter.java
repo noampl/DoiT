@@ -1,10 +1,7 @@
 package com.example.doit.view.adapters;
 
-import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -22,7 +19,6 @@ import com.example.doit.model.entities.User;
 import com.example.doit.viewmodel.TasksViewModel;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder> {
 
@@ -109,20 +105,20 @@ public class TasksAdapter extends ListAdapter<Task, TasksAdapter.TaskViewHolder>
             group.thenAccept(_binding::setGroup);
             _binding.setUser(user);
             _binding.constraint.setOnLongClickListener(view -> {
-                tasksViewModel.set_selectedTaskIndex(getAdapterPosition(),task.get_taskId());
+                tasksViewModel.set_selectedTaskID(task.get_taskId());
                 return true;
             });
 
-            tasksViewModel.get_selectedTaskIndex().observe(_lifeCycleOwner, new Observer<Pair<Integer, String>>() {
+            tasksViewModel.get_selectedTaskID().observe(_lifeCycleOwner, new Observer<String>() {
                 @Override
-                public void onChanged(Pair<Integer, String> pair) {
-                    _binding.setSelectedTask(pair.first);
+                public void onChanged(String id) {
+                    _binding.setSelectedTaskID(id);
                 }
             });
 
+
             _binding.checkbox.setOnCheckedChangeListener((compoundButton, isChecked) ->
                     tasksViewModel.setTaskChecked(task, isChecked));
-            _binding.setItemPosition(getAdapterPosition());
             _binding.setIsMyTasks(_isMyTasksScreen);
             _binding.setTaskViewModel(tasksViewModel);
             _binding.executePendingBindings();

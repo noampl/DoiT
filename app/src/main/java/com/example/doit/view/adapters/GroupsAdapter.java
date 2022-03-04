@@ -18,8 +18,6 @@ import com.example.doit.databinding.GroupItemBinding;
 import com.example.doit.model.entities.Group;
 import com.example.doit.viewmodel.GroupsViewModel;
 
-import java.util.Objects;
-
 public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHolder>{
 
     // region Members
@@ -84,28 +82,30 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
             _binding = binding;
             _lifeCycleOwner = lifecycleOwner;
             _groupViewModel = groupsViewModel;
-            _binding.groupLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public boolean onLongClick(View v) {
-                    _groupViewModel.set_selectedPosition(getAdapterPosition());
-                    _groupViewModel.setSelectedGroupId(_binding.getGroup().get_groupId());
-                    return true;
-                }
-            });
+
         }
 
         public void bind(Group group){
             _binding.setGroup(group);
             _binding.setGroupViewModel(_groupViewModel);
-            _groupViewModel.get_selectedPosition().observe(_lifeCycleOwner, new Observer<Integer>() {
+
+            _binding.groupLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @SuppressLint("ResourceAsColor")
                 @Override
-                public void onChanged(Integer integer) {
-                    _binding.setSelectedGroup(integer);
+                public boolean onLongClick(View v) {
+                    _groupViewModel.set_selectedGroupId(group.get_groupId());
+                    _groupViewModel.setSelectedGroupIdForDb(_binding.getGroup().get_groupId());
+                    return true;
                 }
             });
-            _binding.setSelectedGroup(_groupViewModel.get_selectedPosition().getValue());
-            _binding.setItemPosition(getAdapterPosition());
+
+            _groupViewModel.get_selectedGroupId().observe(_lifeCycleOwner, new Observer<String>() {
+                        @Override
+                        public void onChanged(String id) {
+                            _binding.setSelectedGroupId(id);
+                        }
+            });
+            _binding.setSelectedGroupId(_groupViewModel.get_selectedGroupId().getValue());
             _binding.executePendingBindings();
         }
     }

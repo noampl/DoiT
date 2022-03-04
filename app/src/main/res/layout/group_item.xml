@@ -11,12 +11,10 @@
         <variable
             name="groupViewModel"
             type="com.example.doit.viewmodel.GroupsViewModel" />
+
         <variable
-            name="selectedGroup"
-            type="int" />
-        <variable
-            name="itemPosition"
-            type="int" />
+            name="selectedGroupId"
+            type="String" />
 
     </data>
 
@@ -24,8 +22,8 @@
         android:id="@+id/groupLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{selectedGroup == itemPosition ? @color/doit_light_blue : @android:color/transparent}"
-        android:onClick="@{()->groupViewModel.showGroupTasks(group, itemPosition)}"
+        android:background="@{selectedGroupId == group.get_groupId ? @color/doit_light_blue : @android:color/transparent}"
+        android:onClick="@{()->groupViewModel.showGroupTasks(group)}"
         >
 
         <ImageView

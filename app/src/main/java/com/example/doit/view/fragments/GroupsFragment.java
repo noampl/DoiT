@@ -56,7 +56,7 @@ public class GroupsFragment extends Fragment implements
 
     @Override
     public void onPause() {
-        _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+        _groupsViewModel.set_selectedGroupId(Consts.INVALID_STRING);
         super.onPause();
     }
 
@@ -112,10 +112,10 @@ public class GroupsFragment extends Fragment implements
     }
 
     private void initObservers(){
-        _groupsViewModel.get_selectedPosition().observe(requireActivity(), new Observer<Integer>() {
+        _groupsViewModel.get_selectedGroupId().observe(requireActivity(), new Observer<String>() {
             @Override
-            public void onChanged(Integer integer) {
-                if (integer >= 0) {
+            public void onChanged(String id) {
+                if (!id.equals(Consts.INVALID_STRING)){
                     _groupsViewModel.get_actionBarHelper().get().setTitle("");
                     _groupsViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                     _groupsViewModel.get_actionBarHelper().get().setNavigationClickListener(navigationMenuClickListener);
@@ -168,7 +168,7 @@ public class GroupsFragment extends Fragment implements
     @Override
     public void openFragment() {
         GroupsFragmentDirections.ActionGroupsFragment2ToChosenGroupFragment action =
-        GroupsFragmentDirections.actionGroupsFragment2ToChosenGroupFragment(_groupsViewModel.getSelectedGroupId());
+        GroupsFragmentDirections.actionGroupsFragment2ToChosenGroupFragment(_groupsViewModel.getSelectedGroupIdForDb());
         Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
     }
 
@@ -180,13 +180,13 @@ public class GroupsFragment extends Fragment implements
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
         switch (item.getItemId()) {
             case R.id.delete:
-                _groupsViewModel.deleteGroup(_groupsViewModel.getSelectedGroupId());
-                _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+                _groupsViewModel.deleteGroup(_groupsViewModel.getSelectedGroupIdForDb());
+                _groupsViewModel.set_selectedGroupId(Consts.INVALID_STRING);
                 return true;
             case R.id.edit:
                 GroupsFragmentDirections.ActionGroupsFragment2ToGroupsDetailsFragment action =
-                GroupsFragmentDirections.actionGroupsFragment2ToGroupsDetailsFragment(_groupsViewModel.getSelectedGroupId());
-                _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+                GroupsFragmentDirections.actionGroupsFragment2ToGroupsDetailsFragment(_groupsViewModel.getSelectedGroupIdForDb());
+                _groupsViewModel.set_selectedGroupId(Consts.INVALID_STRING);
                 Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(action);
                 return true;
 
@@ -203,7 +203,7 @@ public class GroupsFragment extends Fragment implements
     private final View.OnClickListener navigationMenuClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            _groupsViewModel.set_selectedPosition(Consts.INVALID_POSITION);
+            _groupsViewModel.set_selectedGroupId(Consts.INVALID_STRING);
         }
     };
 

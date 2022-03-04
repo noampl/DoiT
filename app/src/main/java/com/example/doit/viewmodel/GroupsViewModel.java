@@ -30,9 +30,9 @@ public class GroupsViewModel extends ViewModel {
     private MutableLiveData<Boolean> _isBottomNavigationUp;
     private IDialogNavigationHelper _iDialogNavigationHelper;
     private IFragmentNavigitionHelper _iFragmentNavigitionHelper;
-    private MutableLiveData<Integer> _selectedPosition;
+    private MutableLiveData<String> _selectedGroupId; // uses for the UI
     private MutableLiveData<List<User>> _newGroupMembers;
-    private String selectedGroupId;
+    private String selectedGroupIdForDb; // uses for the Db
     private WeakReference<IActionBarHelper> _actionBarHelper;
     private MutableLiveData<Boolean> _isEdit;
     private MutableLiveData<Boolean> _isLoading;
@@ -74,12 +74,12 @@ public class GroupsViewModel extends ViewModel {
         return _actionBarHelper;
     }
 
-    public String getSelectedGroupId() {
-        return selectedGroupId;
+    public String getSelectedGroupIdForDb() {
+        return selectedGroupIdForDb;
     }
 
-    public void setSelectedGroupId(String groupId){
-        selectedGroupId = groupId;
+    public void setSelectedGroupIdForDb(String groupId){
+        selectedGroupIdForDb = groupId;
     }
 
     public IFragmentNavigitionHelper get_iFragmentNavigitionHelper() {
@@ -90,13 +90,13 @@ public class GroupsViewModel extends ViewModel {
         this._iFragmentNavigitionHelper = _iFragmentNavigitionHelper;
     }
 
-    public MutableLiveData<Integer> get_selectedPosition() {
-        if(_selectedPosition == null) { _selectedPosition = new MutableLiveData<>(Consts.INVALID_POSITION); }
-        return _selectedPosition;
+    public MutableLiveData<String> get_selectedGroupId() {
+        if(_selectedGroupId == null) { _selectedGroupId = new MutableLiveData<>(Consts.INVALID_STRING); }
+        return _selectedGroupId;
     }
 
-    public void set_selectedPosition(Integer _selectedPosition) {
-        this._selectedPosition.setValue(_selectedPosition);
+    public void set_selectedGroupId(String _selectedGroupId) {
+        this._selectedGroupId.setValue(_selectedGroupId);
     }
 
     public MutableLiveData<List<User>> get_newGroupMembers() {
@@ -140,7 +140,7 @@ public class GroupsViewModel extends ViewModel {
      * @return true
      */
     public boolean addGroupDialog(){
-        set_selectedPosition(Consts.INVALID_POSITION);
+        set_selectedGroupId(Consts.INVALID_STRING);
         _newGroupMembers.getValue().add(Repository.getInstance().get_authUser().getValue());
         _iDialogNavigationHelper.openDialog();
 
@@ -175,13 +175,13 @@ public class GroupsViewModel extends ViewModel {
         return true;
     }
 
-    public void showGroupTasks(Group group, int itemPosition){
-        if (_selectedPosition.getValue() != itemPosition) {
-            selectedGroupId = group.get_groupId();
-            Repository.getInstance().setTaskByGroupId(selectedGroupId);
+    public void showGroupTasks(Group group){
+        if (!_selectedGroupId.getValue().equals(group.get_groupId())) {
+            selectedGroupIdForDb = group.get_groupId();
+            Repository.getInstance().setTaskByGroupId(selectedGroupIdForDb);
             _iFragmentNavigitionHelper.openFragment();
         }
-        set_selectedPosition(Consts.INVALID_POSITION);
+        set_selectedGroupId(Consts.INVALID_STRING);
     }
 
     public CompletableFuture<Group> getGroupById(String id){
