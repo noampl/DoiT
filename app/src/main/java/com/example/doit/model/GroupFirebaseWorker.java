@@ -43,14 +43,9 @@ public class GroupFirebaseWorker implements IDataWorker {
     private final FirebaseFirestore db;
     private final CollectionReference usersRef;
     private final CollectionReference groupsRef;
-    private User _user;
-    private String _registerErrorReason;
-    private FirebaseAuth mAuth;
-    private String _image_url;
-    private DocumentReference authDocRef;
     private MutableLiveData<User> authUser;
-    private MutableLiveData<String> _firebaseError;
-    private LiveData<List<Group>> _authUserGroups;
+
+
 
     // endregion
 
@@ -60,8 +55,6 @@ public class GroupFirebaseWorker implements IDataWorker {
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection(USERS_COLLECTION_NAME);
         groupsRef = db.collection(GROUPS_COLLECTION_NAME);
-        mAuth = FirebaseAuth.getInstance();
-        _firebaseError = new MutableLiveData<>();
     }
 
     // endregion
@@ -142,7 +135,7 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
     public void uploadImage(String uri, Group group) {
-        if (uri == null) {
+        if (uri == null || uri.equals("")) {
             return;
         }
         File file = new File(uri);
@@ -219,21 +212,6 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
 
-    public void addUserToGroup(Group group, User user) {
-        groupsRef.document(group.get_groupId()).update("membersId", group.getMembersId())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Users group updated");
-                            for (String id : group.getMembersId()) {
-                                addGroupToUser(Repository.getInstance().getUserFromLocal(id), group);
-                            }
-                        }
-                    }
-                });
-    }
-
 
     private void addGroupToUser(User user, Group group) {
         usersRef.whereEqualTo("id", user.get_userId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -265,20 +243,6 @@ public class GroupFirebaseWorker implements IDataWorker {
                 }
             }
         });
-    }
-
-    public void createNewTask(com.example.doit.model.entities.Task task) {
-        groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).add(task).addOnSuccessListener(
-                new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "added new task: " + task.toString());
-                        task.set_taskId(documentReference.getId());
-                        Repository.getInstance().insertTaskLocal(task);
-                        documentReference.addSnapshotListener(getTaskListener());
-                    }
-                }
-        );
     }
 
     public void updateTask(com.example.doit.model.entities.Task task) {

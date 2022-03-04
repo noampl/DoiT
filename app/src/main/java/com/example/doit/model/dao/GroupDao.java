@@ -1,19 +1,15 @@
 package com.example.doit.model.dao;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.doit.model.entities.Group;
 import com.example.doit.model.entities.User;
-import com.example.doit.model.entities.relations.GroupWithTasks;
-import com.example.doit.model.entities.relations.UserWithGroups;
 
 import java.util.List;
 
@@ -52,14 +48,6 @@ public interface GroupDao {
 
     @Query("DELETE FROM `group` WHERE :groupId = _groupId")
     void delete(String groupId);
-
-    @Transaction
-    @Query("SELECT * FROM `group` WHERE _groupId = :groupId")
-    List<GroupWithTasks> getGroupWithTasks(String groupId);
-
-    @Transaction
-    @Query("SELECT * FROM `user` WHERE _userId = :userId")
-    List<UserWithGroups> getUserWithGroups(String userId);
 
     @Query("SELECT SUM(_value) FROM `task` WHERE _taskId IN (:membersId) AND _finishDate > 0")
     Integer getSumTasksUsersValuesFromGroup(List<String> membersId);

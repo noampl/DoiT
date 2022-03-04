@@ -503,46 +503,37 @@ public class UserFirebaseWorker implements IDataWorker {
                             return;
                         }
                         groupsRef.document(groupID).addSnapshotListener(getGroupListener(authUser)); // adding group listener
-//                        Group group = convertFirebaseDocumentToGroup(groupDoc);
-//                        group.set_groupId(groupDoc.getId());
-//                        Log.d(TAG, group.create().toString());
-//                        User updatedAuth = authUser.getValue();
-//                        updatedAuth.addGroupOrUpdate(group);
-//                        authUser.postValue(updatedAuth);
-//                        System.out.println("peleg - get group from firebase");
-//                        Repository.getInstance().insertGroupLocal(group);
-////                        Repository.getInstance().repeatLoadingThread();
+                        getAllGroupTasks(groupID);
                     }
                 });
             }
         }
-        synchronized (this) {
-            for (String groupID : user.get_groupsId()) {
-                groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot taskDoc : tasks) {
-                                com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
-                                task.set_taskId(taskDoc.getId());
-                                getUser(task.get_assigneeId());
-                                if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
-                                    getUser(task.get_createdById());
-                                }
-                                Repository.getInstance().insertTaskLocal(task);
-                                taskDoc.getReference().addSnapshotListener(getTaskListener());
-                            }
-                        }
-                    });
-            }
-        }
-
     }
 
     // endregion
 
     // region Private Methods
+
+    private void getAllGroupTasks(String groupID){
+        groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> tasks = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot taskDoc : tasks) {
+                            com.example.doit.model.entities.Task task = convertFirebaseDocumentToTask(taskDoc);
+                            task.set_taskId(taskDoc.getId());
+                            getUser(task.get_assigneeId());
+                            if (!Objects.equals(task.get_assigneeId(), task.get_createdById())) {
+                                getUser(task.get_createdById());
+                            }
+                            taskDoc.getReference().addSnapshotListener(getTaskListener());
+                        }
+                    }
+                });
+    }
+
+
     private OnSuccessListener<QuerySnapshot> insertUserDocToUsersList(MutableLiveData<List<User>> users) {
         return new OnSuccessListener<QuerySnapshot>() {
             @Override
