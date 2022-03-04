@@ -149,6 +149,7 @@ public class GroupsViewModel extends ViewModel {
     }
 
     public boolean addMembersDialog(){
+        Repository.getInstance().get_users().getValue().clear();
         _iDialogNavigationHelper.openDialog();
 
         return true;

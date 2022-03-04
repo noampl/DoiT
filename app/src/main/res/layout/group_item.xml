@@ -33,8 +33,8 @@
             android:layout_width="@dimen/large_avatar"
             android:layout_height="@dimen/large_avatar"
             android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:src="@{@drawable/ic_baseline_group_24}"
             app:setGroupImage="@{group._image}"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,9 +49,10 @@
             android:text="@{group._name ,default = thisisheadline}"
             app:layout_constraintStart_toEndOf="@id/group_image"
             app:layout_constraintTop_toTopOf="@id/group_image"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/margin"
             android:textStyle="bold"
-            android:textSize="@dimen/group_title"
+            android:textSize="@dimen/list_item_title"
+
             />
 
         <TextView
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{group._description ,default = veryverylongtitlerrrrr}"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/margin"
             app:layout_constraintStart_toEndOf="@id/group_image"
             app:layout_constraintBottom_toBottomOf="@id/group_image"
             />

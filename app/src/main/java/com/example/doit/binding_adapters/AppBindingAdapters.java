@@ -131,12 +131,22 @@ public class AppBindingAdapters {
 
     @BindingAdapter("setTaskImage")
     public static void setTaskImage(ImageView imageView, String url){
-        setImage(imageView,url,R.drawable.clipboard);
+        setImage(imageView,url,R.drawable.to_do_list_black);
+    }
+
+    @BindingAdapter("setTaskLargeImage")
+    public static void setTaskLargeImage(ImageView imageView, String url){
+        setLargeImage(imageView,url,R.drawable.to_do_list_black);
     }
 
     @BindingAdapter("setGroupImage")
     public static void setGroupImage(ImageView imageView, String url){
         setImage(imageView,url,R.drawable.multiple_users);
+    }
+
+    @BindingAdapter("setGroupLargeImage")
+    public static void setGroupLargeImage(ImageView imageView, String url){
+        setLargeImage(imageView,url,R.drawable.multiple_users);
     }
 
     private static void setImage(ImageView imageView, String url, int Res){
@@ -145,6 +155,15 @@ public class AppBindingAdapters {
         }
         else{
             Picasso.with(imageView.getContext()).load(Res).fit().into(imageView);
+        }
+    }
+
+    private static void setLargeImage(ImageView imageView, String url, int res){
+        if (url != null && url.length() > 5 && !url.equals("")) {
+            Picasso.with(imageView.getContext()).load(url).into(imageView);
+        }
+        else{
+            Picasso.with(imageView.getContext()).load(res).into(imageView);
         }
     }
 }

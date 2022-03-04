@@ -60,6 +60,7 @@ public class RegisterFragment extends Fragment{
         initObservers();
         initBinding();
         initListeners();
+        initMenu();
         Picasso.with(_binding.getRoot().getContext()).load(R.drawable.no_profile_picture).fit()
                 .into(_binding.profileImageButton);
     }
@@ -77,6 +78,14 @@ public class RegisterFragment extends Fragment{
 
     private void initListeners(){
         _binding.profileImageButton.setOnClickListener(replaceImage());
+    }
+
+    private void initMenu(){
+        viewModel.getActionBarHelper().get().setTitle("Register");
+        viewModel.getActionBarHelper().get().setMenuClickListener(null);
+        viewModel.getActionBarHelper().get().setMenu(R.menu.app_menu);
+        viewModel.getActionBarHelper().get().setNavigationClickListener(null);
+
     }
 
     private Observer<Boolean> passwordIdenticalObserver(){
@@ -152,5 +161,5 @@ public class RegisterFragment extends Fragment{
         editor.apply();
     }
 
-    // endregionl
+    // endregion
 }

@@ -170,7 +170,7 @@
     <fragment
         android:id="@+id/groupsDetailsFragment"
         android:name="com.example.doit.view.fragments.GroupsDetailsFragment"
-        android:label="fragment_groups_details"
+        android:label="Details"
         tools:layout="@layout/fragment_groups_details" >
         <argument
             android:name="groupId"

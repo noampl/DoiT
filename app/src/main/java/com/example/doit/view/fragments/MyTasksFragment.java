@@ -67,18 +67,16 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
     private void initListeners(){
         TasksAdapter adapter = new TasksAdapter(true, getViewLifecycleOwner());
         adapter.set_tasksViewModel(_tasksViewModel);
-        _tasksViewModel.fetchTasks();
         _tasksViewModel.set_iFragmentNavigationHelper(this);
-        adapter.submitList(_tasksViewModel.get_tasks().getValue().stream()
-                .filter(t->((t.get_finishDate() != 0) &&
-                (t.get_assigneeId().equals(_tasksViewModel.getLoggedInUserId())))
-                ).collect(Collectors.toList()));
         _binding.taskLst.setAdapter(adapter);
         _tasksViewModel.get_tasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Task> tasks) {
-                List<Task> tmp = tasks.stream().filter((t)->(t.get_finishDate() == 0)).collect(Collectors.toList());
+                List<Task> tmp = tasks.stream()
+                        .filter(t->((t.get_finishDate() == 0) &&
+                                (t.get_assigneeId().equals(_tasksViewModel.getLoggedInUserId())))
+                        ).collect(Collectors.toList());
                 tmp.sort(new Comparator<Task>() {
                     @Override
                     public int compare(Task task, Task task2) {
@@ -105,6 +103,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
 
                 }
                 else {
@@ -112,7 +111,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.app_menu);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(null);
                     _tasksViewModel.get_actionBarHelper().get().setNavigationClickListener(null);
-
+                    _tasksViewModel.get_actionBarHelper().get().setNavIcon(R.drawable.ic_baseline_arrow_back_24);
                 }
             }
         });

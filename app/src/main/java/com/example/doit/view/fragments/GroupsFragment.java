@@ -132,6 +132,14 @@ public class GroupsFragment extends Fragment implements
             @Override
             public void onChanged(Boolean isLoading) {
                 _binding.setIsLoading(isLoading);
+                if (isLoading){
+                    if (_groupsViewModel.get_groups().getValue().size() > 0) {
+                        _binding.noGroupsText.setVisibility(View.INVISIBLE);
+                    }
+                    else{
+                        _binding.noGroupsText.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
     }

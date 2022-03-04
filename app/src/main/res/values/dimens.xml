@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="large_avatar">60dp</dimen>
+    <dimen name="task_size">40dp</dimen>
     <dimen name="small_avatar">30dp</dimen>
     <dimen name="margin">10dp</dimen>
+    <dimen name="task_title_margin">7dp</dimen>
     <dimen name="small_margin">5dp</dimen>
     <dimen name="large_margin">15dp</dimen>
     <dimen name="group_title">20sp</dimen>
+    <dimen name="list_item_title">15sp</dimen>
     <dimen name="xl_avatar">100dp</dimen>
     <dimen name="dialog_btn">100dp</dimen>
     <dimen name="addition_dialog_max_height">150dp</dimen>

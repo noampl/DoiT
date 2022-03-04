@@ -64,6 +64,7 @@
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxWidth="100dp"
+            android:textSize="@dimen/list_item_title"
             app:layout_constraintStart_toEndOf="@id/task_img"
             app:layout_constraintTop_toTopOf="@id/task_img" />
 

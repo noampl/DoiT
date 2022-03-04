@@ -205,6 +205,7 @@ public class GroupsDetailsFragment extends Fragment {
                         Intent data = result.getData();
                         _group.set_image(data != null ? data.getData().toString() : null);
                         Picasso.with(_binding.getRoot().getContext()).load(_group.get_image()).fit().into(_binding.groupImage);
+
                     }
                 }
             }
