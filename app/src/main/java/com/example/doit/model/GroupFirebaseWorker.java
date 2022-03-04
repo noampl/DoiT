@@ -178,6 +178,7 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
     public void deleteUserFromGroup(Group group, User user) {
+        System.out.println("peleg - delete remote group " + group.get_groupId());
         group.getMembersId().remove(user.get_userId());
         user.get_groupsId().remove(group.get_groupId());
         groupsRef.document(group.get_groupId()).update("membersId", group.getMembersId())
@@ -197,6 +198,7 @@ public class GroupFirebaseWorker implements IDataWorker {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
+                                                            System.out.println("peleg - delete local group " + group.get_groupId());
                                                             Repository.getInstance().deleteLocalGroup(group);
                                                             Log.d(TAG, group.get_name() + " deleted from " + user.get_email());
                                                         } else {

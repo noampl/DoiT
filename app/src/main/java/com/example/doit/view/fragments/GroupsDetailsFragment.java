@@ -180,7 +180,7 @@ public class GroupsDetailsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.delete:
                 _groupsViewModel.deleteGroup(_group);
-                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigateUp();
+                Navigation.findNavController(requireActivity(),R.id.fragmentContainerView).navigate(R.id.groupsFragment2);
                 return true;
             case R.id.edit:
                 _groupsViewModel.set_isEdit(!_groupsViewModel.get_isEdit().getValue());

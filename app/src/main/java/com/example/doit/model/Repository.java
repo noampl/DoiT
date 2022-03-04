@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.time.LocalDate;
@@ -387,6 +388,9 @@ public class Repository {
                 synchronized (this) {
                     LocalDB.db.taskDao().insertAll(task);
                    _tasks.postValue(LocalDB.db.taskDao().getAll());
+                   Group group = LocalDB.db.groupDao().getGroup(task.get_groupId());
+                   group.addTask(task.get_taskId());
+                   LocalDB.db.groupDao().update(group);
                 }
             }
         });
@@ -485,12 +489,16 @@ public class Repository {
 
     public void deleteLocalGroup(Group group){
         _executorService.execute(()->{
+            System.out.println("peleg - tasks size before is " + group.get_tasksId().size());
             for (String taskId : group.get_tasksId()){
                 LocalDB.db.taskDao().delete(taskId);
+                System.out.println("peleg - delete task");
             }
             LocalDB.db.groupDao().delete(group);
             _groups.postValue(LocalDB.db.groupDao().getAll());
             _tasks.postValue(LocalDB.db.taskDao().getAll());
+
+            System.out.println("peleg - tasks size after is " + LocalDB.db.taskDao().getAll().size());
 
         });
     }

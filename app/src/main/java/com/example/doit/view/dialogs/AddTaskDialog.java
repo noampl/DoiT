@@ -116,7 +116,7 @@ public class AddTaskDialog extends DialogFragment implements IDialogNavigationHe
             public void onClick(View view) {
                 if(tasksViewModel.createTask(_imgUri,_binding.taskName.getText().toString(),
                         _binding.taskDec.getText().toString(),
-                        Integer.parseInt(_binding.valueSpinner.getSelectedItem().toString()))){
+                        Integer.parseInt(_binding.valueSpinner.getSelectedItem().toString()), _groupId)){
                     dismiss();
                 }
                 else{

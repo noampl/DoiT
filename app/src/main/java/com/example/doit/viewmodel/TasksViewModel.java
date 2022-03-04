@@ -154,7 +154,7 @@ public class TasksViewModel extends ViewModel {
         _iDialogNavigationHelper.openDialog();
     }
 
-    public boolean createTask(Uri uri, String taskName, String taskDesc, int taskValue) {
+    public boolean createTask(Uri uri, String taskName, String taskDesc, int taskValue, String groupId) {
         if (taskName == null || taskName.equals("")){
             return false;
         }
@@ -165,7 +165,7 @@ public class TasksViewModel extends ViewModel {
         } else {
             _assigneeId = Repository.getInstance().get_selectedUsers().getValue().get(0).get_userId();
         }
-        Task task = new Task("", _groupId, taskName, taskDesc, (long)new Date().getTime(),
+        Task task = new Task("", groupId, taskName, taskDesc, (long)new Date().getTime(),
                 (_targetDate.getValue() != null ? _targetDate.getValue() : 0), _createdById, _assigneeId, taskValue, ImageUri);
         Repository.getInstance().createTask(task);
         return true;
