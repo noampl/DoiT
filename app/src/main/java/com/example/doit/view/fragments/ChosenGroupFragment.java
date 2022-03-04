@@ -3,7 +3,6 @@ package com.example.doit.view.fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -11,12 +10,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import com.example.doit.R;
 import com.example.doit.common.Consts;
@@ -32,8 +28,6 @@ import com.example.doit.viewmodel.TasksViewModel;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -102,10 +96,10 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
             }
         });
         _binding.taskLst.setAdapter(adapter);
-        _tasksViewModel.get_selectedTaskIndex().observe(getViewLifecycleOwner(),new Observer<Pair<Integer, String>>() {
+        _tasksViewModel.get_selectedTaskID().observe(getViewLifecycleOwner(),new Observer<String>() {
             @Override
-            public void onChanged(Pair<Integer, String> pair) {
-                if (pair.first >= 0) {
+            public void onChanged(String id) {
+                if (!id.equals(Consts.INVALID_STRING)) {
                     _tasksViewModel.get_actionBarHelper().get().setTitle("");
                     _tasksViewModel.get_actionBarHelper().get().setMenu(R.menu.only_delete);
                     _tasksViewModel.get_actionBarHelper().get().setMenuClickListener(menuItemClickListener);
@@ -179,7 +173,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
     private final Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
         switch (item.getItemId()){
             case R.id.delete:
-                _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskIndex().getValue().second);
+                _tasksViewModel.deleteTask(_tasksViewModel.get_selectedTaskID().getValue());
 
                 return true;
             case R.id.about:
