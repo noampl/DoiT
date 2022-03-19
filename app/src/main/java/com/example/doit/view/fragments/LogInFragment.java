@@ -77,6 +77,7 @@ public class LogInFragment extends Fragment {
             public void onChanged(String s) {
                 if(s.length() > 0 && !s.equals(Consts.INVALID_STRING)){
                     Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                    viewModel.get_Error().postValue(Consts.INVALID_STRING);
                 }
             }
         });

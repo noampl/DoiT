@@ -196,6 +196,20 @@ public class GroupsViewModel extends ViewModel {
             groupToUpdate.set_description(desc);
         }
         if (users != null){
+            // update all the users that removed from the group
+            List<String> oldUsersId = groupToUpdate.getMembersId();
+            for (String id : oldUsersId){
+                boolean isInUsers = false;
+                for (User user : users){
+                    if (user.get_userId().equals(id)){
+                        isInUsers = true;
+                        break;
+                    }
+                }
+                if (!isInUsers){
+                    Repository.getInstance().deleteUserFromGroup(groupToUpdate, id);
+                }
+            }
             groupToUpdate.setMembersId(users.stream().map(User::get_userId).collect(Collectors.toList()));
         }
         updateGroup(groupToUpdate);
