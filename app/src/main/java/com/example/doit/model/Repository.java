@@ -302,9 +302,9 @@ public class Repository {
         saveOrUpdateUser(user);
     }
 
-    public void deleteUserFromGroup(Group group, User user) {
+    public void deleteUserFromGroup(Group group, String userid) {
         _executorService.execute(() -> {
-            groupFirebaseWorker.deleteUserFromGroup(group, user);
+            groupFirebaseWorker.deleteUserFromGroup(group, LocalDB.db.userDao().getUserById(userid));
         });
     }
 
@@ -312,13 +312,6 @@ public class Repository {
         _executorService.execute(() -> userFirebaseWorker.createTask(task));
     }
 
-    public int getValueSumOfTasksInGroup(Group group) {
-        /*
-          receive: group
-          return: sum of all tasks value that users have done
-         */
-        return LocalDB.db.groupDao().getSumTasksUsersValuesFromGroup(group.getMembersId());
-    }
 
     public void deleteNotExistGroupsOnFirebase(String userID) {
         _executorService.execute(new Runnable() {
@@ -489,17 +482,12 @@ public class Repository {
 
     public void deleteLocalGroup(Group group){
         _executorService.execute(()->{
-            System.out.println("peleg - tasks size before is " + group.get_tasksId().size());
             for (String taskId : group.get_tasksId()){
                 LocalDB.db.taskDao().delete(taskId);
-                System.out.println("peleg - delete task");
             }
             LocalDB.db.groupDao().delete(group);
             _groups.postValue(LocalDB.db.groupDao().getAll());
             _tasks.postValue(LocalDB.db.taskDao().getAll());
-
-            System.out.println("peleg - tasks size after is " + LocalDB.db.taskDao().getAll().size());
-
         });
     }
 

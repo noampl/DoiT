@@ -76,8 +76,8 @@ public class RegisterViewModel extends ViewModel {
         return registerError;
     }
 
-    public void setRegisterError(MutableLiveData<String> registerError) {
-        this.registerError = registerError;
+    public void setRegisterError(String registerError) {
+        this.registerError.setValue(registerError);
     }
 
     public void setAttrValid(MutableLiveData<Boolean> attrValid) {
@@ -201,11 +201,12 @@ public class RegisterViewModel extends ViewModel {
         _password.postValue(s.toString());
         isClicked.getValue().put("password",true);
         _user.setPassword(s.toString());
+        passwordsIdentical.setValue(false);
     }
 
     public void onPasswordValidateChange(CharSequence s, int start, int before, int count) {
         _passwordValidation.postValue(s.toString());
-        if (!s.toString().equals(_password.getValue())){
+        if (_password.getValue().equals("")||!s.toString().equals(_password.getValue())){
             passwordsIdentical.setValue(false);
             attrValid.postValue(false);
         }
@@ -217,6 +218,29 @@ public class RegisterViewModel extends ViewModel {
 
     private boolean checkIfValid() {
         if(Boolean.FALSE.equals(attrValid.getValue())) { return false; }
+        if (_user.get_firstName().equals("")){
+            registerError.setValue("first name can not be empty!");
+            return false;
+        }
+        if (_user.get_lastName().equals("")){
+            registerError.setValue("last name can not be empty!");
+            return false;
+        }
+        if (_user.get_email().equals("")){
+            registerError.setValue("email can not be empty");
+            return false;
+        }
+        if (_user.get_password().equals("")){
+            registerError.setValue("password cannot be empty");
+            return false;
+        }
+        if (_user.get_password().length() < 6){
+            registerError.setValue("password must be longer than 6 characters");
+        }
+        if (!passwordsIdentical.getValue()){
+            registerError.setValue("passwords does not match");
+            return false;
+        }
         for (Map.Entry<String,Object> entry: _user.create().entrySet()) {
                if(entry.getKey().equals("id") || entry.getKey().equals("groups")){
                    continue;
@@ -237,12 +261,6 @@ public class RegisterViewModel extends ViewModel {
         }
         repo.register(this.getImageUri().toString(), _user);
         return true;
-    }
-
-    public String getErrorReason(){
-        String error;
-        if ((error = repo.get_remoteError().getValue()) != null) { return error; }
-        return "ERROR: Unrecognized problem with register";
     }
 
 }

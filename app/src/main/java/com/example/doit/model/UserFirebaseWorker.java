@@ -399,15 +399,6 @@ public class UserFirebaseWorker implements IDataWorker {
         });
     }
 
-    public void updateUserPassword(User user) {
-        mAuth.getCurrentUser().updatePassword(user.get_email()).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Failed to change password", e);
-            }
-        });
-    }
-
     public Task<AuthResult> login(Map<String, String> user, MutableLiveData<Boolean> loggedIn) {
         Log.d(TAG, "looking for user");
         authUser.postValue((new User()));

@@ -171,7 +171,6 @@ public class GroupFirebaseWorker implements IDataWorker {
     }
 
     public void deleteUserFromGroup(Group group, User user) {
-        System.out.println("peleg - delete remote group " + group.get_groupId());
         group.getMembersId().remove(user.get_userId());
         user.get_groupsId().remove(group.get_groupId());
         groupsRef.document(group.get_groupId()).update("membersId", group.getMembersId())
@@ -191,7 +190,6 @@ public class GroupFirebaseWorker implements IDataWorker {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
-                                                            System.out.println("peleg - delete local group " + group.get_groupId());
                                                             Repository.getInstance().deleteLocalGroup(group);
                                                             Log.d(TAG, group.get_name() + " deleted from " + user.get_email());
                                                         } else {
@@ -211,40 +209,6 @@ public class GroupFirebaseWorker implements IDataWorker {
                 });
     }
 
-
-
-    private void addGroupToUser(User user, Group group) {
-        usersRef.whereEqualTo("id", user.get_userId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot queryDocumentSnapshot = task.getResult();
-                    if (queryDocumentSnapshot == null) {
-                        Log.w(TAG, "User Id did not found");
-                        return;
-                    }
-                    for (DocumentSnapshot doc : queryDocumentSnapshot.getDocuments()) {
-                        DocumentReference documentReference = doc.getReference();
-                        if (!user.get_groupsId().contains(group.get_groupId())) {
-                            user.addGroupOrUpdate(group);
-                        }
-                        documentReference.update("groups", user.get_groupsId())
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "Group added to user");
-                                        } else {
-                                            Log.w(TAG, "Had a problem with adding group to user");
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        });
-    }
-
     public void updateTask(com.example.doit.model.entities.Task task) {
         groupsRef.document(task.get_groupId()).collection(TASKS_COLLECTION_NAME).document(task.get_taskId())
                 .update(task.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -259,12 +223,17 @@ public class GroupFirebaseWorker implements IDataWorker {
         groupsRef.document(group.get_groupId()).update(group.create()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    uploadImage(group.get_image(), group);
-                    Log.d(TAG, "updated group: " + group.get_groupId());
-                } else {
-                    Log.d(TAG, "problem with update group: " + task.toString());
-                }
+                Repository.getInstance().getExecutorService().execute(()->{
+                    if (task.isSuccessful()){
+                        uploadImage(group.get_image(), group);
+                        for (String userID : group.getMembersId()){
+                            addGroupToUser(userID, group.get_groupId());
+                        }
+                        Log.d(TAG, "updated group: " + group.get_groupId());
+                    } else {
+                        Log.d(TAG, "problem with update group: " + task.toString());
+                    }
+                });
             }
         });
     }

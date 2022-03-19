@@ -96,7 +96,6 @@ public class firebaseUtils {
                     String userId = Repository.getInstance().get_authUser().getValue().get_userId();
                     Repository.getInstance().deleteNotExistGroupsOnFirebase(userId);
                     Repository.getInstance().repeatLoadingThread();
-                    System.out.println("peleg - group name is " + newGroup.get_name()+ " group id "+ newGroup.get_groupId() + " image " + newGroup.get_image());
                 }
             }
         };

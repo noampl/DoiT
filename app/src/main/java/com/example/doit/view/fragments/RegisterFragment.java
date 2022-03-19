@@ -47,7 +47,7 @@ public class RegisterFragment extends Fragment{
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
         viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-        viewModel.getRegisterError().setValue(Consts.INVALID_STRING);
+        viewModel.setRegisterError(Consts.INVALID_STRING);
         init();
         return _binding.getRoot();
     }
@@ -107,6 +107,7 @@ public class RegisterFragment extends Fragment{
             public void onChanged(String s) {
                 if(s != null && !s.equals(Consts.INVALID_STRING)){
                     Toast.makeText(getContext(), s,Toast.LENGTH_SHORT).show();
+                    viewModel.setRegisterError(Consts.INVALID_STRING);
                 }
             }
         };

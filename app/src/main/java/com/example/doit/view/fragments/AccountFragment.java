@@ -95,6 +95,7 @@ public class AccountFragment extends Fragment {
 
     private void initObservers(){
         viewModel.get_authUser().observe(getViewLifecycleOwner(), authUserChange);
+        viewModel.get_operationError().setValue(Consts.INVALID_STRING);
         viewModel.get_operationError().observe(getViewLifecycleOwner(),errorHandler());
         viewModel.getEditDetails().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -153,7 +154,7 @@ public class AccountFragment extends Fragment {
                 if(!Objects.equals(s, "") && !Objects.equals(s, Consts.INVALID_STRING)) {
                     Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
                     viewModel.updateUserDetails();
-                    viewModel.get_operationError().postValue("");
+                    viewModel.get_operationError().postValue(Consts.INVALID_STRING);
                 }
             }
         };
