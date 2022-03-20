@@ -37,6 +37,7 @@ public class TasksViewModel extends ViewModel {
     private final WeakReference<IActionBarHelper> _actionBarHelper;
     private final MutableLiveData<String> _selectedTaskId;
     private final MutableLiveData<Boolean> _isEdit;
+    private MutableLiveData<Boolean> _isTaskLoading;
 
     // endregion
 
@@ -47,6 +48,7 @@ public class TasksViewModel extends ViewModel {
         _createdById = Repository.getInstance().get_authUser().getValue().get_userId();
         _tasksDetailsId = Repository.getInstance().get_taskDetailsId();
         _actionBarHelper = Repository.getInstance().getActionBarHelper();
+        _isTaskLoading = Repository.getInstance().getIsTaskLoading();
         _selectedTaskId = new MutableLiveData<>(Consts.INVALID_STRING);
         _isEdit = new MutableLiveData<>(false);
         _targetDate = new MutableLiveData<>();
@@ -55,6 +57,10 @@ public class TasksViewModel extends ViewModel {
     // endregion
 
     // region Properties
+
+    public MutableLiveData<Boolean> getIsTaskLoading(){
+        return _isTaskLoading;
+    }
 
     public MutableLiveData<Long> get_targetDate() {
         return _targetDate;
@@ -141,8 +147,12 @@ public class TasksViewModel extends ViewModel {
         return Repository.getInstance().getUserFromLocal(id);
     }
 
-    public void fetchTasks(){
-        Repository.getInstance().fetchTasks();
+    public void fetchLocalTasks(){
+        Repository.getInstance().fetchLocalTasks();
+    }
+
+    public void fetchRemoteTasks(String _groupId){
+        Repository.getInstance().fetchRemoteTasks(_groupId);
     }
 
     public void valueSelected(int i, long l){
@@ -250,6 +260,10 @@ public class TasksViewModel extends ViewModel {
 
     public String getLoggedInUserId() {
         return Repository.getInstance().get_authUser().getValue().get_userId();
+    }
+
+    public void fetchREmoteUserTask() {
+        Repository.getInstance().fetchRemoteUserTasks();
     }
     // endregion
 

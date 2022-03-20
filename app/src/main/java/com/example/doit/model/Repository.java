@@ -76,6 +76,7 @@ public class Repository {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(true);
     private ExecutorService loadingThread;
     private final AtomicInteger delayCounter = new AtomicInteger(1);
+    private MutableLiveData<Boolean> _isTaskLoading = new MutableLiveData<>(false);
 
     // endregion
 
@@ -118,6 +119,7 @@ public class Repository {
                                     e.printStackTrace();
                                 }
                                 delayCounter.decrementAndGet();
+                                continue;
                             }
                             _isLoading.postValue(false);
                             break;
@@ -139,7 +141,14 @@ public class Repository {
 
     // region Properties
 
-    public MutableLiveData<Boolean> getIsLoading() {
+    public MutableLiveData<Boolean> getIsTaskLoading() {
+        return _isTaskLoading;
+    }
+
+    public void postIsTaskLoading(boolean isLoading){
+        _isTaskLoading.postValue(isLoading);
+    }
+    public MutableLiveData<Boolean> getIsGroupsLoading() {
         return _isLoading;
     }
 
@@ -343,7 +352,12 @@ public class Repository {
     }
 
     public void repeatLoadingThread(){
-        delayCounter.incrementAndGet();
+        if (delayCounter.get() == 0){
+            _isLoading.postValue(false);
+        }
+        else{
+            delayCounter.incrementAndGet();
+        }
     }
 
     // endregion
@@ -437,7 +451,7 @@ public class Repository {
         return CompletableFuture.supplyAsync(()->LocalDB.db.groupDao().getGroup(groupId));
     }
 
-    public void fetchTasks() {
+    public void fetchLocalTasks() {
         _executorService.execute(() -> _tasks.postValue(LocalDB.db.taskDao()
                 .getTasksByAssignee(_authUser.getValue().get_userId())));
     }
@@ -503,6 +517,30 @@ public class Repository {
         _executorService.execute(() -> {
             groupFirebaseWorker.deleteTask(task);
         });
+    }
+
+    public void fetchRemoteTasks(String groupId) {
+        _executorService.execute(() -> {
+             userFirebaseWorker.getAllGroupTasks(groupId);
+        });
+    }
+
+    public void fetchRemoteUserTasks() {
+        _executorService.execute(()->{
+           List<Group> groups = LocalDB.db.groupDao().getAll();
+           if (groups != null){
+                for (Group group : groups){
+                   _executorService.execute(()->userFirebaseWorker.getAllGroupTasks(group.get_groupId()));
+               }
+           }
+           else{
+               _isTaskLoading.postValue(false);
+           }
+        });
+    }
+
+    public void fetchRemoteGroups(){
+        _executorService.execute(userFirebaseWorker::getAllAuthUserGroupAndTasks);
     }
 
     // endregion

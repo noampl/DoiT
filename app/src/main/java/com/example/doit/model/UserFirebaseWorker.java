@@ -501,11 +501,7 @@ public class UserFirebaseWorker implements IDataWorker {
         }
     }
 
-    // endregion
-
-    // region Private Methods
-
-    private void getAllGroupTasks(String groupID){
+    public void getAllGroupTasks(String groupID){
         groupsRef.document(groupID).collection(TASKS_COLLECTION_NAME).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -520,6 +516,7 @@ public class UserFirebaseWorker implements IDataWorker {
                             }
                             taskDoc.getReference().addSnapshotListener(getTaskListener());
                         }
+                        Repository.getInstance().postIsTaskLoading(false);
                     }
                 });
     }

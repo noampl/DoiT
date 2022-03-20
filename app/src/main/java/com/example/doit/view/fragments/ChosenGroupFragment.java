@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,7 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
         }));
         _binding.setTasksViewModel(_tasksViewModel);
         _binding.setLifecycleOwner(this);
+        initSwiper();
         initListeners();
         return _binding.getRoot();
     }
@@ -142,6 +144,21 @@ public class ChosenGroupFragment extends Fragment implements IDialogNavigationHe
                 ChosenGroupFragmentDirections.actionChosenGroupFragmentToTasksDetails(_tasksViewModel.get_tasksDetailsId());
         action.setIsEdit(isEdit);
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
+    }
+
+    private void initSwiper(){
+        _tasksViewModel.getIsTaskLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                _binding.swiper.setRefreshing(aBoolean);
+            }
+        });
+        _binding.swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                _tasksViewModel.fetchRemoteTasks(_group.get_groupId());
+            }
+        });
     }
 
     // endregion
