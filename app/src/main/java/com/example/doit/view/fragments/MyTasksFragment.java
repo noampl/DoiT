@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +47,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
         super.onCreate(savedInstanceState);
         _tasksViewModel = new ViewModelProvider(this).get(TasksViewModel.class);
         _tasksViewModel.set_tasks(new ArrayList<>());
-        _tasksViewModel.fetchTasks();
+        _tasksViewModel.fetchLocalTasks();
     }
 
     @Override
@@ -55,6 +55,7 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
                              Bundle savedInstanceState) {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_tasks,container,false);
         initListeners();
+        initSwiper();
         _binding.setTaskViewModel(_tasksViewModel);
         _binding.setLifecycleOwner(this);
         return _binding.getRoot();
@@ -123,6 +124,23 @@ public class MyTasksFragment extends Fragment implements IFragmentNavigitionHelp
         action.setIsEdit(isEdit);
         Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(action);
     }
+
+    private void initSwiper() {
+        _tasksViewModel.getIsTaskLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                _binding.swiper.setRefreshing(aBoolean);
+            }
+        });
+        _binding.swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                _tasksViewModel.fetchREmoteUserTask();
+            }
+        });
+
+    }
+
 
     // endregion
 

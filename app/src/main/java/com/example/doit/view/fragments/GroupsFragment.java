@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,7 @@ public class GroupsFragment extends Fragment implements
         _groupsViewModel.set_iFragmentNavigitionHelper(this);
         _groupsViewModel.get_actionBarHelper().get().setNavIcon(null);
         _binding.setGroupsViewModel(_groupsViewModel);
-        _binding.setIsLoading(_groupsViewModel.get_isLoading().getValue());
+        _binding.setIsLoading(_groupsViewModel.get_isGroupsLoading().getValue());
         _binding.setLifecycleOwner(this);
         initAdapter();
         initObservers();
@@ -117,10 +118,17 @@ public class GroupsFragment extends Fragment implements
                 }
             }
         });
-        _groupsViewModel.get_isLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        _groupsViewModel.get_isGroupsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoading) {
                 _binding.setIsLoading(isLoading);
+                _binding.swiper.setRefreshing(isLoading);
+            }
+        });
+        _binding.swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                _groupsViewModel.fetchRemoteGroups();
             }
         });
     }
