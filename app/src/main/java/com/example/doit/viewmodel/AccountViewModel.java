@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.doit.interfaces.IActionBarHelper;
-import com.example.doit.interfaces.IResponseHelper;
 import com.example.doit.model.Repository;
 import com.example.doit.model.entities.User;
 import com.example.doit.model.UserFirebaseWorker;
@@ -17,7 +16,6 @@ public class AccountViewModel extends ViewModel {
     //region members
     private static final String TAG = "AccountViewModel";
     private final Repository repo;
-    private IResponseHelper responseHelper;
     private UserFirebaseWorker worker;
     private MutableLiveData<String> UserEmailAddress;
     private MutableLiveData<String> FirstName;

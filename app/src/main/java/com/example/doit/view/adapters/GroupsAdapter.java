@@ -82,7 +82,6 @@ public class GroupsAdapter extends ListAdapter<Group, GroupsAdapter.GroupsViewHo
             _binding = binding;
             _lifeCycleOwner = lifecycleOwner;
             _groupViewModel = groupsViewModel;
-
         }
 
         public void bind(Group group){

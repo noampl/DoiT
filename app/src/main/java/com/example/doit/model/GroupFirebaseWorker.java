@@ -248,9 +248,6 @@ public class GroupFirebaseWorker implements IDataWorker {
                 });
     }
 
-    public void fetchTasksByGroupId(String groupId) {
-    }
-
     // endregion
 
 }
