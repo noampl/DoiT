@@ -59,7 +59,6 @@ public class Repository {
     private MutableLiveData<List<com.example.doit.model.entities.Task>> _tasks = new MutableLiveData<>(new ArrayList<>()); // FIXME
     private final ExecutorService _executorService;
     private final MutableLiveData<Boolean> _isBottomNavigationUp;
-    private final UserDao userDao;
     private MutableLiveData<User> _authUser;
     private MutableLiveData<Boolean> _loggedIn;
     private final UserFirebaseWorker userFirebaseWorker;
@@ -93,7 +92,6 @@ public class Repository {
         _executorService = Executors.newFixedThreadPool(4);
         _isBottomNavigationUp = new MutableLiveData<>(false);
         _authUser = new MutableLiveData<User>(new User());
-        userDao = LocalDB.db.userDao();
         userFirebaseWorker = (UserFirebaseWorker) createWorker(Consts.FIRE_BASE_USERS);
         groupFirebaseWorker = new GroupFirebaseWorker();
         userFirebaseWorker.setAuthUser(_authUser);
@@ -321,7 +319,6 @@ public class Repository {
         _executorService.execute(() -> userFirebaseWorker.createTask(task));
     }
 
-
     public void deleteNotExistGroupsOnFirebase(String userID) {
         _executorService.execute(new Runnable() {
             @Override
@@ -427,7 +424,7 @@ public class Repository {
     }
 
     public void saveOrUpdateUser(User user) {
-        _executorService.execute(() -> userDao.insertAll(user));
+        _executorService.execute(() -> LocalDB.db.userDao().insertAll(user));
     }
 
     public void searchUsersByNameOrMail(String query) {

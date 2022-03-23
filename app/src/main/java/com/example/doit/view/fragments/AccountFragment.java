@@ -66,7 +66,6 @@ public class AccountFragment extends Fragment {
         initListeners();
         initMenu();
         viewModel.updateUserDetails();
-
     }
 
     private void initMenu() {
